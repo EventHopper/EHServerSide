@@ -2,7 +2,6 @@ const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
 
 const eventManagerSchema = new Schema ({
-    id: String,
     event_id: String,
     users_attended: [String],
     left_swiped_users: [String],
