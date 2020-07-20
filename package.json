@@ -1,0 +1,25 @@
+{
+  "name": "eh-server-side",
+  "version": "1.0.0",
+  "description": "Server Side functionality including REST API hosting and module to populate events",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EventHopper/EHServerSide.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "mongodb",
+    "rest"
+  ],
+  "author": "Ransford Antwi, Kyler Mintah, Batchema Sombie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EventHopper/EHServerSide/issues"
+  },
+  "homepage": "https://github.com/EventHopper/EHServerSide#readme"
+}
