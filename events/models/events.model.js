@@ -2,7 +2,6 @@ const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
 
 const venueSchema = new Schema ({
-    id: String,
     name: String,
     city: String,
     country: String,
@@ -15,7 +14,6 @@ const venueSchema = new Schema ({
 });
 
 const eventManagerSchema = new Schema ({
-    id: String,
     event_id: String,
     users_attended: [String],
     left_swiped_users: [String],
@@ -24,7 +22,6 @@ const eventManagerSchema = new Schema ({
 });
 
 const eventSchema = new Schema({
-    id: String, //TODO: overwrite _id?
     name: String,
     details: String,
     start_date: Date, //TODO: timestamp?
