@@ -14,15 +14,6 @@ const venueSchema = new Schema ({
     }]
 });
 
-const eventManagerSchema = new Schema ({
-    id: String,
-    event_id: String,
-    users_attended: [String],
-    left_swiped_users: [String],
-    right_swiped_users: [String],
-    upswiped_users: [String],
-});
-
 const eventSchema = new Schema({
     id: String, //TODO: overwrite _id?
     name: String,
