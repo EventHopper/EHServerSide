@@ -3,4 +3,5 @@ module.exports = {
     "appEndpoint": "http://localhost:3600",
     "apiEndpoint": "http://localhost:3600",
     "environment": "dev",
+    "ticketleap-api-key": "2912304204111641"
 };

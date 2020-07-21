@@ -1,4 +1,5 @@
 const config = require('./common/config/env.config'); //todo: change config file to env variable
+const aggregator = require('./event_aggregator/aggregator'); //for testing, move to routes later
 
 const express = require('express');
 const app = express();
@@ -18,9 +19,10 @@ app.use(function (req, res, next) {
     }
 });
 
-app.use(bodyParser.json());
-EventsRouter.routesConfig(app);
+//app.use(bodyParser.json());
+//EventsRouter.routesConfig(app);
 
-app.listen(config.port, function () {
-    console.log('app listening at port %s', config.port);
-});
+aggregator.ticketleap('USA', 'PA', 'Philadelphia');
+//app.listen(config.port, function () {
+  //  console.log('app listening at port %s', config.port);
+//});
