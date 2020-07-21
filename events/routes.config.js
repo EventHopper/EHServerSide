@@ -8,4 +8,13 @@ exports.routesConfig = function (app) {
     app.get('/allevents', [ //this is will be called client side
         EventController.list //will add filtering later e.g. by location
     ]);
+
+    //TODO: Create location object from user location
+    /*location = {
+    country_code: "USA",
+    region_name: "PA",
+    city: "Philadelphia"
+    latitude: ""
+    longitude: ""
+};  */
 };

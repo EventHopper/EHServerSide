@@ -2,7 +2,7 @@ const config = require('../common/config/env.config');
 const constants = require('./apiconstants');
 const axios = require('axios');
 
-function aggregate(location){
+function aggregate(location){ 
     return getTicketleap(location.country_code, location.region_name, location.city);
 }
 
@@ -28,5 +28,6 @@ function getTicketleap(country_code, region_name, city){
              console.log(error);
   });
 };
+
 
 exports.aggregate = aggregate;
