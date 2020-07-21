@@ -19,10 +19,20 @@ app.use(function (req, res, next) {
     }
 });
 
-//app.use(bodyParser.json());
-//EventsRouter.routesConfig(app);
+app.use(bodyParser.json());
+EventsRouter.routesConfig(app);
 
-aggregator.ticketleap('USA', 'PA', 'Philadelphia');
-//app.listen(config.port, function () {
-  //  console.log('app listening at port %s', config.port);
-//});
+/* <------------------------------------------------------------- 
+Testing for Event Aggregation */
+var location = {
+    country_code: "USA",
+    region_name: "PA",
+    city: "Philadelphia"
+};
+
+aggregator.aggregate(location);
+
+/*------------------------End of Testing section-------------------------------------------> */
+app.listen(config.port, function () {
+    console.log('app listening at port %s', config.port);
+});
