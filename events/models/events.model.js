@@ -13,14 +13,6 @@ const venueSchema = new Schema ({
     }]
 });
 
-const eventManagerSchema = new Schema ({
-    event_id: String,
-    users_attended: [String],
-    left_swiped_users: [String],
-    right_swiped_users: [String],
-    upswiped_users: [String],
-});
-
 const eventSchema = new Schema({
     name: String,
     details: String,
@@ -45,3 +37,23 @@ const eventSchema = new Schema({
  });
 
  const Event = mongoose.model('Events', eventSchema);
+
+ exports.saveEvent = (eventData) => { //saves to database
+    const event = new Event(eventData);
+    return event.save();
+};
+
+exports.list = (perPage, page) => { //list all events
+    return new Promise((resolve, reject) => {
+        Event.find()
+            .limit(perPage)
+            .skip(perPage * page)
+            .exec(function (err, events) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(events);
+                }
+            })
+    });
+};
