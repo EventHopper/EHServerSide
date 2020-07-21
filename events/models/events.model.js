@@ -37,3 +37,23 @@ const eventSchema = new Schema({
  });
 
  const Event = mongoose.model('Events', eventSchema);
+
+ exports.saveEvent = (eventData) => { //saves to database
+    const event = new Event(eventData);
+    return event.save();
+};
+
+exports.list = (perPage, page) => { //list all events
+    return new Promise((resolve, reject) => {
+        Event.find()
+            .limit(perPage)
+            .skip(perPage * page)
+            .exec(function (err, events) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(events);
+                }
+            })
+    });
+};
