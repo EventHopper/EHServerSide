@@ -39,7 +39,9 @@ const eventSchema = new Schema({
 
  const Event = mongoose.model('Events', eventSchema);
 
- exports.saveEvent = (eventData) => { //saves to database
+ module.exports = { Event: Event};
+
+ module.exports.saveEvent = (eventData) => { //saves to database
     const event = new Event(eventData);
     // console.log(event);
     return event.save();
