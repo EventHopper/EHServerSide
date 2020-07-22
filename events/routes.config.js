@@ -1,4 +1,7 @@
+// import EventController from '.';
+
 const EventController = require('./controllers/events.controller');
+
 
 exports.routesConfig = function (app) {
     app.post('/events', [  //this will be called by the event aggregator, server side

@@ -1,4 +1,5 @@
 const EventModel = require('../models/events.model');
+// import EventModel from '../index';
 
 exports.insert = (req, res) => {
     EventModel.saveEvent(req.body)

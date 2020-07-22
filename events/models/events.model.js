@@ -5,9 +5,10 @@ const venueSchema = new Schema ({
     name: String,
     city: String,
     country: String,
+    street: String,
     zip: String,
     state: String,
-    location: [{
+    location: [{ //TODO: Discuss: does not need to be an array is single location
         latitude: Number,
         longitude: Number
     }]
@@ -21,13 +22,13 @@ const eventSchema = new Schema({
     date_created: Date,
     expiry_date: Date,
     creator_iD: String, //TODO: remove?
-    organizer: [{
+    organizer: { //TODO: Discuss: does not need to be an array is single organizer
         id: String,
         name: String
-    }],
-    venue : [venueSchema],
+    },
+    venue : venueSchema,
     type: String,
-    category: String, // remove?
+    categories: [String], //TODO: discuss
     status: ['upcoming', 'past', 'cancelled'],
     rsvp_required: Boolean,
     image_url: String,
@@ -42,6 +43,7 @@ const eventSchema = new Schema({
 
  module.exports.saveEvent = (eventData) => { //saves to database
     const event = new Event(eventData);
+    // console.log(event);
     return event.save();
 };
 
