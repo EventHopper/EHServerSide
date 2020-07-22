@@ -56,12 +56,10 @@ function saveTicketLeapEvents(external_events) {
       date_created: element.created_utc,
       expiry_date: element.latest_end_utc,
       creator_iD: null, //TODO: remove?
-      organizer: [
-        {
-          id: null, //TODO: Do we need this? Are we storing external organizers?
-          name: element.organization_name,
-        },
-      ],
+      organizer: {
+        id: null, //TODO: Do we need this? Are we storing external organizers?
+        name: element.organization_name,
+      },
       venue: {
         name: element.venue_name,
         city: element.venue_city,
@@ -87,7 +85,7 @@ function saveTicketLeapEvents(external_events) {
       permissionLevel: null, //FIXME: Unsure of ticket leap equivalent
     };
 
-    // console.log(newEvent);
+    console.log(newEvent);
 
     eventModel.saveEvent(newEvent);
   });
