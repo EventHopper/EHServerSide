@@ -8,10 +8,12 @@ const venueSchema = new Schema ({
     street: String,
     zip: String,
     state: String,
-    location: [{ //TODO: Discuss: does not need to be an array is single location
+    url: String,
+    imageURL: String,
+    location: { //TODO: Discuss: does not need to be an array is single location
         latitude: Number,
         longitude: Number
-    }]
+    }
 });
 
 const eventSchema = new Schema({
