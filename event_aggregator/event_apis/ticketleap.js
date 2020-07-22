@@ -51,14 +51,14 @@ function saveTicketLeapEvents(external_events) {
     var newEvent = {
       name: element.name,
       details: element.description,
-      start_date: element.earliest_start_utc, //TODO: timestamp?
+      start_date: element.earliest_start_utc, //TODO: timestamp? probably not according to what I read, timestamp not needed here. Date.parse() gives timestamp though
       end_date: element.earliest_end_utc,
       date_created: element.created_utc,
       expiry_date: element.latest_end_utc,
       creator_iD: null, //TODO: remove?
       organizer: [
         {
-          id: null, //FIXME: Unsure of ticket leap equivalent
+          id: null, //TODO: Do we need this? Are we storing external organizers?
           name: element.organization_name,
         },
       ],
@@ -77,13 +77,13 @@ function saveTicketLeapEvents(external_events) {
       type: null, //FIXME: Need to add
       categories: element.hashtag_text ? element.hashtag_text.split(" ") : null, // TODO: Discuss
       status: ["upcoming", "past", "cancelled"], //FIXME: Unsure of ticket leap equivalent
-      rsvp_required: null, //FIXME: Unsure of ticket leap equivalent TODO: Discuss need
+      rsvp_required: null, //FIXME: Unsure of ticket leap equivalent 
       image_url:
         element.hero_image_url ||
         element.hero_small_image_url ||
         element.image_url_full, //ACK: hero images never null
       public_action: element.url,
-      event_manager_id: null, //FIXME: Unsure of ticket leap equivalent
+      event_manager_id: null, //FIXME: Unsure of ticket leap equivalent 
       permissionLevel: null, //FIXME: Unsure of ticket leap equivalent
     };
 

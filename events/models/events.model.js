@@ -28,7 +28,7 @@ const eventSchema = new Schema({
     }],
     venue : [venueSchema],
     type: String,
-    categories: [String],
+    categories: [String], //TODO: discuss
     status: ['upcoming', 'past', 'cancelled'],
     rsvp_required: Boolean,
     image_url: String,
