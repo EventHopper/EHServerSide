@@ -22,11 +22,11 @@ const eventSchema = new Schema({
     date_created: Date,
     expiry_date: Date,
     creator_iD: String, //TODO: remove?
-    organizer: [{ //TODO: Discuss: does not need to be an array is single organizer
+    organizer: { //TODO: Discuss: does not need to be an array is single organizer
         id: String,
         name: String
-    }],
-    venue : [venueSchema],
+    },
+    venue : venueSchema,
     type: String,
     categories: [String], //TODO: discuss
     status: ['upcoming', 'past', 'cancelled'],
@@ -41,6 +41,7 @@ const eventSchema = new Schema({
 
  exports.saveEvent = (eventData) => { //saves to database
     const event = new Event(eventData);
+    // console.log(event);
     return event.save();
 };
 

@@ -37,7 +37,7 @@ exports.getTicketLeap = function getTicketLeap(
     .then((response) => {
       var events = response.data.events; //array of event objects
       // console.log(events);
-      console.log(url + page_num);
+      // console.log(url + page_num);
 
       saveTicketLeapEvents(events);
     })
@@ -69,25 +69,25 @@ function saveTicketLeapEvents(external_events) {
         street: element.venue_street,
         zip: element.venue_postal_code,
         state: element.venue_region_name,
-        location:[{
+        location: {
           latitude: null,
           longitude: null,
-        }]
+        },
       },
       type: null, //FIXME: Need to add
       categories: element.hashtag_text ? element.hashtag_text.split(" ") : null, // TODO: Discuss
       status: ["upcoming", "past", "cancelled"], //FIXME: Unsure of ticket leap equivalent
-      rsvp_required: null, //FIXME: Unsure of ticket leap equivalent 
+      rsvp_required: null, //FIXME: Unsure of ticket leap equivalent
       image_url:
         element.hero_image_url ||
         element.hero_small_image_url ||
         element.image_url_full, //ACK: hero images never null
       public_action: element.url,
-      event_manager_id: null, //FIXME: Unsure of ticket leap equivalent 
+      event_manager_id: null, //FIXME: Unsure of ticket leap equivalent
       permissionLevel: null, //FIXME: Unsure of ticket leap equivalent
     };
 
-    console.log(newEvent);
+    // console.log(newEvent);
 
     eventModel.saveEvent(newEvent);
   });
