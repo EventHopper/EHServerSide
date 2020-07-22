@@ -1,7 +1,5 @@
 const config = require("./common/config/env.config"); //TODO: change config file to env variable
 const aggregator = require("./event_aggregator/aggregator"); //for testing, move to routes later
-const config = require('./common/config/env.config'); //TODO: change config file to env variable
-const aggregator = require('./event_aggregator/aggregator'); //for testing, move to routes later
 
 const express = require("express");
 const app = express();
