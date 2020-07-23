@@ -10,33 +10,27 @@ const venueSchema = new Schema ({
     state: String,
     url: String,
     imageURL: String,
-    location: { //TODO: Discuss: does not need to be an array is single location
+    location: {
         latitude: Number,
-        longitude: Number
+        longitude: Number,
+        timezone: String
     }
 });
 
 const eventSchema = new Schema({
     name: String,
     details: String,
-    start_date: Date, //TODO: timestamp?
-    end_date: Date,
-    date_created: Date,
-    expiry_date: Date,
-    creator_iD: String, //TODO: remove?
-    organizer: { //TODO: Discuss: does not need to be an array is single organizer
-        id: String,
-        name: String
-    },
+    event_start_utc: Date, 
+    event_end_utc: Date,
+    source: String,
+    organizer: String,
     venue : venueSchema,
-    type: String,
-    categories: [String], //TODO: discuss
-    status: ['upcoming', 'past', 'cancelled'],
-    rsvp_required: Boolean,
-    image_url: String,
+    category: String,
+    tags: [String],
+    image_url_full: String,
+    image_url_small: String,
     public_action: String,
-    event_manager_id: String, //change?
-    permissionLevel: Number
+    event_manager_id: String,
  });
 
  const Event = mongoose.model('Events', eventSchema);
