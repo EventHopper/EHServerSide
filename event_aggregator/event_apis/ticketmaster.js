@@ -3,10 +3,23 @@ const constants = require("../apiconstants");
 const config = require("../../common/config/env.config");
 const eventModel = require("../../events/models/events.model.js");
 
-exports.getTicketMaster = function getTicketMaster(
-  state,
-  city
-) {
+
+/***************************************************************************//**
+ * EXTERNAL VENDOR API (EVAPI) Integration
+ * @host Ticketmster
+ * @author Ransford Antwi
+ * @module event_aggregator
+ * 
+ * REQUIRED FUNCTIONS
+ * @function aggregateExternalVendor returns vendor object
+ * @function importToDatabase saves aggregated events to databse
+ *
+ * @param location EventHopper location object
+ ******************************************************************************/
+
+exports.aggregateExternalVendor = aggregateExternalVendor;
+
+function aggregateExternalVendor(location) {
   //Construct URL
 
   let now = new Date();
@@ -18,32 +31,31 @@ exports.getTicketMaster = function getTicketMaster(
 
   console.log("date is: " + date);
   
-  const url =
+  const api_url =
     constants.ticketmasterURL +
     "stateCode=" +
-    state +
+    location.state +
     "&city=" +
-    city +
+    location.city +
     "&apikey=" +
     config["ticketmaster-consumer-key"] +
     "&startDateTime=" +
     date +
     "&page=";
 
-    console.log(url);
+    console.log(api_url);
   //send http request
-  axios
-    .get(url + page_num) //TODO: keep iterating the page numbers till the events array is empty
+  axios.get(api_url + page_num) //TODO: keep iterating the page numbers till the events array is empty
     .then((response) => {
       var events = response.data._embedded.events; //array of event objects
-      saveTicketMasterEvents(events);
+      importToDatabase(events);
     })
     .catch((error) => {
       console.log(error);
     });
 };
 
-function saveTicketMasterEvents(external_events) {
+function importToDatabase(external_events) {
   external_events.forEach((element) => {
     var venue = element._embedded.venues;
     var newEvent = {
