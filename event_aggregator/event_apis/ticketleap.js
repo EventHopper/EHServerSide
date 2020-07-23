@@ -3,8 +3,8 @@ const constants = require("../apiconstants");
 const eventModel = require("../../events/models/events.model.js");
 require("dotenv").config();
 
-/**
- * EXTERNAL VENDOR API (EVAPI) Integration   
+/****************************************************************************
+ * EXTERNAL VENDOR API (EVAPI) Integration
  * @host Ticketleap
  * @author Kyler Mintah
  * @module event_aggregator
@@ -16,7 +16,8 @@ require("dotenv").config();
  * @param location EventHopper location object
  ******************************************************************************/
 
-/***************************************************************************/ exports.aggregateExternalVendor = aggregateExternalVendor;
+/***************************************************************************/ 
+exports.aggregateExternalVendor = aggregateExternalVendor;
 
 function aggregateExternalVendor(location) {
   //Construct URL
