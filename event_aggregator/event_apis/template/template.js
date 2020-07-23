@@ -6,7 +6,7 @@ const eventModel = require("../../events/models/events.model.js");
 
 /***************************************************************************//**
  * EXTERNAL VENDOR API (EVAPI) Integration
- * @host MeetUp
+ * @host TODO: Add Vendor Name
  * @author TODO: Add Internal Developer Name(s)
  * @module event_aggregator
  * 

@@ -3,11 +3,23 @@ const constants = require("../apiconstants");
 const config = require("../../common/config/env.config");
 const eventModel = require("../../events/models/events.model.js");
 
-exports.getTicketLeap = function getTicketLeap(
-  country_code,
-  region_name,
-  city
-) {
+
+/***************************************************************************//**
+ * EXTERNAL VENDOR API (EVAPI) Integration
+ * @host Ticketleap
+ * @author Kyler Mintah
+ * @module event_aggregator
+ * 
+ * REQUIRED FUNCTIONS
+ * @function aggregateExternalVendor returns vendor object
+ * @function importToDatabase saves aggregated events to databse
+ *
+ * @param location EventHopper location object
+ ******************************************************************************/
+
+exports.aggregateExternalVendor = aggregateExternalVendor;
+
+function aggregateExternalVendor(location) {
   //Construct URL
 
   let now = new Date();
@@ -15,15 +27,15 @@ exports.getTicketLeap = function getTicketLeap(
   var month = now.getMonth() + 1; //January is 0
   var day = now.getDate();
   var date = year.toString() + "-" + month.toString() + "-" + day.toString();
-  let page_num = 1;
+  let page_num = 1; 
 
-  const url =
+  const api_url =
     constants.ticketleapURL +
-    country_code +
+    location.country_code +
     "/" +
-    region_name +
+    location.region_name +
     "/" +
-    city +
+    location.city +
     "?key=" +
     config["ticketleap-api-key"] +
     "&dates_after=" +
@@ -31,21 +43,17 @@ exports.getTicketLeap = function getTicketLeap(
     "&page_num=";
 
   //send http request
-  axios
-    .get(url + page_num) //TODO: keep iterating the page numbers till the events array is empty
+  axios.get(api_url + page_num) //TODO: keep iterating the page numbers till the events array is empty
     .then((response) => {
       var events = response.data.events; //array of event objects
-      // console.log(events);
-      // console.log(url + page_num);
-
-      saveTicketLeapEvents(events);
+      importToDatabase(events);
     })
     .catch((error) => {
       console.log(error);
     });
 };
 
-function saveTicketLeapEvents(external_events) {
+function importToDatabase(external_events) {
   external_events.forEach((element) => {
     var newEvent = {
       name: element.name,
