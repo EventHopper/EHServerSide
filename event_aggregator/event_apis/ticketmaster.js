@@ -1,7 +1,7 @@
 const axios = require("axios");
 const constants = require("../apiconstants");
-const config = require("../../common/config/env.config");
 const eventModel = require("../../events/models/events.model.js");
+require("dotenv").config();
 
 
 /***************************************************************************//**
@@ -38,7 +38,7 @@ function aggregateExternalVendor(location) {
     "&city=" +
     location.city +
     "&apikey=" +
-    config["ticketmaster-consumer-key"] +
+    process.env.TICKETMASTER_CONSUMER_KEY  +
     "&startDateTime=" +
     date +
     "&page=";
