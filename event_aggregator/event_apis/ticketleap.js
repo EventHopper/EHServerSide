@@ -1,9 +1,10 @@
 const axios = require("axios");
 const constants = require("../apiconstants");
-const config = require("../../common/config/env.config");
 const eventModel = require("../../events/models/events.model.js");
+require("dotenv").config();
+
 /**
- * EXTERNAL VENDOR API (EVAPI) Integration
+ * EXTERNAL VENDOR API (EVAPI) Integration   
  * @host Ticketleap
  * @author Kyler Mintah
  * @module event_aggregator
@@ -35,7 +36,7 @@ function aggregateExternalVendor(location) {
     "/" +
     location.city +
     "?key=" +
-    config["ticketleap-api-key"] +
+    process.env.TICKETLEAP_API_KEY +
     "&dates_after=" +
     date +
     "&page_num=";
@@ -57,11 +58,12 @@ function aggregateExternalVendor(location) {
 function importToDatabase(external_events) {
   external_events.forEach((element) => {
     var newEvent = {
+      vendor_id: "",
       name: element.name,
       details: element.description,
       start_date_utc: element.earliest_start_utc,
       end_date_utc: element.latest_end_utc,
-      source: "TL", //ticketLeap code
+      source: "TicketLeap", //ticketLeap code
       organizer: element.organization_name,
       venue: {
         name: element.venue_name,

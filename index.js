@@ -1,4 +1,4 @@
-const config = require("./common/config/env.config"); //TODO: change config file to env variable
+require("dotenv").config();
 const aggregator = require("./event_aggregator/aggregator"); //for testing, move to routes later
 
 const express = require("express");
@@ -35,7 +35,7 @@ var location = {
 
 aggregator.aggregate(location);
 
-/*------------------------End of Testing section-------------------------------------------> */
-app.listen(config.port, function () {
-  console.log("app listening at port %s", config.port);
+/*------------------------End of Testing section------------------> */
+app.listen(process.env.PORT, function () {
+  console.log("app listening at port %s", process.env.PORT);
 });

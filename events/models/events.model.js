@@ -17,6 +17,7 @@ const venueSchema = new Schema ({
 });
 
 const eventSchema = new Schema({
+    vendor_id: String,
     name: String,
     details: String,
     start_date_utc: Date, 
