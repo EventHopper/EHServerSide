@@ -26,7 +26,12 @@ app.use(bodyParser.json());
 EventsRouter.routesConfig(app);
 
 /* <------------------------------------------------------------- 
-Testing for Event Aggregation TODO: move to routes */
+Testing for Event Aggregation */
+var location = {
+  country_code: "USA",
+  region: "PA",
+  city: "Philadelphia",
+/**** Testing for Event Aggregation TODO: move to routes *****/
 
 var getLocation = async () => {
   const res = await Location.constructLocation(40.10889, -93.346420); //the hardcoded numbers will be replaced by the user's latlong

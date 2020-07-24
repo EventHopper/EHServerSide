@@ -1,8 +1,6 @@
 const axios = require("axios");
-const constants = require("../apiconstants");
-const config = require("../../common/config/env.config");
+const constants = require("./api-config/apiconstants");
 const eventModel = require("../../events/models/events.model.js");
-
 
 /***************************************************************************//**
  * EXTERNAL VENDOR API (EVAPI) Integration
@@ -45,6 +43,7 @@ function aggregateExternalVendor(location) {
 function importToDatabase(external_events) {
   external_events.forEach((element) => {
     var newEvent = {
+      vendor_id: element.id+'-'+constants.VENDOR_CODE_MEETUP,
       name: null,
       details: null,
       start_date: null, //TODO: timestamp? probably not according to what I read, timestamp not needed here. Date.parse() gives timestamp though
