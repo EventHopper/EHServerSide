@@ -1,6 +1,7 @@
 const axios = require("axios");
 const constants = require("../apiconstants");
 const eventModel = require("../../events/models/events.model.js");
+const countries = require("i18n-iso-countries");
 require("dotenv").config();
 
 /****************************************************************************
@@ -69,7 +70,7 @@ function importToDatabase(external_events) {
       venue: {
         name: element.venue_name,
         city: element.venue_city,
-        country: element.venue_country_code, //TODO: parse country codes?
+        country: countries.getName(element.venue_country_code, "en"), 
         street: element.venue_street,
         zip: element.venue_postal_code,
         state: element.venue_region_name,
