@@ -1,9 +1,9 @@
 const axios = require("axios");
-const constants = require("../apiconstants");
+const constants = require("./api-config/apiconstants");
 const eventModel = require("../../events/models/events.model.js");
 require("dotenv").config();
 
-/****************************************************************************
+/***************************************************************************//**
  * EXTERNAL VENDOR API (EVAPI) Integration
  * @host Ticketleap
  * @author Kyler Mintah
@@ -16,7 +16,6 @@ require("dotenv").config();
  * @param location EventHopper location object
  ******************************************************************************/
 
-/***************************************************************************/ 
 exports.aggregateExternalVendor = aggregateExternalVendor;
 
 function aggregateExternalVendor(location) {
@@ -30,10 +29,10 @@ function aggregateExternalVendor(location) {
   let page_num = 1;
 
   const api_url =
-    constants.ticketleapURL +
+    constants.TICKETLEAP_URL +
     location.country_code +
     "/" +
-    location.region_name +
+    location.state +
     "/" +
     location.city +
     "?key=" +
@@ -59,12 +58,12 @@ function aggregateExternalVendor(location) {
 function importToDatabase(external_events) {
   external_events.forEach((element) => {
     var newEvent = {
-      vendor_id: "",
+      vendor_id: element.id+'-'+constants.VENDOR_CODE_TICKETLEAP,
       name: element.name,
       details: element.description,
       start_date_utc: element.earliest_start_utc,
       end_date_utc: element.latest_end_utc,
-      source: "TicketLeap", //ticketLeap code
+      source: "Ticketleap", //ticketLeap code
       organizer: element.organization_name,
       venue: {
         name: element.venue_name,
@@ -80,11 +79,11 @@ function importToDatabase(external_events) {
         },
       },
       category: null, //FIXME: Need to add
-      tags: element.hashtag_text ? element.hashtag_text.split(" ") : null, // TODO: Discuss
-      element_url_full: element.image_url_full,
+      tags: element.hashtag_text ? element.hashtag_text.split(" ") : null,
+      image_url_full: element.image_url_full,
       image_url_small: element.hero_image_url || element.hero_small_image_url,
       public_action: element.url,
-      event_manager_id: null, //FIXME: Unsure of ticket leap equivalent
+      event_manager_id: null, //FIXME: To be added
     };
 
     console.log(newEvent);

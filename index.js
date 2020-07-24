@@ -29,7 +29,7 @@ EventsRouter.routesConfig(app);
 Testing for Event Aggregation */
 var location = {
   country_code: "USA",
-  region_name: "PA",
+  state: "PA",
   city: "Philadelphia",
 };
 
