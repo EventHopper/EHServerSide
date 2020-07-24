@@ -6,7 +6,7 @@ require("dotenv").config();
 /***************************************************************************//**
  * EXTERNAL VENDOR API (EVAPI) Integration
  * @host Ticketleap
- * @author Kyler Mintah
+ * @author Ransford Antwi, Kyler Mintah
  * @module event_aggregator
  *
  * REQUIRED FUNCTIONS
@@ -20,7 +20,7 @@ exports.aggregateExternalVendor = aggregateExternalVendor;
 
 function aggregateExternalVendor(location) {
   //Construct URL
-
+  var country_code = location.country_code == 'US' ? 'USA' : location.country_code; //FIXME: Ticketleap has its own country codes
   let now = new Date();
   var year = now.getFullYear();
   var month = now.getMonth() + 1; //January is 0
