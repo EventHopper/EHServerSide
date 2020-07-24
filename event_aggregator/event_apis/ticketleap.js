@@ -30,8 +30,6 @@ function aggregateExternalVendor(location) {
 
   const api_url =
     constants.TICKETLEAP_URL +
-    location.country_code +
-    constants.ticketleapURL +
     country_code +
     "/" +
     location.region +

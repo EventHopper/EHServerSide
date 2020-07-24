@@ -39,8 +39,11 @@ async function constructLocation(latitude, longitude){
             zipcode: result.zipcode,
             lat: result.latitude,
             long: result.longitude,
-            region: result.administrativeLevels ? (result.administrativeLevels.level1long ? result.administrativeLevels.level1long : null) : null
+            region: result.administrativeLevels ? (result.administrativeLevels.level1long ? result.administrativeLevels.level1long : null) : null,
+            region_code: result.administrativeLevels ? (result.administrativeLevels.level1short ? result.administrativeLevels.level1short : null) : null
           };       
+          console.log(res);
+
           return location;
       }
 }
