@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const venueSchema = new Schema ({
     name: String,
     city: String,
-    country: String,
+    country_code: String,
     street: String,
     zip: String,
     state: String,
@@ -17,7 +17,7 @@ const venueSchema = new Schema ({
 });
 
 const eventSchema = new Schema({
-    vendor_id: String,
+    vendor_id: {type: String, required: true, unique: true},
     name: String,
     details: String,
     start_date_utc: Date, 
@@ -40,7 +40,9 @@ const eventSchema = new Schema({
  module.exports.saveEvent = (eventData) => { //saves to database
     const event = new Event(eventData);
     // console.log(event);
-    return event.save();
+    return Event.update({vendor_id : event.vendor_id}, event, {upsert : true, setDefaultsOnInsert: true}, function(err, doc) {
+
+    });
 };
 
 exports.list = (perPage, page) => { //list all events

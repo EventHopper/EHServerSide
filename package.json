@@ -29,6 +29,7 @@
     "express": "^4.17.1",
     "i18n-iso-countries": "^6.0.0",
     "mongoose": "^5.9.25",
+    "node-geocoder": "^3.27.0",
     "swagger-ui-express": "^4.1.4",
     "sync-request": "^6.1.0",
     "uuid": "^8.2.0"

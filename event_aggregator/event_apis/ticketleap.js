@@ -1,13 +1,13 @@
 const axios = require("axios");
-const constants = require("../apiconstants");
+const constants = require("./api-config/apiconstants");
 const eventModel = require("../../events/models/events.model.js");
 const countries = require("i18n-iso-countries");
 require("dotenv").config();
 
-/****************************************************************************
+/***************************************************************************//**
  * EXTERNAL VENDOR API (EVAPI) Integration
  * @host Ticketleap
- * @author Kyler Mintah
+ * @author Ransford Antwi, Kyler Mintah
  * @module event_aggregator
  *
  * REQUIRED FUNCTIONS
@@ -17,12 +17,11 @@ require("dotenv").config();
  * @param location EventHopper location object
  ******************************************************************************/
 
-/***************************************************************************/ 
 exports.aggregateExternalVendor = aggregateExternalVendor;
 
 function aggregateExternalVendor(location) {
   //Construct URL
-
+  var country_code = location.country_code.length === 3 ? location.country_code : countries.alpha2ToAlpha3(location.country_code); 
   let now = new Date();
   var year = now.getFullYear();
   var month = now.getMonth() + 1; //January is 0
@@ -31,10 +30,10 @@ function aggregateExternalVendor(location) {
   let page_num = 1;
 
   const api_url =
-    constants.ticketleapURL +
-    location.country_code +
+    constants.TICKETLEAP_URL +
+    country_code +
     "/" +
-    location.region_name +
+    location.region_code +
     "/" +
     location.city +
     "?key=" +
@@ -60,17 +59,17 @@ function aggregateExternalVendor(location) {
 function importToDatabase(external_events) {
   external_events.forEach((element) => {
     var newEvent = {
-      vendor_id: "",
+      vendor_id: element.id+'-'+constants.VENDOR_CODE_TICKETLEAP,
       name: element.name,
       details: element.description,
       start_date_utc: element.earliest_start_utc,
       end_date_utc: element.latest_end_utc,
-      source: "TicketLeap", //ticketLeap code
+      source: "Ticketleap", //ticketLeap code
       organizer: element.organization_name,
       venue: {
         name: element.venue_name,
         city: element.venue_city,
-        country: countries.getName(element.venue_country_code, "en"), 
+        country_code: element.venue_country_code, //countries.alpha2ToAlpha3(element.venue_country_code), 
         street: element.venue_street,
         zip: element.venue_postal_code,
         state: element.venue_region_name,
@@ -81,15 +80,14 @@ function importToDatabase(external_events) {
         },
       },
       category: null, //FIXME: Need to add
-      tags: element.hashtag_text ? element.hashtag_text.split(" ") : null, // TODO: Discuss
-      element_url_full: element.image_url_full,
+      tags: element.hashtag_text ? element.hashtag_text.split(" ") : null,
+      image_url_full: element.image_url_full,
       image_url_small: element.hero_image_url || element.hero_small_image_url,
       public_action: element.url,
-      event_manager_id: null, //FIXME: Unsure of ticket leap equivalent
+      event_manager_id: null, //FIXME: To be added
     };
 
     console.log(newEvent);
-
     eventModel.saveEvent(newEvent);
   });
 }

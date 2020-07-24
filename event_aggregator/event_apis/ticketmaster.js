@@ -1,15 +1,14 @@
 const axios = require("axios");
-const constants = require("../apiconstants");
+const constants = require("./api-config/apiconstants");
 const eventModel = require("../../events/models/events.model.js");
+const countries = require("i18n-iso-countries");
 require("dotenv").config();
-
-
-/***************************************************************************//**
+/**
  * EXTERNAL VENDOR API (EVAPI) Integration
  * @host Ticketmster
  * @author Ransford Antwi
  * @module event_aggregator
- * 
+ *
  * REQUIRED FUNCTIONS
  * @function aggregateExternalVendor returns vendor object
  * @function importToDatabase saves aggregated events to databse
@@ -17,7 +16,7 @@ require("dotenv").config();
  * @param location EventHopper location object
  ******************************************************************************/
 
-exports.aggregateExternalVendor = aggregateExternalVendor;
+/***************************************************************************/ exports.aggregateExternalVendor = aggregateExternalVendor;
 
 function aggregateExternalVendor(location) {
   //Construct URL
@@ -26,26 +25,37 @@ function aggregateExternalVendor(location) {
   var year = now.getFullYear();
   var month = now.getMonth() + 1; //January is 0
   var day = now.getDate();
-  var date = year.toString() + "-" + ((month < 10) ? '0' + month.toString() : month.toString()) + "-" + ((day < 10) ? '0' + day.toString() : day.toString()) + "T" + now.getHours() + ":00:00z";
-  let page_num = 0;
+  var hour = now.getHours();
+  hour = hour < 10 ? "0" + hour : hour;
+  var date =
+    year.toString() +
+    "-" +
+    (month < 10 ? "0" + month.toString() : month.toString()) +
+    "-" +
+    (day < 10 ? "0" + day.toString() : day.toString()) +
+    "T" +
+    hour +
+    ":00:00Z";
+  let page_num = 1;
 
   console.log("date is: " + date);
-  
+
   const api_url =
-    constants.ticketmasterURL +
+    constants.TICKETMASTER_URL +
     "stateCode=" +
-    location.state +
+    location.region_code +
     "&city=" +
     location.city +
     "&apikey=" +
-    process.env.TICKETMASTER_CONSUMER_KEY  +
+    process.env.TICKETMASTER_CONSUMER_KEY +
     "&startDateTime=" +
     date +
     "&page=";
 
-    console.log(api_url);
+  console.log(api_url + page_num);
   //send http request
-  axios.get(api_url + page_num) //TODO: keep iterating the page numbers till the events array is empty
+  axios
+    .get(api_url + page_num) //TODO: keep iterating the page numbers till the events array is empty
     .then((response) => {
       var events = response.data._embedded.events; //array of event objects
       importToDatabase(events);
@@ -53,27 +63,26 @@ function aggregateExternalVendor(location) {
     .catch((error) => {
       console.log(error);
     });
-};
+}
 
 function importToDatabase(external_events) {
   external_events.forEach((element) => {
     var venue = element._embedded.venues;
     var newEvent = {
       name: element.name,
+      vendor_id: element.id + "-" + constants.VENDOR_CODE_TICKETMASTER,
       details: element.info || "Please swipe right for more info", //some events don't have the info field
-      start_date: element.dates.start.dateTime || element.dates.start.localDate , //TODO: timestamp? probably not according to what I read, timestamp not needed here. Date.parse() gives timestamp though
-      end_date: null,
-      date_created: null,
-      expiry_date: null, //FIXME: 
-      creator_iD: "TicketMaster", //TODO: use api name or our own internal naming system for the apis?
-      organizer: {
-        id: null, //TODO: Do we need this? Are we storing external organizers?
-        name: "Created by Ticketmaster", //FIXME:
-      },
+      start_date_utc:
+        element.dates.start.dateTime || element.dates.start.localDate, //TODO: timestamp? probably not according to what I read, timestamp not needed here. Date.parse() gives timestamp though
+      end_date_utc: null,
+      organizer: "Ticketmaster", //FIXME:
       venue: {
         name: venue[0].name,
         city: venue[0].city.name,
-        country: venue[0].country.countryCode, //TODO: parse country codes?
+        country_code:
+          venue[0].country.countryCode.length === 3
+            ? venue[0].country.countryCode
+            : countries.alpha2ToAlpha3(venue[0].country.countryCode),
         street: venue[0].address.line1,
         zip: venue[0].postalCode,
         state: venue[0].state.stateCode,
@@ -84,11 +93,11 @@ function importToDatabase(external_events) {
           longitude: venue[0].location.longitude,
         },
       },
-      type: element.classifications[0].segment.name, 
-      categories: element.classifications[0].genre.name,
-      status: "upcoming", //FIXME: 
-      rsvp_required: true, //All ticketmaster events require purchasing events hence rsvp required
-      image_url: element.images[0].url, //TODO: explore furthur
+      category: element.classifications[0].segment.name,
+      tags: element.classifications[0].genre.name,
+      status: "upcoming", //FIXME:
+      image_url_full: element.images[0].url, //TODO: explore furthur
+      //TODO: image_url_small missing
       public_action: element.url,
       event_manager_id: null, //TODO: Add later
     };
