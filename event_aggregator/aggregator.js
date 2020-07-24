@@ -10,7 +10,7 @@ const ticketMaster = require("./event_apis/ticketmaster");
 
 function aggregate(location){ 
     ticketLeap.aggregateExternalVendor(location);
-    // ticketMaster.aggregateExternalVendor(location);
+    ticketMaster.aggregateExternalVendor(location);
 }
 
 exports.aggregate = aggregate;

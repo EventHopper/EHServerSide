@@ -32,7 +32,7 @@ function aggregateExternalVendor(location) {
     constants.TICKETLEAP_URL +
     location.country_code +
     "/" +
-    location.state +
+    location.region +
     "/" +
     location.city +
     "?key=" +

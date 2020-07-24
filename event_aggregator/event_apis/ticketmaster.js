@@ -35,11 +35,11 @@ function aggregateExternalVendor(location) {
   const api_url =
   constants.TICKETMASTER_URL +
     "stateCode=" +
-    location.state +
+    location.region +
     "&city=" +
     location.city +
     "&apikey=" +
-    process.env.TICKETMASTER_CONSUMER_KEY  +
+    process.env.TICKETMASTER_CONSUMER_KEY +
     "&startDateTime=" +
     date +
     "&page=";
