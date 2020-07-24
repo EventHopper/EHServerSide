@@ -34,7 +34,7 @@ function aggregateExternalVendor(location) {
   const api_url =
     constants.ticketmasterURL +
     "stateCode=" +
-    location.state +
+    location.region +
     "&city=" +
     location.city +
     "&apikey=" +
