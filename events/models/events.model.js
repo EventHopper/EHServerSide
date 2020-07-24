@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const venueSchema = new Schema ({
     name: String,
     city: String,
-    country: String,
+    country_code: String,
     street: String,
     zip: String,
     state: String,

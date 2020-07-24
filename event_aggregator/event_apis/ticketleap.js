@@ -1,6 +1,7 @@
 const axios = require("axios");
 const constants = require("./api-config/apiconstants");
 const eventModel = require("../../events/models/events.model.js");
+const countries = require("i18n-iso-countries");
 require("dotenv").config();
 
 /***************************************************************************//**
@@ -20,7 +21,7 @@ exports.aggregateExternalVendor = aggregateExternalVendor;
 
 function aggregateExternalVendor(location) {
   //Construct URL
-  var country_code = location.country_code == 'US' ? 'USA' : location.country_code; //FIXME: Ticketleap has its own country codes
+  var country_code = location.country_code.length === 3 ? location.country_code : countries.alpha2ToAlpha3(location.country_code); 
   let now = new Date();
   var year = now.getFullYear();
   var month = now.getMonth() + 1; //January is 0
@@ -32,7 +33,7 @@ function aggregateExternalVendor(location) {
     constants.TICKETLEAP_URL +
     country_code +
     "/" +
-    location.region +
+    location.region_code +
     "/" +
     location.city +
     "?key=" +
@@ -68,7 +69,7 @@ function importToDatabase(external_events) {
       venue: {
         name: element.venue_name,
         city: element.venue_city,
-        country: element.venue_country_code, //TODO: parse country codes?
+        country_code: element.venue_country_code, //countries.alpha2ToAlpha3(element.venue_country_code), 
         street: element.venue_street,
         zip: element.venue_postal_code,
         state: element.venue_region_name,
@@ -87,7 +88,6 @@ function importToDatabase(external_events) {
     };
 
     console.log(newEvent);
-
     eventModel.saveEvent(newEvent);
   });
 }
