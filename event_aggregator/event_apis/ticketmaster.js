@@ -3,7 +3,8 @@ const constants = require("./api-config/apiconstants");
 const eventModel = require("../../events/models/events.model.js");
 const countries = require("i18n-iso-countries");
 require("dotenv").config();
-/**
+
+/***************************************************************************//**
  * EXTERNAL VENDOR API (EVAPI) Integration
  * @host Ticketmster
  * @author Ransford Antwi
@@ -11,6 +12,7 @@ require("dotenv").config();
  *
  * REQUIRED FUNCTIONS
  * @function aggregateExternalVendor returns vendor object
+ * @function getEventObjects recursive middle function to access all possible events
  * @function importToDatabase saves aggregated events to databse
  *
  * @param location EventHopper location object
