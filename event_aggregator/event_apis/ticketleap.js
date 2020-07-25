@@ -12,13 +12,15 @@ require("dotenv").config();
  *
  * REQUIRED FUNCTIONS
  * @function aggregateExternalVendor returns vendor object
- * @function importToDatabase saves aggregated events to databse
+ * @function getEventObjects recursive middle function to access all possible events
+ * @function importToDatabase saves event page to databse
  *
  * @param location EventHopper location object
  ******************************************************************************/
 
 exports.aggregateExternalVendor = aggregateExternalVendor;
 
+//assembles query and executes aggregation
 function aggregateExternalVendor(location) {
   //Construct URL
   var country_code = location.country_code.length === 3 ? location.country_code : countries.alpha2ToAlpha3(location.country_code); 
@@ -27,7 +29,6 @@ function aggregateExternalVendor(location) {
   var month = now.getMonth() + 1; //January is 0
   var day = now.getDate();
   var date = year.toString() + "-" + month.toString() + "-" + day.toString();
-  let page_num = 1;
 
   const api_url =
     constants.TICKETLEAP_URL +
@@ -43,19 +44,26 @@ function aggregateExternalVendor(location) {
     "&page_num=";
 
   console.log(api_url);
+  
+    var page_num = 1;
 
-  //send http request
-  axios
-    .get(api_url + page_num) //TODO: keep iterating the page numbers till the events array is empty
-    .then((response) => {
-      var events = response.data.events; //array of event objects
-      importToDatabase(events);
-    })
-    .catch((error) => {
-      console.log(error);
+    getEventObjects(api_url, page_num);
+}
+
+//recursive http request function
+function getEventObjects(api_url, page_num) {
+    axios.get(api_url+page_num).then(function(response){
+        var events = response.data.events;
+        importToDatabase(events);
+        if(events !== null ){
+            getEventObjects(api_url, page_num+1);
+        }
+    }).catch((error)=>{
+        console.log(error);
     });
 }
 
+//converts response to event object and updates database
 function importToDatabase(external_events) {
   external_events.forEach((element) => {
     var newEvent = {
@@ -79,8 +87,8 @@ function importToDatabase(external_events) {
           timezone: element.venue_timezone,
         },
       },
-      category: null, //FIXME: Need to add
-      tags: element.hashtag_text ? element.hashtag_text.split(" ") : null,
+      category: null, //FIXME: See Internal Module #37
+      tags: element.hashtag_text ? element.hashtag_text.split(" ") : null, //FIXME: See Internal Module #37
       image_url_full: element.image_url_full,
       image_url_small: element.hero_image_url || element.hero_small_image_url,
       public_action: element.url,

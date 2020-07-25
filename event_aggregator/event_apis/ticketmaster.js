@@ -16,7 +16,7 @@ require("dotenv").config();
  * @param location EventHopper location object
  ******************************************************************************/
 
-/***************************************************************************/ exports.aggregateExternalVendor = aggregateExternalVendor;
+exports.aggregateExternalVendor = aggregateExternalVendor;
 
 function aggregateExternalVendor(location) {
   //Construct URL
@@ -51,18 +51,23 @@ function aggregateExternalVendor(location) {
     "&startDateTime=" +
     date +
     "&page=";
+  
+  getEventObjects(api_url, page_num);
 
-  console.log(api_url + page_num);
-  //send http request
-  axios
-    .get(api_url + page_num) //TODO: keep iterating the page numbers till the events array is empty
-    .then((response) => {
-      var events = response.data._embedded.events; //array of event objects
+}
+
+//recursive http request function
+function getEventObjects(api_url, page_num) {
+  axios.get(api_url+page_num).then(function(response){
+      var events = response.data._embedded.events;
       importToDatabase(events);
-    })
-    .catch((error) => {
+      console.log("_____________________ NEW PAGE _____________________\n" + "API URL: "+api_url+page_num+"\n___________________________________________________\n");
+      if(events !== null ){
+          getEventObjects(api_url, page_num+1);
+      }
+  }).catch((error)=>{
       console.log(error);
-    });
+  });
 }
 
 function importToDatabase(external_events) {
@@ -86,16 +91,16 @@ function importToDatabase(external_events) {
         street: venue[0].address.line1,
         zip: venue[0].postalCode,
         state: venue[0].state.stateCode,
-        url: venue[0].url,
+        url: venue[0].url|| null,
         imageURL: venue[0].images ? venue[0].images[0].url : null,
         location: {
           latitude: venue[0].location.latitude,
           longitude: venue[0].location.longitude,
         },
       },
-      category: element.classifications[0].segment.name,
-      tags: element.classifications[0].genre.name,
-      status: "upcoming", //FIXME:
+      category: element.classifications[0].segment.name, //FIXME: See Internal Module #37
+      tags: element.classifications[0].genre.name || null, //FIXME: See Internal Module #37
+      status: "upcoming", //FIXME: 
       image_url_full: element.images[0].url, //TODO: explore furthur
       //TODO: image_url_small missing
       public_action: element.url,
