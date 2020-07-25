@@ -62,9 +62,9 @@ function aggregateExternalVendor(location) {
 function getEventObjects(api_url, page_num) {
   axios.get(api_url+page_num).then(function(response){
       var events = response.data._embedded.events;
-      importToDatabase(events);
+      if(events.length !== 0){
       console.log("_____________________ NEW PAGE _____________________\n" + "API URL: "+api_url+page_num+"\n___________________________________________________\n");
-      if(events !== null ){
+      importToDatabase(events);
           getEventObjects(api_url, page_num+1);
       }
   }).catch((error)=>{
