@@ -1,7 +1,7 @@
 const axios = require("axios");
 const constants = require("../apiconstants");
 const config = require("../../common/config/env.config");
-const eventModel = require("../../events/models/events.model.js.js.js");
+const eventModel = require("../../events/models/events.model.js");
 
 
 /***************************************************************************//**
