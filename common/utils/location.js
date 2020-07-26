@@ -34,12 +34,12 @@ async function constructLocation(latitude, longitude){
           var result = res[0];
           var location = {
             country_code: result.countryCode,
-            country: result.country, //TODO: make upsert key
-            city: result.city, //TODO: Make location schema with city required + unique and upsert on city
+            country: result.country,
+            city: result.city,
             zipcode: result.zipcode, 
             lat: result.latitude,
             long: result.longitude,
-            region: result.administrativeLevels ? (result.administrativeLevels.level1long ? result.administrativeLevels.level1long : null) : null, //TODO: make upsert key
+            region: result.administrativeLevels ? (result.administrativeLevels.level1long ? result.administrativeLevels.level1long : null) : null,
             region_code: result.administrativeLevels ? (result.administrativeLevels.level1short ? result.administrativeLevels.level1short : null) : null
           };       
           console.log(res);
