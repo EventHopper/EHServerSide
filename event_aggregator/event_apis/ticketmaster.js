@@ -53,7 +53,7 @@ function aggregateExternalVendor(location) {
     "&startDateTime=" +
     date +
     "&page=";
-  
+
   getEventObjects(api_url, page_num);
 
 }
@@ -99,16 +99,13 @@ function importToDatabase(external_events) {
         location: {
           latitude: venue[0].location.latitude,
           longitude: venue[0].location.longitude,
-<<<<<<< HEAD
-	  timezone: venues[0].timezone,
-=======
+	        timezone: venues[0].timezone,
           timezone: venues[0].timezone,
->>>>>>> d0c51dc96b82c6823daba3215da663e1a98ef5d6
         },
       },
       category: element.classifications[0].segment.name, //FIXME: See Internal Module #37
       tags: element.classifications[0].genre.name || null, //FIXME: See Internal Module #37
-      status: "upcoming", //FIXME: 
+      status: "upcoming", //FIXME:
       image_url_full: element.images[0].url, //TODO: explore furthur
       //TODO: image_url_small missing
       public_action: element.url,
