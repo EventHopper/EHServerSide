@@ -1,5 +1,5 @@
 // import EventController from '.';
-
+// DEPRECATED
 const EventController = require('./controllers/events.controller');
 
 
