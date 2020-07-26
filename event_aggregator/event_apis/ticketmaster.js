@@ -78,10 +78,11 @@ function importToDatabase(external_events) {
     var newEvent = {
       name: element.name,
       vendor_id: element.id + "-" + constants.VENDOR_CODE_TICKETMASTER,
-      details: element.info || "Please swipe right for more info", //some events don't have the info field
-      start_date_utc:
-        element.dates.start.dateTime || element.dates.start.localDate, //TODO: timestamp? probably not according to what I read, timestamp not needed here. Date.parse() gives timestamp though
+      details: element.info || "Please swipe for more info", //some events don't have the info field
+      start_date_utc: element.dates.start.dateTime, //TODO: timestamp? probably not according to what I read, timestamp not needed here. Date.parse() gives timestamp though
+      start_date_local: `${element.dates.start.localDate}T${element.dates.start.localTime}`,
       end_date_utc: null,
+      end_date_local: null,
       organizer: "Ticketmaster", //FIXME:
       venue: {
         name: venue[0].name,
@@ -98,6 +99,7 @@ function importToDatabase(external_events) {
         location: {
           latitude: venue[0].location.latitude,
           longitude: venue[0].location.longitude,
+          timezone: venues[0].timezone,
         },
       },
       category: element.classifications[0].segment.name, //FIXME: See Internal Module #37

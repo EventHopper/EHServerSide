@@ -72,7 +72,9 @@ function importToDatabase(external_events) {
       name: element.name,
       details: element.description,
       start_date_utc: element.earliest_start_utc,
+      start_date_local: element.earliest_start_local,
       end_date_utc: element.latest_end_utc,
+      end_date_local: element.latest_end_local,
       source: "Ticketleap", //ticketLeap code
       organizer: element.organization_name,
       venue: {
@@ -83,7 +85,7 @@ function importToDatabase(external_events) {
         zip: element.venue_postal_code,
         state: element.venue_region_name,
         location: {
-          latitude: null,
+          latitude: null, //TODO: Convert location to lat and long
           longitude: null,
           timezone: element.venue_timezone,
         },
