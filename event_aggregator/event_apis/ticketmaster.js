@@ -91,6 +91,7 @@ function importToDatabase(external_events) {
         location: {
           latitude: venue[0].location.latitude,
           longitude: venue[0].location.longitude,
+	  timezone: venues[0].timezone,
         },
       },
       category: element.classifications[0].segment.name,
