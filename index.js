@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const EventsRouter = require("./events/routes.config");
 const Location = require("./common/utils/location");
 const LocationModel = require("./events/models/location.model");
+const update = require("./events/update_job/index");
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -44,8 +45,9 @@ var location = {
   // let location = await getLocation();
   // console.log(location);
 
-  LocationModel.saveLocation(location);
+  //LocationModel.saveLocation(location);
   aggregator.aggregate(location);
+  //update.updateJob();
 })();
 
 /*------------------------End of Testing section------------------> */
