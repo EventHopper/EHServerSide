@@ -7,7 +7,7 @@ require("dotenv").config();
 /***************************************************************************//**
  * EXTERNAL VENDOR API (EVAPI) Integration
  * @host Ticketleap
- * @author Ransford Antwi, Kyler Mintah
+ * @author Ransford Antwi, Kyler Mintah, Batchema Sombie
  * @module event_aggregator
  *
  * REQUIRED FUNCTIONS
@@ -23,7 +23,7 @@ exports.aggregateExternalVendor = aggregateExternalVendor;
 //assembles query and executes aggregation
 function aggregateExternalVendor(location) {
   //Construct URL
-  var country_code = location.country_code.length === 3 ? location.country_code : countries.alpha2ToAlpha3(location.country_code); 
+  var country_code = location.country_code.length === 3 ? location.country_code : countries.alpha2ToAlpha3(location.country_code);
   let now = new Date();
   var year = now.getFullYear();
   var month = now.getMonth() + 1; //January is 0
@@ -44,7 +44,7 @@ function aggregateExternalVendor(location) {
     "&page_num=";
 
   console.log(api_url);
-  
+
     var page_num = 1;
 
     getEventObjects(api_url, page_num);
@@ -56,7 +56,7 @@ function getEventObjects(api_url, page_num) {
         var events = response.data.events;
         if(events.length !== 0){
         console.log("_____________________ NEW PAGE _____________________\n" + "API URL: "+api_url+page_num+"\n___________________________________________________\n");
-        importToDatabase(events);   
+        importToDatabase(events);
         getEventObjects(api_url, page_num+1);
         }
     }).catch((error)=>{
@@ -80,7 +80,7 @@ function importToDatabase(external_events) {
       venue: {
         name: element.venue_name,
         city: element.venue_city,
-        country_code: element.venue_country_code, //countries.alpha2ToAlpha3(element.venue_country_code), 
+        country_code: element.venue_country_code, //countries.alpha2ToAlpha3(element.venue_country_code),
         street: element.venue_street,
         zip: element.venue_postal_code,
         state: element.venue_region_name,
