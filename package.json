@@ -4,8 +4,9 @@
   "description": "Server Side functionality including REST API hosting and module to populate events",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "nyc ava",
-    "watch:test": "ava --watch"
+    "test:watch": "ava --watch"
   },
   "repository": {
     "type": "git",
