@@ -24,7 +24,8 @@ const clientLocationSchema = new Schema({
                             region : location.region}, location, 
                             {upsert : true, setDefaultsOnInsert: true}, 
                             function(err, doc) {
-                                
+                                // console.log(doc);
+                                // console.log(err);
                             });
 };
 
