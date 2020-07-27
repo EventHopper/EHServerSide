@@ -46,8 +46,8 @@ var location = {
   // console.log(location);
 
   //LocationModel.saveLocation(location);
-  //aggregator.aggregate(location);
-  update.updateJob();
+  aggregator.aggregate(location);
+  //update.updateJob();
 })();
 
 /*------------------------End of Testing section------------------> */
