@@ -1,6 +1,6 @@
 const axios = require("axios");
 const constants = require("./api-config/apiconstants");
-const eventModel = require("../../events/models/events.model.js");
+const eventModel = require("../../models/events.model.js");
 const countries = require("i18n-iso-countries");
 require("dotenv").config();
 

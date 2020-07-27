@@ -1,5 +1,5 @@
 require("dotenv").config();
-const aggregator = require("./event_aggregator/aggregator"); //for testing, move to routes later
+const aggregator = require("./events/aggregator/aggregator"); //for testing, move to routes later
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");

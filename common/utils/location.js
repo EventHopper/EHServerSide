@@ -36,7 +36,7 @@ async function constructLocation(latitude, longitude){
             country_code: result.countryCode,
             country: result.country,
             city: result.city,
-            zipcode: result.zipcode,
+            zipcode: result.zipcode, 
             lat: result.latitude,
             long: result.longitude,
             region: result.administrativeLevels ? (result.administrativeLevels.level1long ? result.administrativeLevels.level1long : null) : null,
