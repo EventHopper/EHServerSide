@@ -64,9 +64,13 @@ function getEventObjects(api_url, page_num) {
     
       var events = response.data._embedded ? response.data._embedded.events : null;
       if(events !== null && events.length !== 0){
-        console.log("_____________________ NEW PAGE _____________________\n" + "API URL: "+api_url+page_num+"\n___________________________________________________\n");
-        importToDatabase(events);
-        getEventObjects(api_url, page_num+1);
+          console.log("_____________________ NEW PAGE _____________________\n" 
+          + "API URL: "
+          +api_url
+          +page_num
+          +"\n___________________________________________________\n");
+          importToDatabase(events);
+          getEventObjects(api_url, page_num+1);
       }else{
         console.log("TicketMaster is Done");
       }
