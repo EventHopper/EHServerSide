@@ -61,11 +61,14 @@ function aggregateExternalVendor(location) {
 //recursive http request function
 function getEventObjects(api_url, page_num) {
   axios.get(api_url+page_num).then(function(response){
-      var events = response.data._embedded.events;
-      if(events.length !== 0){
-      console.log("_____________________ NEW PAGE _____________________\n" + "API URL: "+api_url+page_num+"\n___________________________________________________\n");
-      importToDatabase(events);
-          getEventObjects(api_url, page_num+1);
+    
+      var events = response.data._embedded ? response.data._embedded.events : null;
+      if(events !== null && events.length !== 0){
+        console.log("_____________________ NEW PAGE _____________________\n" + "API URL: "+api_url+page_num+"\n___________________________________________________\n");
+        importToDatabase(events);
+        getEventObjects(api_url, page_num+1);
+      }else{
+        console.log("TicketMaster is Done");
       }
   }).catch((error)=>{
       console.log(error);
@@ -99,12 +102,11 @@ function importToDatabase(external_events) {
         location: {
           latitude: venue[0].location.latitude,
           longitude: venue[0].location.longitude,
-	        timezone: venues[0].timezone,
-          timezone: venues[0].timezone,
+	        timezone: venue[0].timezone,
         },
       },
       category: element.classifications[0].segment.name, //FIXME: See Internal Module #37
-      tags: element.classifications[0].genre.name || null, //FIXME: See Internal Module #37
+      tags: element.classifications[0].genre ? element.classifications[0].genre.name : null, //FIXME: See Internal Module #37
       status: "upcoming", //FIXME:
       image_url_full: element.images[0].url, //TODO: explore furthur
       //TODO: image_url_small missing

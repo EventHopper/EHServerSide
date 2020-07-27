@@ -29,11 +29,9 @@ const clientLocationSchema = new Schema({
                             });
 };
 
-exports.list = (perPage, page) => { //list all events
+module.exports.list = () => { //list all locations
     return new Promise((resolve, reject) => {
         Location.find()
-            .limit(perPage)
-            .skip(perPage * page)
             .exec(function (err, locations) {
                 if (err) {
                     reject(err);
