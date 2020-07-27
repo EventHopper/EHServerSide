@@ -98,7 +98,7 @@ function importToDatabase(external_events) {
       event_manager_id: null, //FIXME: To be added
     };
 
-    console.log(newEvent);
+    // console.log(newEvent);
     eventModel.saveEvent(newEvent);
   });
 }

@@ -5,6 +5,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const EventsRouter = require("./events/routes.config");
 const Location = require("./common/utils/location");
+const LocationModel = require("./events/models/location.model");
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -33,6 +34,7 @@ Testing for Event Aggregation TODO: move to routes */
 //   return res;
 // };
 var location = {	
+  country: "United States of America",
   country_code: "US",
   region_code: "PA",	  
   city: "Philadelphia",
@@ -41,6 +43,8 @@ var location = {
 (async () => {
   // let location = await getLocation();
   // console.log(location);
+
+  LocationModel.saveLocation(location);
   aggregator.aggregate(location);
 })();
 

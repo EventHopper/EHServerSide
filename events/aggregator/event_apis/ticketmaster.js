@@ -111,7 +111,7 @@ function importToDatabase(external_events) {
       event_manager_id: null, //TODO: Add later
     };
 
-    console.log(newEvent);
+    // console.log(newEvent);
 
     eventModel.saveEvent(newEvent);
   });
