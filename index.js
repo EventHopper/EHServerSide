@@ -1,12 +1,13 @@
 require("dotenv").config();
-const aggregator = require("./events/aggregator/aggregator"); //for testing, move to routes later
+const aggregator = require("./services/aggregator/aggregator"); //TODO: for testing, move to routes later
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const EventsRouter = require("./events/routes.config");
+const EventsRouter = require("./api/events/routes.config");
+const constants = require("./common/public/constants");
 const Location = require("./common/utils/location");
-const LocationModel = require("./events/models/location.model");
-const update = require("./events/update_job/index");
+const LocationModel = require("./models/location/location.model");
+const update = require("./jobs/update_job/index");
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -25,6 +26,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(bodyParser.json());
+app.set('view engine', 'ejs');
 EventsRouter.routesConfig(app);
 
 /* <------------------------------------------------------------- 
@@ -49,6 +51,10 @@ var location = {
   aggregator.aggregate(location);
   //update.updateJob();
 })();
+
+app.get('/', (req, res) => { 
+    res.json(constants.API_HOME_MESSAGE);
+})
 
 /*------------------------End of Testing section------------------> */
 app.listen(process.env.PORT, function () {
