@@ -9,7 +9,7 @@ const Location = require("./common/utils/location");
 const LocationModel = require("./models/location/location.model");
 const update = require("./jobs/update_job/index");
 
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
