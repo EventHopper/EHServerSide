@@ -35,7 +35,7 @@
     "i18n-iso-countries": "^6.0.0",
     "mongoose": "^5.9.25",
     "node-geocoder": "^3.27.0",
-    "realm": "^10.0.0-beta.6",
+    "realm": "^10.0.0-beta.9",
     "set-interval-async": "1.0.33",
     "swagger-ui-express": "^4.1.4",
     "sync-request": "^6.1.0",

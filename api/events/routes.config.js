@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 // import EventController from '.';
 // DEPRECATED
 const EventController = require('./events.controller');

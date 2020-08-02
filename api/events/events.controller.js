@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const EventModel = require('../../models/events/events.model');
 // import EventModel from '../index';
 
