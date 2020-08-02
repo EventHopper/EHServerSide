@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable max-len */
 require('dotenv').config();
 const aggregator = require('./services/aggregator/aggregator'); // TODO: for testing, move to routes later
@@ -49,7 +50,7 @@ const location = {
   // console.log(location);
 
   // LocationModel.saveLocation(location);
-  //aggregator.aggregate(location);
+  aggregator.aggregate(location);
   // update.updateJob();
 })();
 
