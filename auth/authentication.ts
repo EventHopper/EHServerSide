@@ -15,7 +15,7 @@ const app = new Realm.App({id: `${ID}`}); // TODO: change to dotenv
 async function loginApiKey(apiKey: string) {
   // Create an API Key credential
   console.log('hi');
-  const credentials = Realm.Credentials.userApiKey(apiKey);
+  const credentials = Realm.Credentials.serverApiKey(apiKey);
 
   try {
     // Authenticate the user
