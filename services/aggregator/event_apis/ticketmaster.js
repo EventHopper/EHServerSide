@@ -65,7 +65,7 @@ function getEventObjects(api_url, page_num) {
     
       var events = response.data._embedded ? response.data._embedded.events : null;
       if(events !== null && events.length !== 0){
-        if (logging) {
+        if (settings.LOGGING) {
           console.log("_____________________ NEW PAGE _____________________\n" 
           + "API URL: "
           +api_url
@@ -78,7 +78,9 @@ function getEventObjects(api_url, page_num) {
         console.log("TicketMaster is Done");
       }
   }).catch((error)=>{
+    if (settings.LOGGING) {
       console.log(error);
+    }
   });
 }
 

@@ -2,6 +2,7 @@ const axios = require("axios");
 const constants = require("./api-config/apiconstants");
 const eventModel = require("../../../models/events/events.model");
 const countries = require("i18n-iso-countries");
+const settings = require('../settings');
 require("dotenv").config();
 logging = false;
 /***************************************************************************//**
@@ -43,8 +44,6 @@ function aggregateExternalVendor(location) {
     date +
     "&page_num=";
 
-  console.log(api_url);
-
     var page_num = 1;
 
     getEventObjects(api_url, page_num);
@@ -55,7 +54,7 @@ function getEventObjects(api_url, page_num) {
     axios.get(api_url+page_num).then(function(response){
         var events = response.data.events;
         if(events.length !== 0){
-          if (logging) {
+          if (settings.LOGGING) {
             console.log("_____________________ NEW PAGE _____________________\n" 
             + "API URL: "
             +api_url
@@ -66,7 +65,9 @@ function getEventObjects(api_url, page_num) {
             getEventObjects(api_url, page_num+1);
         }
     }).catch((error)=>{
+      if (settings.LOGGING) {
         console.log(error);
+      }
     });
 }
 
