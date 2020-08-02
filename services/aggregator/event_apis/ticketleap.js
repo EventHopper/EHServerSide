@@ -1,11 +1,14 @@
-const axios = require("axios");
-const constants = require("./api-config/apiconstants");
-const eventModel = require("../../../models/events/events.model");
-const countries = require("i18n-iso-countries");
+/* eslint-disable camelcase */
+/* eslint-disable require-jsdoc */
+/* eslint-disable max-len */
+const axios = require('axios');
+const constants = require('./api-config/apiconstants');
+const eventModel = require('../../../models/events/events.model');
+const countries = require('i18n-iso-countries');
 const settings = require('../settings');
-require("dotenv").config();
+require('dotenv').config();
 logging = false;
-/***************************************************************************//**
+/** *************************************************************************//**
  * EXTERNAL VENDOR API (EVAPI) Integration
  * @host Ticketleap
  * @author Ransford Antwi, Kyler Mintah, Batchema Sombie
@@ -21,60 +24,60 @@ logging = false;
 
 exports.aggregateExternalVendor = aggregateExternalVendor;
 
-//assembles query and executes aggregation
+// assembles query and executes aggregation
 function aggregateExternalVendor(location) {
-  //Construct URL
-  var country_code = location.country_code.length === 3 ? location.country_code : countries.alpha2ToAlpha3(location.country_code);
-  let now = new Date();
-  var year = now.getFullYear();
-  var month = now.getMonth() + 1; //January is 0
-  var day = now.getDate();
-  var date = year.toString() + "-" + month.toString() + "-" + day.toString();
+  // Construct URL
+  const country_code = location.country_code.length === 3 ? location.country_code : countries.alpha2ToAlpha3(location.country_code);
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1; // January is 0
+  const day = now.getDate();
+  const date = year.toString() + '-' + month.toString() + '-' + day.toString();
 
   const api_url =
     constants.TICKETLEAP_URL +
     country_code +
-    "/" +
+    '/' +
     location.region_code +
-    "/" +
+    '/' +
     location.city +
-    "?key=" +
+    '?key=' +
     process.env.TICKETLEAP_API_KEY +
-    "&dates_after=" +
+    '&dates_after=' +
     date +
-    "&page_num=";
+    '&page_num=';
 
-    var page_num = 1;
+  const page_num = 1;
 
-    getEventObjects(api_url, page_num);
+  getEventObjects(api_url, page_num);
 }
 
-//recursive http request function
+// recursive http request function
 function getEventObjects(api_url, page_num) {
-    axios.get(api_url+page_num).then(function(response){
-        var events = response.data.events;
-        if(events.length !== 0){
-          if (settings.LOGGING) {
-            console.log("_____________________ NEW PAGE _____________________\n" 
-            + "API URL: "
-            +api_url
-            +page_num
-            +"\n___________________________________________________\n");
-          }
-            importToDatabase(events);
-            getEventObjects(api_url, page_num+1);
-        }
-    }).catch((error)=>{
+  axios.get(api_url+page_num).then(function(response) {
+    const events = response.data.events;
+    if (events.length !== 0) {
       if (settings.LOGGING) {
-        console.log(error);
+        console.log('_____________________ NEW PAGE _____________________\n' +
+            'API URL: '+
+            api_url+
+            page_num+
+            '\n___________________________________________________\n');
       }
-    });
+      importToDatabase(events);
+      getEventObjects(api_url, page_num+1);
+    }
+  }).catch((error)=>{
+    if (settings.LOGGING) {
+      console.log(error);
+    }
+  });
 }
 
-//converts response to event object and updates database
+// converts response to event object and updates database
 function importToDatabase(external_events) {
   external_events.forEach((element) => {
-    var newEvent = {
+    const newEvent = {
       vendor_id: element.id+'-'+constants.VENDOR_CODE_TICKETLEAP,
       name: element.name,
       details: element.description,
@@ -82,27 +85,27 @@ function importToDatabase(external_events) {
       start_date_local: element.earliest_start_local,
       end_date_utc: element.latest_end_utc,
       end_date_local: element.latest_end_local,
-      source: "Ticketleap", //ticketLeap code
+      source: 'Ticketleap', // ticketLeap code
       organizer: element.organization_name,
       venue: {
         name: element.venue_name,
         city: element.venue_city,
-        country_code: element.venue_country_code, //countries.alpha2ToAlpha3(element.venue_country_code),
+        country_code: element.venue_country_code, // countries.alpha2ToAlpha3(element.venue_country_code),
         street: element.venue_street,
         zip: element.venue_postal_code,
         state: element.venue_region_name,
         location: {
-          latitude: null, //TODO: Convert location to lat and long
+          latitude: null, // TODO: Convert location to lat and long
           longitude: null,
           timezone: element.venue_timezone,
         },
       },
-      category: null, //FIXME: See Internal Module #37
-      tags: element.hashtag_text ? element.hashtag_text.split(" ") : null, //FIXME: See Internal Module #37
+      category: null, // FIXME: See Internal Module #37
+      tags: element.hashtag_text ? element.hashtag_text.split(' ') : null, // FIXME: See Internal Module #37
       image_url_full: element.image_url_full,
       image_url_small: element.hero_image_url || element.hero_small_image_url,
       public_action: element.url,
-      event_manager_id: null, //FIXME: To be added
+      event_manager_id: null, // FIXME: To be added
     };
 
     // console.log(newEvent);
