@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import Realm from 'realm';
 import assert from 'assert';
-import {APP_ID as ID} from '../common/utils/config';
+import {REALM_APP_ID as ID} from '../common/utils/config';
 
 const app = new Realm.App({id: `${ID}`}); // TODO: change to dotenv
 
