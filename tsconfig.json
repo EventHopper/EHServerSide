@@ -8,5 +8,5 @@
     "esModuleInterop": true,
     "strict": true
   },
-  "include": ["./jobs/pruning/*", "./api/internal/*"]
+  "include": ["./jobs/pruning/*", "./api/internal/*" , "./auth/*"]
 }

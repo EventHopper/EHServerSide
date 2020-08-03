@@ -1,3 +1,3 @@
 function eventbrite() {
-   //TODO: Fill up callback
+  // TODO: Fill up callback
 }
