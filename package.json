@@ -4,8 +4,8 @@
   "description": "Server Side functionality including REST API hosting and module to populate events",
   "main": "index.js",
   "scripts": {
+    "start:client": "ts-node ./api/internal/server.ts",
     "start:auth": "ts-node ./auth/authentication.ts",
-    "start:client": "ts-node ./api/internal/index.ts",
     "start:updater": "node index.js",
     "test": "nyc ava",
     "test:watch": "ava --watch"
@@ -28,6 +28,7 @@
   "homepage": "https://github.com/EventHopper/EHServerSide#readme",
   "dependencies": {
     "@types/dotenv": "^8.2.0",
+    "@types/mongoose": "^5.7.34",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",

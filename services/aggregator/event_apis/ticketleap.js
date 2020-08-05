@@ -5,7 +5,7 @@ const axios = require('axios');
 const constants = require('./api-config/apiconstants');
 const eventModel = require('../../../models/events/events.model');
 const countries = require('i18n-iso-countries');
-const settings = require('../settings');
+const settings = require('../config');
 require('dotenv').config();
 logging = false;
 /** *************************************************************************//**

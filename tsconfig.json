@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
+    "allowJs": true,
     "module": "commonjs",
     "outDir": "./build",
     "noImplicitAny": true,
@@ -8,5 +9,5 @@
     "esModuleInterop": true,
     "strict": true
   },
-  "include": ["./jobs/pruning/*", "./api/internal/*" , "./auth/*"]
+  "include": ["./jobs/pruning/*", "./api/internal/*" , "./auth/*", "./jobs/update_job/*", "./models/*", "api/app.ts"]
 }
