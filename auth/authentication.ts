@@ -6,10 +6,11 @@ import {REALM_APP_ID as ID} from '../common/utils/config';
 
 class Auth {
    private app:Realm.App = new Realm.App({id: `${ID}`});
-   public authUser:Realm.User;
+   public authUser!: Realm.User;
 
-   constructor() {
-     this.authUser = new Realm.User();
+
+   public getAccessToken() {
+     return this.authUser.accessToken;
    }
    /**
  * Logs in a user onto the Realm App via and APIKey.
@@ -30,10 +31,9 @@ class Auth {
        // `App.currentUser` updates to match the logged in user
        assert(user.id === this.app.currentUser!.id);
        this.authUser = user;
-       return this.authUser;
+       return 'AUTH_SUCCESS';
      } catch (err) {
-       console.error('Failed to log in', err);
-       return null;
+       return 'AUTH_FAILED';
      }
    }
 }
