@@ -1,3 +1,5 @@
+const {response} = require('express');
+
 const mongoose = require('../../services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
 
@@ -41,16 +43,19 @@ module.exports = {Event: Event};
 
 module.exports.saveEvent = (eventData) => { // saves to database
   const event = new Event(eventData);
-  // console.log(event);
-  return Event.update({vendor_id: event.vendor_id},
+  console.log(event);
+  return Event.findOneAndUpdate(
+      {useFindAndMondify: true}, {vendor_id: event.vendor_id},
       event,
       {upsert: true, setDefaultsOnInsert: true},
       function(err, doc) {
-
+        console.log(doc);
+        if (err) return res.send(500, {error: err});
+        return res.send('Succesfully saved.');
       });
 };
 
-exports.list = (perPage, page) => { // list all events
+module.exports.list = (perPage, page) => { // list all events
   return new Promise((resolve, reject) => {
     Event.find()
         .limit(perPage)

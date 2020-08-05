@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable max-len */
 require('dotenv').config();
 const aggregator = require('./services/aggregator/aggregator'); // TODO: for testing, move to routes later
@@ -9,7 +8,7 @@ const EventsRouter = require('./api/events/routes.config');
 const constants = require('./common/public/constants');
 const Location = require('./common/utils/location');
 const LocationModel = require('./models/location/location.model');
-const update = require('./jobs/update_job/index');
+// const update = require('./jobs/update_job/index');
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
