@@ -1,3 +1,4 @@
+/* eslint-disable no-invalid-this */
 /* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
 import Realm from 'realm';
@@ -12,16 +13,25 @@ class Auth {
    public getAccessToken() {
      return this.authUser.accessToken;
    }
+
+   public refreshToken() {
+     return this.authUser.refreshToken;
+   }
+
+   public hasAccessToken() {
+     this.authUser.refreshToken;
+     return this.authUser != null;
+   }
+
    /**
- * Logs in a user onto the Realm App via and APIKey.
- * To log in with an API key, create an API Key credential with a server
- * or user API key and pass it to App.logIn()
- * @param {string} apiKey The API key.
- * @return {int} The sum of the two numbers.
- */
-   public async loginApiKey(apiKey: string) {
+   * Logs in a user onto the Realm App via and APIKey.
+   * To log in with an API key, create an API Key credential with a server
+   * or user API key and pass it to App.logIn()
+   * @param {string} apiKey The API key.
+   * @return {int} The sum of the two numbers.
+   */
+   public loginApiKey = async (apiKey: string) => {
      // Create an API Key credential
-     console.log('hi');
      const credentials = Realm.Credentials.serverApiKey(apiKey);
 
      try {

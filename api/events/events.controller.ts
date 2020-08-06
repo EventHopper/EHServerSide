@@ -1,3 +1,4 @@
+/* eslint-disable no-invalid-this */
 /* eslint-disable new-cap */
 /* eslint-disable require-jsdoc */
 /* eslint-disable no-unused-vars */
@@ -6,14 +7,23 @@
 import * as EventModel from '../../models/events/events.model';
 import * as express from 'express';
 import {Schema, model, Document, Model} from 'mongoose';
+import Auth from '../../auth/server_auth';
+import {ControllerInterface} from '../utils/controller.interface';
 // import EventModel from '../index';
 
-class EventsController {
+
+class EventsController implements ControllerInterface {
   public path = '/events';
   public router = express.Router();
+  private _auth:Auth;
 
   constructor() {
     this.initializeRoutes();
+    this._auth = new Auth();
+  }
+
+  public setAuthObject = (authObject:Auth)=>{
+    this._auth = authObject;
   }
 
   public initializeRoutes() {
