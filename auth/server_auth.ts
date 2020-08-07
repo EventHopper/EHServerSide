@@ -19,6 +19,9 @@ class Auth {
    }
 
    public hasAccessToken() {
+     if (!this.authUser) {
+       return false;
+     }
      this.authUser.refreshToken;
      return this.authUser != null;
    }
