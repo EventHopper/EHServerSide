@@ -11,6 +11,8 @@ class Auth {
 
 
    public getAccessToken() {
+     //  let realm = new Realm({schema: []});
+     //  realm.write
      return this.authUser.accessToken;
    }
 
@@ -19,8 +21,10 @@ class Auth {
    }
 
    public hasAccessToken() {
-     this.authUser.refreshToken;
-     return this.authUser != null;
+     if (!this.authUser) {
+       return false;
+     }
+     return this.authUser.accessToken != null;
    }
 
    /**

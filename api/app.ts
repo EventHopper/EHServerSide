@@ -16,7 +16,7 @@ class App {
   Then change all calls to auth to this.auth instead*/
   private _auth:Auth;
 
-  constructor(controllers:[ControllerInterface], port:number) {
+  constructor(controllers:ControllerInterface[], port:number) {
     this.app = express();
     this.port = port;
     this._auth = new Auth();
@@ -54,7 +54,7 @@ class App {
     }
   }
 
-  private initializeControllers = (controllers:[ControllerInterface]) => {
+  private initializeControllers = (controllers:ControllerInterface[]) => {
     controllers.forEach((controller:ControllerInterface) => {
       controller.setAuthObject(this._auth);
       this.app.use('/', controller.router);
