@@ -9,6 +9,8 @@ import * as express from 'express';
 import {Schema, model, Document, Model} from 'mongoose';
 import Auth from '../../auth/server_auth';
 import {ControllerInterface} from '../utils/controller.interface';
+import QueryBuilder from '../utils/graphql/query.builder';
+import {QueryType} from '../utils/graphql/query.types';
 // import EventModel from '../index';
 
 class EventsController implements ControllerInterface {
@@ -42,6 +44,18 @@ class EventsController implements ControllerInterface {
   };
 
   list = (req:express.Request, res:express.Response) => {
+    // const limit = req.query.limit &&
+    // Number.parseInt(req.query.limit) <= 100 ? parseInt(req.query.limit) : 10;
+    // let page = 0;
+    // if (req.query) {
+    //   if (req.query.page) {
+    //     req.query.page = parseInt(req.query.page);
+    //     page = Number.isInteger(req.query.page) ? req.query.page : 0;
+    //   }
+    // }
+    const builder:QueryBuilder = new QueryBuilder([], QueryType.EVENT);
+
+    console.log(builder.generateGetByIDQuery('Fordo'));
     const limit = 10;
     const page = 1;
     console.log('%i, %i', limit, page);

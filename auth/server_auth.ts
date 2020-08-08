@@ -24,7 +24,8 @@ class Auth {
      if (!this.authUser) {
        return false;
      }
-     return this.authUser.accessToken != null;
+     this.authUser.refreshToken;
+     return this.authUser != null;
    }
 
    /**
