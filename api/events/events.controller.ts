@@ -13,7 +13,6 @@ import QueryBuilder from '../utils/graphql/query.builder';
 import {QueryType} from '../utils/graphql/query.types';
 // import EventModel from '../index';
 
-
 class EventsController implements ControllerInterface {
   public path = '/events';
   public router = express.Router();

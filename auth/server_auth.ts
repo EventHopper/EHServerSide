@@ -6,11 +6,17 @@ import assert from 'assert';
 import {REALM_APP_ID as ID} from '../common/utils/config';
 
 class Auth {
-   private app:Realm.App = new Realm.App({id: `${ID}`});
+   public app:Realm.App = new Realm.App({id: `${ID}`});
    public authUser!: Realm.User;
 
 
+   public getInstance():Realm.App {
+     return this.app;
+   }
+
    public getAccessToken() {
+     //  let realm = new Realm({schema: []});
+     //  realm.write
      return this.authUser.accessToken;
    }
 

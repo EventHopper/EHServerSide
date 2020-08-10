@@ -1,6 +1,5 @@
-const {response} = require('express');
-
-const mongoose = require('../../services/mongoose.service').mongoose;
+/* eslint-disable require-jsdoc */
+import {mongoose} from '../../services/mongoose/mongoose.events.service';
 const Schema = mongoose.Schema;
 
 const venueSchema = new Schema({
@@ -37,11 +36,9 @@ const eventSchema = new Schema({
   event_manager_id: String, // change?
 });
 
-const Event = mongoose.model('Events', eventSchema);
+export const Event = mongoose.model('Events', eventSchema);
 
-module.exports = {Event: Event};
-
-module.exports.saveEvent = (eventData) => { // saves to database
+export function saveEvent(eventData) { // saves to database
   const event = new Event(eventData);
   console.log(event);
   return Event.findOneAndUpdate(
@@ -50,12 +47,12 @@ module.exports.saveEvent = (eventData) => { // saves to database
       {upsert: true, setDefaultsOnInsert: true},
       function(err, doc) {
         console.log(doc);
-        if (err) return res.send(500, {error: err});
-        return res.send('Succesfully saved.');
+        if (err) return {error: err};
+        return 'Succesfully saved.';
       });
-};
+}
 
-module.exports.list = (perPage, page) => { // list all events
+export function list(perPage, page) { // list all events
   return new Promise((resolve, reject) => {
     Event.find()
         .limit(perPage)
@@ -68,4 +65,4 @@ module.exports.list = (perPage, page) => { // list all events
           }
         });
   });
-};
+}

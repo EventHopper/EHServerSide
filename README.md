@@ -1,6 +1,10 @@
 # EHServerSide
 Server Side functionality including REST API hosting and module to populate events
 
+## Server Architecture
+![](docs/server-design.png)
+
+## Event Aggregation Pipeline
 ![](docs/SystemDesign.PNG)
 
 ## Important Links
