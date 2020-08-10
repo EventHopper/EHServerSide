@@ -37,13 +37,13 @@ function aggregateExternalVendor(location) {
 
   // send http request
   axios.get(api_url + page_num) // TODO: keep iterating the page numbers till the events array is empty
-      .then((response) => {
-        const events = null; // array of event objects
-        importToDatabase(events);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    .then((response) => {
+      const events = null; // array of event objects
+      importToDatabase(events);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 function importToDatabase(external_events) {

@@ -1,4 +1,5 @@
-const mongoose = require('../../common/services/mongoose.service').mongoose;
+import {mongoose} from '../../services/mongoose.service'
+
 const Schema = mongoose.Schema;
 
 const eventManagerSchema = new Schema({

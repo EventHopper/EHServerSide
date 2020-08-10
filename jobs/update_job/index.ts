@@ -19,11 +19,11 @@ function updateJob() {
 
 async function updateEvents() {
   const locations = await list().catch(
-      (err) => {
-        console.log(err);
-      });
+    (err) => {
+      console.log(err);
+    });
   console.log(locations);
-  locations.forEach((element) => {
+  locations.forEach((element: any) => {
     aggregate(element);
   });
   console.log('whats hatnin');
