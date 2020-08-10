@@ -3,6 +3,7 @@
 /* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
 import express from 'express';
+import chalk from 'chalk';
 import bodyParser from 'body-parser';
 import Auth from '../auth/server_auth';
 import {ControllerInterface} from './utils/controller.interface';
@@ -10,10 +11,6 @@ import {ControllerInterface} from './utils/controller.interface';
 class App {
   public app: express.Application;
   public port: number;
-  /* Having trouble getting this.
-  Keep getting anTypeError: Cannot read property 'auth' of undefined
-  to replicate, uncomment line 14, comment line 29.
-  Then change all calls to auth to this.auth instead*/
   private _auth:Auth;
 
   constructor(controllers:ControllerInterface[], port:number) {
@@ -36,21 +33,21 @@ class App {
     // const auth = new Auth();
     let enumString:any;
     if (!this._auth.hasAccessToken()) {
-      console.log('Did not have token: fetching from server');
+      // console.log('Did not have token: fetching from server');
       enumString = await this._auth.loginApiKey(String(request.query.key)).catch((err)=>{
         console.log(err);
       });
     } else {
-      console.log('Already had token: fetching from cache');
+      // console.log('Already had token: fetching from cache');
       enumString = 'AUTH_SUCCESS';
     }
     if (enumString === 'AUTH_SUCCESS') {
-      console.log('Auth Succeeded');
+      // console.log(chalk.greenBright('Auth Succeeded'));
       // console.log(this._auth.getAccessToken());
       next();
     } else if (enumString === 'AUTH_FAILED') {
-      console.log('Auth Failed');
-      response.json('Failed to authenticate request. Please ensure valid apikey');
+      console.log(chalk.redBright('Auth Failed'));
+      response.json(chalk.redBright('Failed to authenticate request. Please ensure valid apikey'));
     }
   }
 
