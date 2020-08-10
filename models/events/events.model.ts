@@ -80,7 +80,7 @@ const list = (perPage: number, page: number) => { // list all events
     Event.find()
       .limit(perPage)
       .skip(perPage * page)
-      .exec(function (err, events) {
+      .exec(function(err, events) {
         if (err) {
           reject(err);
         } else {
