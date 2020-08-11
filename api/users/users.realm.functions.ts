@@ -53,10 +53,9 @@ class RealmFunctions {
 
     // Let logged in users log out
     public logOut = async (userID: string) => {
-      const currentUser = this._auth.app.currentUser;
+      const currentUser:Realm.User = this._auth.app.allUsers.filter((user) => user.id === userID)[0];
       if (currentUser != null) {
         await this._auth.app.removeUser(currentUser);
-        assert(currentUser.id !== this._auth.app.currentUser?.id);
         assert(this._auth.app.allUsers.find(({id}) => id === currentUser.id) === undefined);
       }
     }

@@ -6,18 +6,14 @@
 // const EventModel = require('../../models/events/events.model');
 import * as UserModel from '../../models/users/users.model';
 import * as express from 'express';
-import {Schema, model, Document, Model} from 'mongoose';
 import Auth from '../../auth/server_auth';
 import {ControllerInterface} from '../utils/controller.interface';
-import RealmFunctions from './realm.functions';
+import RealmFunctions from './users.realm.functions';
+import UserFunctions from './users.functions';
+import UserRoutes from './users.routes.config';
 // import EventModel from '../index';
 
 class UserController implements ControllerInterface {
-  public rootPath = '/users';
-  public registrationPath = `${this.rootPath}/register`;
-  public loginPath = `${this.rootPath}/login`;
-  public pswdResetPath = `${this.rootPath}/password/reset`;
-  public emailConfirmPath = `${this.rootPath}/email/resend-confirmation`;
   public router = express.Router();
   private _auth:Auth;
 
@@ -31,10 +27,10 @@ class UserController implements ControllerInterface {
   }
 
   public initializeRoutes() {
-    this.router.get(this.rootPath, this.listUsers);
-    this.router.post(this.registrationPath, this.registerNewUser);
-    this.router.post(this.loginPath, this.logIn);
-    this.router.post(this.emailConfirmPath, this.resendEmailVerification);
+    this.router.get(UserRoutes.rootPath, this.listUsers);
+    this.router.post(UserRoutes.registrationPath, this.registerNewUser);
+    this.router.post(UserRoutes.loginPath, this.logIn);
+    this.router.post(UserRoutes.emailConfirmPath, this.resendEmailVerification);
   }
   resendEmailVerification = (req:express.Request, res:express.Response) => {
     const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
