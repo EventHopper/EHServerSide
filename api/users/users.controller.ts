@@ -53,7 +53,7 @@ class UserController implements ControllerInterface {
           data_id: user.id,
         };
 
-        UserModel.saveUser(newUser).catch((err)=>{
+        UserModel.saveUser(newUser).catch((err: any)=>{
           console.log(err);
         });
       }
