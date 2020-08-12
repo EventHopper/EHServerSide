@@ -4,7 +4,7 @@
 // DEPRECATED
 // import EventController from '../events/events.controller';
 import express from 'express';
-import {EventsController} from './events.controller';
+import EventsController from './events.controller';
 
 const eventController = new EventsController();
 

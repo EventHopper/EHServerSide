@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start:client": "ts-node ./api/internal/server.ts",
-    "start:auth": "ts-node ./auth/authentication.ts",
+    "start:auth": "ts-node ./auth/server_auth.ts",
     "start:updater": "ts-node index.ts",
     "test": "nyc ava",
     "test:watch": "ava --watch"

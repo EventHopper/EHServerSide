@@ -13,12 +13,8 @@ import QueryBuilder from '../utils/graphql/query.builder';
 import {QueryType} from '../utils/graphql/query.types';
 // import EventModel from '../index';
 
-<<<<<<< HEAD
-class EventsController implements ControllerInterface {
-=======
 
-export class EventsController implements ControllerInterface {
->>>>>>> batchema/typescript
+export default class EventsController implements ControllerInterface {
   public path = '/events';
   public router = express.Router();
   private _auth:Auth;

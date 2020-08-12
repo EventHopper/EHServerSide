@@ -17,15 +17,15 @@ const options = {
 const uri = 'mongodb+srv://ransford:chiefarchitect@eventhoppertesting.mdabm.mongodb.net/user_database?retryWrites=true&w=majority';
 const connectWithRetry = () => {
   console.log('MongoDB connection with retry');
-  mongoose.connect(uri, options).then(()=>{
+  mongoose.connect(uri, options).then(() => {
     console.log('MongoDB is connected');
-  }).catch((err)=>{
+  }).catch((err: any) => {
     console.log('MongoDB connection unsuccessful, retry after 5 seconds. ',
-        ++count);
+      ++count);
     setTimeout(connectWithRetry, 5000);
   });
 };
 
 connectWithRetry();
 
-exports.mongoose = mongoose;
+export {mongoose};
