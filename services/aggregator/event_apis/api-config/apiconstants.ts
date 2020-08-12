@@ -1,5 +1,5 @@
 
-module.exports = Object.freeze({
+export default Object.freeze({
   // VENDOR API URLS
   TICKETLEAP_URL: 'http://public-api.ticketleap.com/events/by/location/',
   TICKETMASTER_URL: 'https://app.ticketmaster.com/discovery/v2/events.json?',

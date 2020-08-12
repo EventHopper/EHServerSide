@@ -1,12 +1,13 @@
 /* eslint-disable camelcase */
 /* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
-const axios = require('axios');
-const constants = require('./api-config/apiconstants');
-const eventModel = require('../../../models/events/events.model');
-const countries = require('i18n-iso-countries');
-require('dotenv').config();
-logging = false;
+import axios from 'axios';
+import {default as constants} from './api-config/apiconstants'
+import * as eventModel from '../../../models/events/events.model';
+import * as countries from 'i18n-iso-countries';
+import * as config from '../../../common/utils/config';
+import {default as settings} from '../config';
+const logging = false;
 
 /** *************************************************************************//**
  * EXTERNAL VENDOR API (EVAPI) Integration
@@ -22,16 +23,16 @@ logging = false;
  * @param location EventHopper location object
  ******************************************************************************/
 
-exports.aggregateExternalVendor = aggregateExternalVendor;
+// exports.aggregateExternalVendor = aggregateExternalVendor;
 
-function aggregateExternalVendor(location) {
+export function aggregateExternalVendor(location: any) {
   // Construct URL
 
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth() + 1; // January is 0
   const day = now.getDate();
-  let hour = now.getHours();
+  let hour: string | number = now.getHours();
   hour = hour < 10 ? '0' + hour : hour;
   const date =
     year.toString() +
@@ -62,30 +63,30 @@ function aggregateExternalVendor(location) {
 }
 
 // recursive http request function
-function getEventObjects(api_url, page_num) {
-  axios.get(api_url+page_num).then(function(response) {
+export function getEventObjects(api_url: string, page_num: number) {
+  axios.get(api_url + page_num).then(function (response) {
     const events = response.data._embedded ? response.data._embedded.events : null;
     if (events !== null && events.length !== 0) {
       if (settings.LOGGING) {
         console.log('_____________________ NEW PAGE _____________________\n' +
-          'API URL: '+
-          api_url+
-          page_num+
+          'API URL: ' +
+          api_url +
+          page_num +
           '\n___________________________________________________\n');
       }
       importToDatabase(events);
-      getEventObjects(api_url, page_num+1);
+      getEventObjects(api_url, page_num + 1);
     } else {
       console.log('TicketMaster is Done');
     }
-  }).catch((error)=>{
+  }).catch((error) => {
     if (settings.LOGGING) {
       console.log(error);
     }
   });
 }
 
-function importToDatabase(external_events) {
+export function importToDatabase(external_events: any[]) {
   external_events.forEach((element) => {
     const venue = element._embedded.venues;
     const newEvent = {
@@ -107,7 +108,7 @@ function importToDatabase(external_events) {
         street: venue[0].address.line1,
         zip: venue[0].postalCode,
         state: venue[0].state.stateCode,
-        url: venue[0].url|| null,
+        url: venue[0].url || null,
         imageURL: venue[0].images ? venue[0].images[0].url : null,
         location: {
           latitude: venue[0].location.latitude,
