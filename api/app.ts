@@ -11,9 +11,19 @@ import {ControllerInterface} from './utils/controller.interface';
 class App {
   public app: express.Application;
   public port: number;
+<<<<<<< HEAD
   private _auth:Auth;
 
   constructor(controllers:ControllerInterface[], port:number) {
+=======
+  /* Having trouble getting this.
+  Keep getting anTypeError: Cannot read property 'auth' of undefined
+  to replicate, uncomment line 14, comment line 29.
+  Then change all calls to auth to this.auth instead*/
+  private _auth: Auth;
+
+  constructor(controllers: [ControllerInterface], port: number) {
+>>>>>>> batchema/typescript
     this.app = express();
     this.port = port;
     this._auth = new Auth();
@@ -28,13 +38,18 @@ class App {
   }
 
   private authMiddleware = async (request: express.Request,
-    response: express.Response, next:express.NextFunction) => { // TODO: Update Access token from cache
+    response: express.Response, next: express.NextFunction) => { // TODO: Update Access token from cache
     console.log(`${request.method} ${request.path} ${String(request.query.key)}`);
     // const auth = new Auth();
-    let enumString:any;
+    let enumString: any;
     if (!this._auth.hasAccessToken()) {
+<<<<<<< HEAD
       // console.log('Did not have token: fetching from server');
       enumString = await this._auth.loginApiKey(String(request.query.key)).catch((err)=>{
+=======
+      console.log('Did not have token: fetching from server');
+      enumString = await this._auth.loginApiKey(String(request.query.key)).catch((err) => {
+>>>>>>> batchema/typescript
         console.log(err);
       });
     } else {
@@ -51,8 +66,13 @@ class App {
     }
   }
 
+<<<<<<< HEAD
   private initializeControllers = (controllers:ControllerInterface[]) => {
     controllers.forEach((controller:ControllerInterface) => {
+=======
+  private initializeControllers = (controllers: [ControllerInterface]) => {
+    controllers.forEach((controller: ControllerInterface) => {
+>>>>>>> batchema/typescript
       controller.setAuthObject(this._auth);
       this.app.use('/', controller.router);
     });

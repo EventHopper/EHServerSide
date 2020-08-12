@@ -13,7 +13,12 @@ import QueryBuilder from '../utils/graphql/query.builder';
 import {QueryType} from '../utils/graphql/query.types';
 // import EventModel from '../index';
 
+<<<<<<< HEAD
 class EventsController implements ControllerInterface {
+=======
+
+export class EventsController implements ControllerInterface {
+>>>>>>> batchema/typescript
   public path = '/events';
   public router = express.Router();
   private _auth:Auth;
@@ -32,18 +37,18 @@ class EventsController implements ControllerInterface {
     this.router.post(this.path, this.insert);
   }
 
-  insert = (req:express.Request, res:express.Response) => {
+  public insert = (req:express.Request, res:express.Response) => {
     if (JSON.stringify(req.body) !== JSON.stringify({})) {
       EventModel.saveEvent(req.body)
-          .then((result:any) => {
-            return res.status(201).send({id: result._id});
-          });
+        .then((result:any) => {
+          return res.status(201).send({id: result._id});
+        });
     } else {
       res.json('Cannot Create EventHopper Event: Request Body Empty');
     }
   };
 
-  list = (req:express.Request, res:express.Response) => {
+  public list = (req:express.Request, res:express.Response) => {
     // const limit = req.query.limit &&
     // Number.parseInt(req.query.limit) <= 100 ? parseInt(req.query.limit) : 10;
     // let page = 0;
@@ -60,10 +65,8 @@ class EventsController implements ControllerInterface {
     const page = 1;
     console.log('%i, %i', limit, page);
     EventModel.list(limit, page)
-        .then((result:typeof EventModel) => {
-          res.status(200).send(result);
-        });
+      .then((result: any) => {
+        res.status(200).send(result);
+      });
   };
 }
-
-export default EventsController;
