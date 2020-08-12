@@ -36,7 +36,7 @@ class App {
     this.app.use(this.authMiddleware);
   }
 
-  private authMiddleware = async (request: express.Request,
+  private authMiddleware = async(request: express.Request,
     response: express.Response, next: express.NextFunction) => { // TODO: Update Access token from cache
     console.log(`${request.method} ${request.path} ${String(request.query.key)}`);
     // const auth = new Auth();
