@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 import {aggregate} from '../../services/aggregator/aggregator';
 import {list} from '../../models/location/location.model';
-import {UPDATE_JOB_INTERVAL} from './constants';
+import {default as constants} from './constants';
 import {setIntervalAsync} from 'set-interval-async/dynamic';
 
 /** *************************************************************************//**
@@ -14,16 +14,16 @@ import {setIntervalAsync} from 'set-interval-async/dynamic';
  ******************************************************************************/
 
 function updateJob() {
-  setIntervalAsync(updateEvents, UPDATE_JOB_INTERVAL);
+  setIntervalAsync(updateEvents, constants.UPDATE_JOB_INTERVAL);
 }
 
 async function updateEvents() {
   const locations = await list().catch(
-      (err) => {
-        console.log(err);
-      });
+    (err) => {
+      console.log(err);
+    });
   console.log(locations);
-  locations.forEach((element) => {
+  locations.forEach((element: any) => {
     aggregate(element);
   });
   console.log('whats hatnin');

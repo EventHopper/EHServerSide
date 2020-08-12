@@ -1,5 +1,5 @@
 /* eslint-disable require-jsdoc */
-const nodeGeocoder = require('node-geocoder');
+import nodeGeocoder, {Geocoder} from 'node-geocoder';
 require('dotenv').config();
 
 
@@ -18,7 +18,7 @@ require('dotenv').config();
 
 
 /* Init Geocoder  */
-const options = {
+const options : nodeGeocoder.Options = {
   provider: 'google',
   // Optional depending on the providers
   // fetch: customFetchImplementation,
@@ -27,11 +27,11 @@ const options = {
 };
 const geocoder = nodeGeocoder(options);
 
-async function constructLocation(latitude, longitude) {
-  const res = await geocoder.reverse({lat: latitude, lon: longitude})
-      .catch((err) => {
-        console.log('error: ' + err);
-      });
+export async function constructLocation(latitude: number, longitude:number) {
+  const res = await geocoder.reverse({ lat: latitude, lon: longitude })
+    .catch((err) => {
+      console.log('error: ' + err);
+    });
   if (res) {
     const result = res[0];
     const location = {
@@ -42,16 +42,14 @@ async function constructLocation(latitude, longitude) {
       lat: result.latitude,
       long: result.longitude,
       region: result.administrativeLevels ?
-      (result.administrativeLevels.level1long ?
-        result.administrativeLevels.level1long : null) : null,
+        (result.administrativeLevels.level1long ?
+          result.administrativeLevels.level1long : null) : null,
       region_code: result.administrativeLevels ?
-      (result.administrativeLevels.level1short ?
-        result.administrativeLevels.level1short : null) : null,
+        (result.administrativeLevels.level1short ?
+          result.administrativeLevels.level1short : null) : null,
     };
     console.log(res);
 
     return location;
   }
 }
-
-exports.constructLocation = constructLocation;

@@ -1,13 +1,13 @@
 /* eslint-disable camelcase */
 /* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
-const axios = require('axios');
-const constants = require('./api-config/apiconstants');
-const eventModel = require('../../../models/events/events.model');
-const countries = require('i18n-iso-countries');
-const settings = require('../config');
-require('dotenv').config();
-logging = false;
+import axios from 'axios';
+import {default as constants} from './api-config/apiconstants'
+import * as eventModel from '../../../models/events/events.model';
+import * as countries from 'i18n-iso-countries';
+import * as config from '../../../common/utils/config';
+import {default as settings} from '../config';
+const logging = false;
 /** *************************************************************************//**
  * EXTERNAL VENDOR API (EVAPI) Integration
  * @host Ticketleap
@@ -22,10 +22,10 @@ logging = false;
  * @param location EventHopper location object
  ******************************************************************************/
 
-exports.aggregateExternalVendor = aggregateExternalVendor;
+// exports.aggregateExternalVendor = aggregateExternalVendor;
 
 // assembles query and executes aggregation
-function aggregateExternalVendor(location) {
+export function aggregateExternalVendor(location: any) {
   // Construct URL
   const country_code = location.country_code.length === 3 ? location.country_code : countries.alpha2ToAlpha3(location.country_code);
   const now = new Date();
@@ -42,7 +42,7 @@ function aggregateExternalVendor(location) {
     '/' +
     location.city +
     '?key=' +
-    process.env.TICKETLEAP_API_KEY +
+    config.TICKETLEAP_API_KEY +
     '&dates_after=' +
     date +
     '&page_num=';
@@ -53,21 +53,21 @@ function aggregateExternalVendor(location) {
 }
 
 // recursive http request function
-function getEventObjects(api_url, page_num) {
-  axios.get(api_url+page_num).then(function(response) {
+export function getEventObjects(api_url: string, page_num: number) {
+  axios.get(api_url + page_num).then(function (response) {
     const events = response.data.events;
     if (events.length !== 0) {
       if (settings.LOGGING) {
         console.log('_____________________ NEW PAGE _____________________\n' +
-            'API URL: '+
-            api_url+
-            page_num+
-            '\n___________________________________________________\n');
+          'API URL: ' +
+          api_url +
+          page_num +
+          '\n___________________________________________________\n');
       }
       importToDatabase(events);
-      getEventObjects(api_url, page_num+1);
+      getEventObjects(api_url, page_num + 1);
     }
-  }).catch((error)=>{
+  }).catch((error) => {
     if (settings.LOGGING) {
       console.log(error);
     }
@@ -75,10 +75,10 @@ function getEventObjects(api_url, page_num) {
 }
 
 // converts response to event object and updates database
-function importToDatabase(external_events) {
+export function importToDatabase(external_events: any[]) {
   external_events.forEach((element) => {
     const newEvent = {
-      vendor_id: element.id+'-'+constants.VENDOR_CODE_TICKETLEAP,
+      vendor_id: element.id + '-' + constants.VENDOR_CODE_TICKETLEAP,
       name: element.name,
       details: element.description,
       start_date_utc: element.earliest_start_utc,

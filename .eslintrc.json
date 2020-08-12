@@ -1,19 +1,28 @@
 {
-    "env": {
-        "es2020": true
-    },
-    "extends": [
-        "google"
+  "env": {
+    "es2020": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 11,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "quotes": [
+      2,
+      "single"
     ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": 11,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "@typescript-eslint"
+    "linebreak-style": 0,
+    "indent": [
+      "error",
+      2
     ],
-    "rules": {
-        "linebreak-style" : 0
-    }
+    "space-before-function-paren": [
+      "error",
+      "never"
+    ]
+  }
 }

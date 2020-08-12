@@ -1,8 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
-const ticketLeap = require('./event_apis/ticketleap');
-const ticketMaster = require('./event_apis/ticketmaster');
-
+import * as ticketLeap from './event_apis/ticketleap';
+import * as ticketMaster from './event_apis/ticketleap';
 /** *************************************************************************//**
  * EVENT AGGREGATOR
  *
@@ -10,7 +9,7 @@ const ticketMaster = require('./event_apis/ticketmaster');
  * @function aggregate imports external events into event database
  ******************************************************************************/
 
-function aggregate(location) {
+export function aggregate(location : any) {
   ticketLeap.aggregateExternalVendor(location);
   ticketMaster.aggregateExternalVendor(location);
 }
