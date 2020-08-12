@@ -1,5 +1,8 @@
-import mongoose from 'mongoose';
+
 let count = 0;
+const Mongoose = require('mongoose').Mongoose;
+
+const eventMongooseInstance = new Mongoose();
 
 const options = {
   autoIndex: false, // Don't build indexes
@@ -17,8 +20,8 @@ const options = {
 const uri = 'mongodb+srv://ransford:chiefarchitect@eventhoppertesting.mdabm.mongodb.net/all_events?retryWrites=true&w=majority';
 const connectWithRetry = () => {
   console.log('MongoDB connection with retry');
-  mongoose.connect(uri, options).then(() => {
-    console.log('MongoDB is connected');
+  eventMongooseInstance.connect(uri, options).then(() => {
+    console.log('MongoDB - Events Database is connected');
   }).catch((err: string) => {
     console.log('MongoDB connection unsuccessful, retry after 5 seconds. ',
       ++count);
@@ -28,4 +31,4 @@ const connectWithRetry = () => {
 
 connectWithRetry();
 
-export {mongoose};
+export {eventMongooseInstance};

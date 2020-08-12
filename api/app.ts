@@ -3,6 +3,7 @@
 /* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
 import express from 'express';
+import path from 'path';
 import chalk from 'chalk';
 import bodyParser from 'body-parser';
 import Auth from '../auth/server_auth';
@@ -28,10 +29,14 @@ class App {
   private initializeMiddlewares() {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded());
+    // this.app.use(express.static(__dirname +'/public/assets'));
+    this.app.use(express.static(path.join(__dirname, 'public')));
+    console.log(path.join(__dirname, '/public'));
+    this.app.set('view engine', 'ejs');
     this.app.use(this.authMiddleware);
   }
 
-  private authMiddleware = async (request: express.Request,
+  private authMiddleware = async(request: express.Request,
     response: express.Response, next: express.NextFunction) => { // TODO: Update Access token from cache
     console.log(`${request.method} ${request.path} ${String(request.query.key)}`);
     // const auth = new Auth();
@@ -50,8 +55,8 @@ class App {
       // console.log(this._auth.getAccessToken());
       next();
     } else if (enumString === 'AUTH_FAILED') {
-      console.log(chalk.redBright('Auth Failed'));
-      response.json(chalk.redBright('Failed to authenticate request. Please ensure valid apikey'));
+      // console.log(chalk.redBright('Auth Failed'));
+      response.json('Failed to authenticate request. Please ensure valid apikey');
     }
   }
 
