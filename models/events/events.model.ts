@@ -1,4 +1,6 @@
-import {mongoose} from '../../services/mongoose.service'
+import {eventMongooseInstance as mongoose} from '../../services/mongoose/mongoose.events.service';
+import { MongooseDocument, Model } from 'mongoose';
+
 const Schema = mongoose.Schema;
 
 const venueSchema = new Schema({
@@ -17,7 +19,7 @@ const venueSchema = new Schema({
 });
 
 
-interface EventDoc extends mongoose.Document {
+interface EventDoc extends MongooseDocument {
   vendor_id: {type: String, required: true, unique: true},
   name: String,
   details: String,
@@ -36,7 +38,7 @@ interface EventDoc extends mongoose.Document {
   event_manager_id: String, // change?
 }
 
-const eventSchema = new Schema({
+const eventSchema:any = new Schema({
   vendor_id: {type: String, required: true, unique: true},
   name: String,
   details: String,
@@ -55,7 +57,7 @@ const eventSchema = new Schema({
   event_manager_id: String, // change?
 });
 
-const Event = mongoose.model<EventDoc>('Events', eventSchema);
+const Event = mongoose.model('Events', eventSchema);
 
 const saveEvent = (eventData: any) => { // saves to database
   const event = new Event(eventData);
@@ -80,7 +82,7 @@ const list = (perPage: number, page: number) => { // list all events
     Event.find()
       .limit(perPage)
       .skip(perPage * page)
-      .exec(function(err, events) {
+      .exec(function(err:any, events:any) {
         if (err) {
           reject(err);
         } else {

@@ -33,12 +33,12 @@ export function saveLocation(locationData) { // saves to database
 export function list() { // list all locations
   return new Promise((resolve, reject) => {
     Location.find()
-        .exec(function(err, locations) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(locations);
-          }
-        });
+      .exec(function(err, locations) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(locations);
+        }
+      });
   });
 }
