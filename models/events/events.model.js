@@ -1,6 +1,7 @@
+/* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
-import {mongoose} from '../../services/mongoose/mongoose.events.service';
-const Schema = mongoose.Schema;
+import {eventMongooseInstance} from '../../services/mongoose/mongoose.events.service';
+const Schema = eventMongooseInstance.Schema;
 
 const venueSchema = new Schema({
   name: String,
@@ -36,7 +37,7 @@ const eventSchema = new Schema({
   event_manager_id: String, // change?
 });
 
-export const Event = mongoose.model('Events', eventSchema);
+export const Event = eventMongooseInstance.model('Events', eventSchema);
 
 export function saveEvent(eventData) { // saves to database
   const event = new Event(eventData);

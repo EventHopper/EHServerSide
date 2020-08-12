@@ -51,8 +51,8 @@ class App {
       // console.log(this._auth.getAccessToken());
       next();
     } else if (enumString === 'AUTH_FAILED') {
-      console.log(chalk.redBright('Auth Failed'));
-      response.json(chalk.redBright('Failed to authenticate request. Please ensure valid apikey'));
+      // console.log(chalk.redBright('Auth Failed'));
+      response.json('Failed to authenticate request. Please ensure valid apikey');
     }
   }
 

@@ -1,5 +1,6 @@
-import {mongoose} from '../../services/mongoose/mongoose.events.service';
-const Schema = mongoose.Schema;
+/* eslint-disable max-len */
+import {eventMongooseInstance} from '../../services/mongoose/mongoose.events.service';
+const Schema = eventMongooseInstance.Schema;
 
 const clientLocationSchema = new Schema({
   country_code: String,
@@ -12,7 +13,7 @@ const clientLocationSchema = new Schema({
   region_code: String,
 });
 
-const Location = mongoose.model('Location', clientLocationSchema);
+const Location = eventMongooseInstance.model('Location', clientLocationSchema);
 
 export const Location = Location;
 

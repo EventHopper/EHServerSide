@@ -1,6 +1,7 @@
+/* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
-import {mongoose} from '../../services/mongoose/mongoose.users.service';
-const Schema = mongoose.Schema;
+import {userMongooseInstance as userMongoose} from '../../services/mongoose/mongoose.users.service';
+const Schema = userMongoose.Schema;
 
 const userSchema = new Schema({
   fullname: String,
@@ -20,7 +21,7 @@ const userSchema = new Schema({
   },
 });
 
-export const User = mongoose.model('Users', userSchema);
+export const User = userMongoose.model('Users', userSchema);
 
 export function saveUser(userData:any) { // saves to database
   const user:any = new User(userData);
@@ -52,15 +53,17 @@ export function list(perPage:number, page:number) { // list all users
 };
 
 export function getUserData(username:string) { // list all users
+  const query = username.toLowerCase();
   return new Promise((resolve, reject) => {
-    User.findOne({'username': `${username.toLowerCase()}`},
+    User.findOne({'username': `${query}`},
         function(err, userDocument) {
           if (err) {
             console.log(err);
             reject(err);
+          } else {
+            console.log(userDocument);
+            resolve(userDocument);
           }
-          console.log(userDocument);
-          resolve(userDocument);
         });
   });
 };

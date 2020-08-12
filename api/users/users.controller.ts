@@ -39,7 +39,8 @@ class UserController implements ControllerInterface {
     realmFunc.resendConfirmationEmail(req.body.email);
   }
 
-  registerNewUser = async (req:express.Request, res:express.Response) => { // TODO: accept an encrypted JSON of email & password from client, decrypt and then pass to realmFunc
+  registerNewUser = async (req:express.Request, res:express.Response) => {
+    // TODO: accept an encrypted JSON of email & password from client, decrypt and then pass to realmFunc
     if (JSON.stringify(req.body) != JSON.stringify({})) {
       const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
       const result = await realmFunc.registerUser(String(req.body.email), String(req.body.password));
@@ -48,11 +49,10 @@ class UserController implements ControllerInterface {
         const newUser = {
           username: String(req.body.username).toLowerCase(),
           email: req.body.email,
-          data_id: user.id,
+          user_id: user.id,
         };
 
         UserModel.saveUser(newUser).catch((err)=>{
-          console.log(err);
         });
       }
       console.log(result);
@@ -77,10 +77,12 @@ class UserController implements ControllerInterface {
   };
 
   getUserData = async (req:express.Request, res: express.Response) => {
-    const userDocument = await UserModel.getUserData(String(req.params.username));
+    const userDocument = await UserModel.getUserData(String(req.params.username)).catch((err)=>{
+      console.log(err);
+    });
     if (userDocument == null) {
-      res.render(path.join(__dirname, '/views/user-not-found'), {username: String(req.params.username)});
-      res.status(404);
+      res.status(404)
+          .render(path.join(__dirname, '/views/user-not-found'), {username: String(req.params.username)});
     } else {
       res.send(userDocument);
     }
@@ -98,8 +100,9 @@ class UserController implements ControllerInterface {
 
   }
 
-  listUsers = (req:express.Request, res:express.Response) => {
-    res.json(UserModel.list(10, 1));
+  listUsers = async (req:express.Request, res:express.Response) => {
+    const userList = await UserModel.list(100, 0);
+    res.json(userList);
   };
 }
 
