@@ -3,6 +3,7 @@
 /* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
 import express from 'express';
+import path from 'path';
 import chalk from 'chalk';
 import bodyParser from 'body-parser';
 import Auth from '../auth/server_auth';
@@ -24,6 +25,10 @@ class App {
   private initializeMiddlewares() {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded());
+    // this.app.use(express.static(__dirname +'/public/assets'));
+    this.app.use(express.static(path.join(__dirname, 'public')));
+    console.log(path.join(__dirname, '/public'));
+    this.app.set('view engine', 'ejs');
     this.app.use(this.authMiddleware);
   }
 

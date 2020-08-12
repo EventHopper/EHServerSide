@@ -9,6 +9,7 @@ import * as express from 'express';
 import Auth from '../../auth/server_auth';
 import {ControllerInterface} from '../utils/controller.interface';
 import RealmFunctions from './users.realm.functions';
+import path from 'path';
 import UserFunctions from './users.functions';
 import UserRoutes from './users.routes.config';
 // import EventModel from '../index';
@@ -22,7 +23,7 @@ class UserController implements ControllerInterface {
     this._auth = new Auth();
   }
 
-  public setAuthObject = (authObject:Auth)=>{
+  public setAuthObject = (authObject:Auth) => {
     this._auth = authObject;
   }
 
@@ -31,20 +32,21 @@ class UserController implements ControllerInterface {
     this.router.post(UserRoutes.registrationPath, this.registerNewUser);
     this.router.post(UserRoutes.loginPath, this.logIn);
     this.router.post(UserRoutes.emailConfirmPath, this.resendEmailVerification);
+    this.router.get(UserRoutes.userInformation, this.getUserData);
   }
   resendEmailVerification = (req:express.Request, res:express.Response) => {
     const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
     realmFunc.resendConfirmationEmail(req.body.email);
   }
 
-  registerNewUser = async (req:express.Request, res:express.Response) => { // TODO: accept an encrypted JSON of email & password from client, decrypt and then pass ti realmFunc
+  registerNewUser = async (req:express.Request, res:express.Response) => { // TODO: accept an encrypted JSON of email & password from client, decrypt and then pass to realmFunc
     if (JSON.stringify(req.body) != JSON.stringify({})) {
       const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
       const result = await realmFunc.registerUser(String(req.body.email), String(req.body.password));
       if (result?.code==200) {
         const user:Realm.User = result!.userInstance!;
         const newUser = {
-          username: req.body.username,
+          username: String(req.body.username).toLowerCase(),
           email: req.body.email,
           data_id: user.id,
         };
@@ -73,6 +75,16 @@ class UserController implements ControllerInterface {
       res.json('Could not log in user');
     }
   };
+
+  getUserData = async (req:express.Request, res: express.Response) => {
+    const userDocument = await UserModel.getUserData(String(req.params.username));
+    if (userDocument == null) {
+      res.render(path.join(__dirname, '/views/user-not-found'), {username: String(req.params.username)});
+      res.status(404);
+    } else {
+      res.send(userDocument);
+    }
+  }
 
   sendFriendRequest = (req:express.Request, res: express.Response) => {
     if (JSON.stringify(req.body) !== JSON.stringify({})) {

@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
   fullname: String,
-  username: String,
+  username: {required: true, type: String, unique: true},
   imageURL: String,
   user_id: {required: true, type: String, unique: true},
   friends: [String],
@@ -22,8 +22,8 @@ const userSchema = new Schema({
 
 export const User = mongoose.model('Users', userSchema);
 
-export function saveUser(userData) { // saves to database
-  const user = new User(userData);
+export function saveUser(userData:any) { // saves to database
+  const user:any = new User(userData);
   console.log(user);
   return User.findOneAndUpdate(
       {user_id: user.data_id},
@@ -31,12 +31,12 @@ export function saveUser(userData) { // saves to database
       {upsert: true, new: true, useFindAndModify: true},
       function(err, doc) {
         console.log(doc);
-        if (err) return (500, {error: err});
+        if (err) return {status: 500, error: err};
         return ('User Succesfully Updated.');
       });
 };
 
-export function list(perPage, page) { // list all users
+export function list(perPage:number, page:number) { // list all users
   return new Promise((resolve, reject) => {
     User.find()
         .limit(perPage)
@@ -47,6 +47,20 @@ export function list(perPage, page) { // list all users
           } else {
             resolve(users);
           }
+        });
+  });
+};
+
+export function getUserData(username:string) { // list all users
+  return new Promise((resolve, reject) => {
+    User.findOne({'username': `${username.toLowerCase()}`},
+        function(err, userDocument) {
+          if (err) {
+            console.log(err);
+            reject(err);
+          }
+          console.log(userDocument);
+          resolve(userDocument);
         });
   });
 };
