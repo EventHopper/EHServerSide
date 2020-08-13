@@ -41,15 +41,12 @@ class App {
     console.log(`${request.method} ${request.path} ${String(request.query.key)}`);
     // const auth = new Auth();
     let enumString: any;
-    if (true) { //!this._auth.hasAccessToken()
-      // console.log('Did not have token: fetching from server');
-      enumString = await this._auth.loginApiKey(String(request.query.key)).catch((err)=>{
-        console.log(err);
-      });
-    } else {
-      // console.log('Already had token: fetching from cache');
-      enumString = 'AUTH_SUCCESS';
-    }
+    //if(!this._auth.hasAccessToken())
+    // console.log('Did not have token: fetching from server');
+    enumString = await this._auth.loginApiKey(String(request.query.key)).catch((err)=>{
+      console.log(err);
+    });
+
     if (enumString === 'AUTH_SUCCESS') {
       // console.log(chalk.greenBright('Auth Succeeded'));
       // console.log(this._auth.getAccessToken());
