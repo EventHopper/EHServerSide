@@ -10,8 +10,6 @@ const app = new App([
   new UserController(),
 ],
 
-
-
 Number(PORT));
 
 app.listen();
