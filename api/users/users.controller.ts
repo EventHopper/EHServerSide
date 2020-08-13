@@ -83,7 +83,7 @@ class UserController implements ControllerInterface {
     });
     if (userDocument == null) {
       res.status(404)
-        .render(path.join(__dirname, '/views/user-not-found'), {username: String(req.params.username)});
+        .render(path.join(__dirname, '../public/views/user-not-found'), {username: String(req.params.username)});
     } else {
       res.send(userDocument);
     }

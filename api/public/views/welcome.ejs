@@ -1,0 +1,68 @@
+<html>
+    <style>
+        .topright {
+          position: absolute;
+          top: 8px;
+          right: 16px;
+          font-size: 18px;
+          margin-top: 30px;
+          margin-right: 40px;
+        }
+
+        .mainimage { 
+          height: auto;
+          opacity: 0.3;
+        }
+
+        .centered {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .child {
+            margin-top: 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        img { 
+          height: auto;
+        }
+        </style>
+
+    <div class="container">
+        <div class="child",
+        style="text-align: center;">
+            <img class = mainimage,
+                src='/images/logo.png', 
+                alt='users not found graphic', 
+                height='100', 
+                width='100', 
+                class="center">
+            <h1 style="font-size:32px; color: #fa7c33; font-family:courier",>
+                EventHopper API
+            </h1>
+            <p style="font-size:16px; color: #6c66db; font-family:courier">
+                <b>Explore /users, /events, /organizations and more!</b>
+            </p>
+        </div>
+    </div>
+
+    <div class="topright">
+        <img class = ,
+            src='/images/logo.png', 
+            alt='eventhopper logo', 
+            height='50', 
+            width='50', >
+    </div>
+</html>

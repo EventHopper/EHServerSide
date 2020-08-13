@@ -41,7 +41,7 @@ class App {
     console.log(`${request.method} ${request.path} ${String(request.query.key)}`);
     // const auth = new Auth();
     let enumString: any;
-    if (!this._auth.hasAccessToken()) {
+    if (true) { //!this._auth.hasAccessToken()
       // console.log('Did not have token: fetching from server');
       enumString = await this._auth.loginApiKey(String(request.query.key)).catch((err)=>{
         console.log(err);
@@ -64,6 +64,11 @@ class App {
     controllers.forEach((controller: ControllerInterface) => {
       controller.setAuthObject(this._auth);
       this.app.use('/', controller.router);
+    });
+    //Home Route
+    this.app.use('/', (req:express.Request, res: express.Response)=>{
+      res.status(500)
+        .render(path.join(__dirname, '/public/views/welcome'));
     });
   }
 
