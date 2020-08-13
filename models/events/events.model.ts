@@ -38,7 +38,7 @@ interface EventDoc extends MongooseDocument {
   event_manager_id: String, // change?
 }
 
-const eventSchema:any = new Schema({
+const eventSchema = new Schema({
   vendor_id: {type: String, required: true, unique: true},
   name: String,
   details: String,
@@ -61,7 +61,6 @@ const Event = mongoose.model('Events', eventSchema);
 
 const saveEvent = (eventData: any) => { // saves to database
   const event = new Event(eventData);
-  console.log(event);
   return Event.findOneAndUpdate(
     {vendor_id: event.vendor_id},
     event,
