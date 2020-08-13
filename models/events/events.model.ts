@@ -84,7 +84,8 @@ const list = (perPage: number, page: number) => { // list all events
       .skip(perPage * page)
       .exec(function(err:any, events:any) {
         if (err) {
-          reject(err);
+          console.log('here is the error:', err);
+          return {error: err};
         } else {
           resolve(events);
         }
@@ -92,4 +93,18 @@ const list = (perPage: number, page: number) => { // list all events
   });
 };
 
-export {Event, saveEvent, list};
+const byID = (idParam: string) => { // find event by ID
+  return new Promise((resolve, reject) => {
+    Event.find({_id:idParam})
+      .exec(function(err:any, event:any) {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          resolve(event);
+        }
+      });
+  });
+};
+
+export {Event, saveEvent, list, byID}; //TODO: Can't we export the whole file?
