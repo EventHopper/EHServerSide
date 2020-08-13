@@ -67,7 +67,7 @@ class App {
     });
     //Home Route
     this.app.use('/', (req:express.Request, res: express.Response)=>{
-      res.status(500)
+      res.status(200)
         .render(path.join(__dirname, '/public/views/welcome'));
     });
   }
