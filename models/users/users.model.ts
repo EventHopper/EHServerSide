@@ -4,7 +4,7 @@ import {userMongooseInstance as userMongoose} from '../../services/mongoose/mong
 const Schema = userMongoose.Schema;
 
 const userSchema = new Schema({
-  fullname: String,
+  full_name: String,
   username: {required: true, type: String, unique: true},
   imageURL: String,
   user_id: {required: true, type: String, unique: true},
