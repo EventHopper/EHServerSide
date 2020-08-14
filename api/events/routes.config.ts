@@ -10,10 +10,10 @@ const eventController = new EventsController();
 
 export const routesConfig = function(app: express.Application) {
   app.post('/events', () => [ // called by the event aggregator, serverside
-    eventController.list,
+    eventController.listAll,
   ]);
   app.get('/allevents', () => [ // this is will be called client side
-    eventController.list, // will add filtering later e.g. by location
+    eventController.listAll, // will add filtering later e.g. by location
   ]);
 
   app.get('/hallo', // this is will be called client side
