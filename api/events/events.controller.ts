@@ -43,13 +43,32 @@ export default class EventsController implements ControllerInterface {
 
   public pathResolver = (req:express.Request, res:express.Response) => {
   
+    if(!req.query){
+      res.status(400).json('Invalid search index');
+    }
+
+    /*Parse pagination parameters  */
+    const size:number = req.query.limit &&
+     Number.parseInt(String(req.query.limit)) <= 100 ? parseInt(String(req.query.limit)) : 10;
+    let page:number = 0;
+    if (req.query) {
+      if (req.query.page) {
+        let pageParam:number = parseInt(String(req.query.page));
+        page = Number.isInteger(pageParam) ? pageParam : 0;
+      }
+    }
+
+    /*Parse endpoints  */
     if(!req.query.index){ //no query index, return all events 
-      return this.list(req, res);
+      return this.listAll(res, size, page);
     }
     let endpoint:string = String(req.query.index);
     switch(endpoint){
     case 'id':  //find event by ID
       this.byID(req, res);
+      break;
+    case 'location':
+      this.byLocation(req,res,size,page);
       break;
     default:
       res.json('Invalid search index');
@@ -72,17 +91,26 @@ export default class EventsController implements ControllerInterface {
       });
   };
 
-  private list = (req:express.Request, res:express.Response) => {
-    const size:number = req.query.limit &&
-     Number.parseInt(String(req.query.limit)) <= 100 ? parseInt(String(req.query.limit)) : 10;
-    let page:number = 0;
-    if (req.query) {
-      if (req.query.page) {
-        let pageParam:number = parseInt(String(req.query.page));
-        page = Number.isInteger(pageParam) ? pageParam : 0;
-      }
+  private byLocation = (req:express.Request, res:express.Response, size:number, page:number) => {
+    
+    if(!(req.query.city || req.query.lat)){ //city or coordinates not provided
+      res.status(400).json('Invalid query parameters provided to search endpoint'); 
     }
+    if(req.query.city){ //search by city
+      const desiredCity:string = String(req.query.city);
+      const query = {'venue.city' : desiredCity};
+      EventModel.list(size, page, query)
+        .then((result: any) => {
+          res.status(200).send(result);
+        }).catch(error => {
+          res.status(400).json('No such event exists');
+        });
 
+      //TODO:Search by latlong
+    }
+  };
+
+  private listAll = (res:express.Response, size:number, page:number) => {
     console.log('%i, %i', size, page);
     EventModel.list(size, page)
       .then((result: any) => {
