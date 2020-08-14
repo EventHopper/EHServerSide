@@ -69,7 +69,7 @@ export default class EventsController implements ControllerInterface {
       this.byLocation(req,res,size,page);
       break;
     default:
-      res.json('Invalid search index');
+      res.status(400).json('Invalid search index');
       break;
     }
   };
