@@ -1,5 +1,5 @@
 import {eventMongooseInstance as mongoose} from '../../services/mongoose/mongoose.events.service';
-import { MongooseDocument, Model } from 'mongoose';
+import { MongooseDocument, Model, Mongoose } from 'mongoose';
 
 const Schema = mongoose.Schema;
 
@@ -76,9 +76,10 @@ const saveEvent = (eventData: any) => { // saves to database
     });
 };
 
-const list = (perPage: number, page: number) => { // list all events
+const list = (perPage: number, page: number, query?: Object) => { // list events
   return new Promise((resolve, reject) => {
-    Event.find()
+    console.log(query);
+    Event.find(query)
       .limit(perPage)
       .skip(perPage * page)
       .exec(function(err:any, events:any) {
@@ -91,6 +92,7 @@ const list = (perPage: number, page: number) => { // list all events
       });
   });
 };
+
 
 const byID = (idParam: string) => { // find event by ID
   return new Promise((resolve, reject) => {
