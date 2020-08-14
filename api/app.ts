@@ -53,7 +53,7 @@ class App {
       next();
     } else if (enumString === 'AUTH_FAILED') {
       // console.log(chalk.redBright('Auth Failed'));
-      response.json('Failed to authenticate request. Please ensure valid apikey');
+      response.status(400).json('Failed to authenticate request. Please ensure valid apikey');
     }
   }
 

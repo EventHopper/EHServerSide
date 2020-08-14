@@ -60,7 +60,7 @@ const eventSchema = new Schema({
 const Event = mongoose.model('Events', eventSchema);
 
 const saveEvent = (eventData: any) => { // saves to database
-  const event = new Event(eventData);
+  const event = eventData;
   return Event.findOneAndUpdate(
     {vendor_id: event.vendor_id},
     event,

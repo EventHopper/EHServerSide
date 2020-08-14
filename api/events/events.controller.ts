@@ -108,7 +108,7 @@ export default class EventsController implements ControllerInterface {
     }
   };
 
-  private listAll = (res:express.Response, size:number, page:number) => {
+  public listAll = (res:express.Response, size:number, page:number) => {
     console.log('%i, %i', size, page);
     EventModel.list(size, page)
       .then((result: any) => {

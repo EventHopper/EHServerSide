@@ -59,7 +59,7 @@ class UserController implements ControllerInterface {
       console.log(result);
       res.json(result);
     } else {
-      res.json('Cannot Register EventHopper User: Request Body Empty');
+      res.status(400).json('Cannot Register User, Missing Request Body');
     }
   };
 
@@ -73,7 +73,7 @@ class UserController implements ControllerInterface {
       console.log(result);
       res.json(result);
     } else {
-      res.json('Could not log in user');
+      res.status(400).json('Could not log in user');
     }
   };
 
