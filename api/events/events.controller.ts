@@ -51,11 +51,9 @@ export default class EventsController implements ControllerInterface {
     const size:number = req.query.limit &&
      Number.parseInt(String(req.query.limit)) <= 100 ? parseInt(String(req.query.limit)) : 10;
     let page:number = 0;
-    if (req.query) {
-      if (req.query.page) {
-        let pageParam:number = parseInt(String(req.query.page));
-        page = Number.isInteger(pageParam) ? pageParam : 0;
-      }
+    if (req.query.page) {
+      let pageParam:number = parseInt(String(req.query.page));
+      page = Number.isInteger(pageParam) ? pageParam : 0;
     }
 
     /*Parse endpoints  */
