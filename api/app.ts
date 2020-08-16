@@ -29,7 +29,7 @@ class App {
   private initializeMiddlewares() {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded());
-    // this.app.use(express.static(__dirname +'/public/assets'));
+    this.app.disable('x-powered-by') //See https://expressjs.com/en/advanced/best-practice-security.html
     this.app.use(express.static(path.join(__dirname, 'public')));
     console.log(path.join(__dirname, '/public'));
     this.app.set('view engine', 'ejs');
@@ -37,7 +37,7 @@ class App {
   }
 
   private authMiddleware = async(request: express.Request,
-    response: express.Response, next: express.NextFunction) => { // TODO: Update Access token from cache
+    response: express.Response, next: express.NextFunction) => {
     console.log(`${request.method} ${request.path} ${String(request.query.key)}`);
     // const auth = new Auth();
     let enumString: any;
