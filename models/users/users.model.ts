@@ -56,7 +56,8 @@ export function list(perPage:number, page:number) { // list all users
   });
 };
 
-export function search(query:string) { // list all users
+export function search(query:string, limit?:number) { // list all users
+  let resultLimit:number = limit? limit: 10;
   return new Promise((resolve, reject) => {
     const aggregation = [
       {
@@ -75,7 +76,7 @@ export function search(query:string) { // list all users
         }
       }, 
       {
-        $limit: 10
+        $limit: resultLimit
       },
       {
         $project: {
