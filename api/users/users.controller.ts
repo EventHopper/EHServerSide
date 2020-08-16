@@ -33,6 +33,7 @@ class UserController implements ControllerInterface {
     this.router.post(UserRoutes.loginPath, this.logIn);
     this.router.post(UserRoutes.emailConfirmPath, this.resendEmailVerification);
     this.router.get(UserRoutes.userInformation, this.getUserData);
+    this.router.get(UserRoutes.userSearch, this.searchUsers)
   }
   resendEmailVerification = (req:express.Request, res:express.Response) => {
     const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
@@ -50,11 +51,11 @@ class UserController implements ControllerInterface {
           username: String(req.body.username).toLowerCase(),
           email: req.body.email,
           user_id: user.id,
+          full_name: req.body.full_name ? req.body.full_name : 'null',
+          image_url: req.body.image_url ? req.body.image_url : 'null',
         };
 
-        UserModel.saveUser(newUser).catch((err: any)=>{
-          console.log(err);
-        });
+        UserModel.newUser(newUser);
       }
       console.log(result);
       res.json(result);
@@ -86,6 +87,27 @@ class UserController implements ControllerInterface {
         .render(path.join(__dirname, '../public/views/user-not-found'), {username: String(req.params.username)});
     } else {
       res.send(userDocument);
+    }
+  }
+
+  searchUsers = async(req:express.Request, res: express.Response) => {
+    let searchQuery:string = '';
+    console.log(req.query.query);
+    if (req.query.query != null){
+      searchQuery = String(req.query.query);
+    } 
+
+    let result:any;
+    let limit = Number(req.query.limit) ? Number(req.query.limit) : undefined;
+    if (limit) {
+      result = await UserModel.search(searchQuery, limit);
+    } else {
+      result = await UserModel.search(searchQuery);
+    }
+    if (result.length >= 1) {
+      res.status(200).json(result);
+    } else {
+      res.status(200).json('No Search Results');
     }
   }
 

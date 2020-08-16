@@ -8,6 +8,7 @@ class UserRoutes {
     static pswdResetPath = `${UserRoutes.rootPath}/password/reset`;
     static emailConfirmPath = `${UserRoutes.rootPath}/email/resend-confirmation`;
     static userInformation = `${UserRoutes.rootPath}/:username`;
+    static userSearch = `/search${UserRoutes.rootPath}`;
 };
 
 export default UserRoutes;
