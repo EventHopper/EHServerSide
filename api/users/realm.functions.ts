@@ -13,8 +13,8 @@ class RealmFunctions {
       this._auth = auth;
     }
 
-    public registerUser = async (email: string, password: string) => {
-      if (typeof password !== `string`) {
+    public registerUser = async(email: string, password: string) => {
+      if (typeof password !== 'string') {
         return {message: 'password should be a string', code: 12, userInstance: null};
       }
       if (password.length < 6 || password.length > 127) {
@@ -33,15 +33,15 @@ class RealmFunctions {
       }
     };
 
-    public resendConfirmationEmail = async (email:string) => {
+    public resendConfirmationEmail = async(email:string) => {
       return await this._auth.app.emailPasswordAuth.resendConfirmationEmail(email);
     }
 
-    public sendPasswordResetEmail = async (email:string) => {
+    public sendPasswordResetEmail = async(email:string) => {
       return await this._auth.app.emailPasswordAuth.sendResetPasswordEmail(email);
     }
 
-    public logIn = async (email: string, password: string) => {
+    public logIn = async(email: string, password: string) => {
       const credentials = Realm.Credentials.emailPassword(email, password);
       let result;
       await this._auth.app.logIn(credentials).then((user) => {
@@ -52,7 +52,7 @@ class RealmFunctions {
     }
 
     // Let logged in users log out
-    public logOut = async (userID: string) => {
+    public logOut = async(userID: string) => {
       const currentUser = this._auth.app.currentUser;
       if (currentUser != null) {
         await this._auth.app.removeUser(currentUser);
