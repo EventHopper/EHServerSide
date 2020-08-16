@@ -12,10 +12,9 @@ export interface ControllerInterface {
 
 export function createController(
   Controller: any,
-  authObject: Auth,
+  authObject: Auth
 ): ControllerInterface {
   return new Controller(authObject);
 }
-
 
 export type Controller = EventController;
