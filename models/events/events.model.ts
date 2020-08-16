@@ -17,10 +17,10 @@ const venueSchema = new Schema({
     timezone: String,
   },
   position: {
-    objectType: String,
+    type: String,
     coordinates: [Number]
   },
-});
+}, {typeKey: '$type' });
 
 
 interface EventDoc extends MongooseDocument {

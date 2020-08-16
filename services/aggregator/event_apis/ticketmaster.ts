@@ -116,7 +116,7 @@ export function importToDatabase(external_events: any[]) {
           timezone: venue[0].timezone,
         },
         position:{
-          objectType: 'Point',
+          type: 'Point',
           coordinates: [venue[0].location.longitude, venue[0].location.latitude],
         },
       },
