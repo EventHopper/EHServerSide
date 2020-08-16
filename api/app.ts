@@ -28,10 +28,9 @@ class App {
 
   private initializeMiddlewares() {
     this.app.use(bodyParser.json());
-    this.app.use(bodyParser.urlencoded());
+    this.app.use(bodyParser.urlencoded({extended: true}));
     this.app.disable('x-powered-by') //See https://expressjs.com/en/advanced/best-practice-security.html
     this.app.use(express.static(path.join(__dirname, 'public')));
-    console.log(path.join(__dirname, '/public'));
     this.app.set('view engine', 'ejs');
     this.app.use(this.authMiddleware);
   }
