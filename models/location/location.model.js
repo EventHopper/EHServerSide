@@ -1,5 +1,6 @@
-import {mongoose} from '../../services/mongoose/mongoose.events.service';
-const Schema = mongoose.Schema;
+/* eslint-disable max-len */
+import {eventMongooseInstance} from '../../services/mongoose/mongoose.events.service';
+const Schema = eventMongooseInstance.Schema;
 
 const clientLocationSchema = new Schema({
   country_code: String,
@@ -12,7 +13,7 @@ const clientLocationSchema = new Schema({
   region_code: String,
 });
 
-const Location = mongoose.model('Location', clientLocationSchema);
+const Location = eventMongooseInstance.model('Location', clientLocationSchema);
 
 export const Location = Location;
 
@@ -32,12 +33,12 @@ export function saveLocation(locationData) { // saves to database
 export function list() { // list all locations
   return new Promise((resolve, reject) => {
     Location.find()
-        .exec(function(err, locations) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(locations);
-          }
-        });
+      .exec(function(err, locations) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(locations);
+        }
+      });
   });
 }

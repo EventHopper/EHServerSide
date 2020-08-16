@@ -1,4 +1,6 @@
-import {mongoose} from '../../services/mongoose.service'
+import {eventMongooseInstance as mongoose} from '../../services/mongoose/mongoose.events.service';
+import { MongooseDocument, Model, Mongoose } from 'mongoose';
+
 const Schema = mongoose.Schema;
 
 const venueSchema = new Schema({
@@ -17,7 +19,7 @@ const venueSchema = new Schema({
 });
 
 
-interface EventDoc extends mongoose.Document {
+interface EventDoc extends MongooseDocument {
   vendor_id: {type: String, required: true, unique: true},
   name: String,
   details: String,
@@ -55,11 +57,10 @@ const eventSchema = new Schema({
   event_manager_id: String, // change?
 });
 
-const Event = mongoose.model<EventDoc>('Events', eventSchema);
+const Event = mongoose.model('Events', eventSchema);
 
 const saveEvent = (eventData: any) => { // saves to database
-  const event = new Event(eventData);
-  console.log(event);
+  const event = eventData;
   return Event.findOneAndUpdate(
     {vendor_id: event.vendor_id},
     event,
@@ -75,14 +76,16 @@ const saveEvent = (eventData: any) => { // saves to database
     });
 };
 
-const list = (perPage: number, page: number) => { // list all events
+const list = (perPage: number, page: number, query?: Object) => { // list events
   return new Promise((resolve, reject) => {
-    Event.find()
+    console.log(query);
+    Event.find(query)
       .limit(perPage)
       .skip(perPage * page)
-      .exec(function(err, events) {
+      .exec(function(err:any, events:any) {
         if (err) {
-          reject(err);
+          console.log('here is the error:', err);
+          return {error: err};
         } else {
           resolve(events);
         }
@@ -90,4 +93,19 @@ const list = (perPage: number, page: number) => { // list all events
   });
 };
 
-export {Event, saveEvent, list};
+
+const byID = (idParam: string) => { // find event by ID
+  return new Promise((resolve, reject) => {
+    Event.find({_id:idParam})
+      .exec(function(err:any, event:any) {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          resolve(event);
+        }
+      });
+  });
+};
+
+export {Event, saveEvent, list, byID}; //TODO: Can't we export the whole file?

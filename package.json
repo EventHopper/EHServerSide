@@ -28,7 +28,7 @@
   "homepage": "https://github.com/EventHopper/EHServerSide#readme",
   "dependencies": {
     "@types/dotenv": "^8.2.0",
-    "@types/mongoose": "^5.7.34",
+    "@types/mongoose": "^5.7.36",
     "@types/node-geocoder": "^3.24.1",
     "@types/set-interval-async": "^1.0.0",
     "axios": "^0.19.2",

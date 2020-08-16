@@ -1,4 +1,4 @@
-import {mongoose} from '../../services/mongoose.service'
+import {eventMongooseInstance as mongoose} from '../../services/mongoose/mongoose.events.service'
 
 const Schema = mongoose.Schema;
 

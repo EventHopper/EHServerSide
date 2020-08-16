@@ -9,6 +9,7 @@ const app = new App([
   new EventsController(),
   new UserController(),
 ],
+
 Number(PORT));
 
 app.listen();
