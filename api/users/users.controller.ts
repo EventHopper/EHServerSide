@@ -96,7 +96,14 @@ class UserController implements ControllerInterface {
     if (req.query.query != null){
       searchQuery = String(req.query.query);
     } 
-    const result:any = await UserModel.search(searchQuery);
+
+    let result:any;
+    let limit = Number(req.query.limit) ? Number(req.query.limit) : undefined;
+    if (limit) {
+      result = await UserModel.search(searchQuery, limit);
+    } else {
+      result = await UserModel.search(searchQuery);
+    }
     if (result.length >= 1) {
       res.status(200).json(result);
     } else {
