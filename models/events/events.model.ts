@@ -16,6 +16,10 @@ const venueSchema = new Schema({
     longitude: Number,
     timezone: String,
   },
+  position: {
+    objectType: String,
+    coordinates: [Number]
+  },
 });
 
 
@@ -61,6 +65,7 @@ const Event = mongoose.model('Events', eventSchema);
 
 const saveEvent = (eventData: any) => { // saves to database
   const event = eventData;
+  //console.log(event.venue.position);
   return Event.findOneAndUpdate(
     {vendor_id: event.vendor_id},
     event,
@@ -71,7 +76,7 @@ const saveEvent = (eventData: any) => { // saves to database
         return {error: err};
       }
       console.log('succesfully saved');
-      console.log(doc);
+      //console.log(doc);
       return 'Succesfully saved.';
     });
 };

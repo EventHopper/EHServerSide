@@ -64,7 +64,7 @@ export function aggregateExternalVendor(location: any) {
 
 // recursive http request function
 export function getEventObjects(api_url: string, page_num: number) {
-  axios.get(api_url + page_num).then(function (response) {
+  axios.get(api_url + page_num).then(function(response) {
     const events = response.data._embedded ? response.data._embedded.events : null;
     if (events !== null && events.length !== 0) {
       if (settings.LOGGING) {
@@ -94,7 +94,7 @@ export function importToDatabase(external_events: any[]) {
       vendor_id: element.id + '-' + constants.VENDOR_CODE_TICKETMASTER,
       details: element.info || 'Please swipe for more info', // some events don't have the info field
       start_date_utc: element.dates.start.dateTime, // TODO: timestamp? probably not according to what I read, timestamp not needed here. Date.parse() gives timestamp though
-      start_date_local: `${element.dates.start.localDate}T${element.dates.start.localTime}`,
+      start_date_local: `${element.dates.start.localDate}${element.dates.start.localTime? 'T'+element.dates.start.localTime : ''}`,
       end_date_utc: null,
       end_date_local: null,
       organizer: 'Ticketmaster', // FIXME:
@@ -115,6 +115,10 @@ export function importToDatabase(external_events: any[]) {
           longitude: venue[0].location.longitude,
           timezone: venue[0].timezone,
         },
+        position:{
+          objectType: 'Point',
+          coordinates: [venue[0].location.longitude, venue[0].location.latitude],
+        },
       },
       category: element.classifications[0].segment.name, // FIXME: See Internal Module #37
       tags: element.classifications[0].genre ? element.classifications[0].genre.name : null, // FIXME: See Internal Module #37
@@ -124,9 +128,6 @@ export function importToDatabase(external_events: any[]) {
       public_action: element.url,
       event_manager_id: null, // TODO: Add later
     };
-
-    // console.log(newEvent);
-
     eventModel.saveEvent(newEvent);
   });
 }

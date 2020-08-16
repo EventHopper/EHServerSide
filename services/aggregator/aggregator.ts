@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
 import * as ticketLeap from './event_apis/ticketleap';
-import * as ticketMaster from './event_apis/ticketleap';
+import * as ticketMaster from './event_apis/ticketmaster';
 /** *************************************************************************//**
  * EVENT AGGREGATOR
  *
