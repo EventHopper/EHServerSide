@@ -5,3 +5,4 @@ node_modules
 auth/realm-object-server
 *.realm
 *.realm.lock
+realm-object-server
