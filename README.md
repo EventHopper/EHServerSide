@@ -1,4 +1,7 @@
 # EHServerSide
+
+![Node.js CI](https://github.com/EventHopper/EHServerSide/workflows/Node.js%20CI/badge.svg?branch=beta)
+
 Server Side functionality including REST API hosting and module to populate events
 
 ## Server Architecture
