@@ -94,7 +94,7 @@ export default class EventsController implements ControllerInterface {
     if(!(req.query.city || req.query.lat)){ //city or coordinates not provided
       res.status(400).json('Invalid query parameters provided to search endpoint'); 
     }
-    if(req.query.city){ //search by city
+    if(req.query.city) { //search by city
       const desiredCity:string = String(req.query.city);
       const query = {'venue.city' : desiredCity};
       EventModel.list(size, page, query)
@@ -103,8 +103,16 @@ export default class EventsController implements ControllerInterface {
         }).catch(error => {
           res.status(400).json('No such event exists');
         });
-
-      //TODO:Search by latlong
+    }
+    const radius:number = Number(req.query.radius); //TODO: In the API Doc under "Events by Location" mention that radius is in miles
+    if(req.query.long && req.query.lat){
+      EventModel.byLatLong(Number(req.query.long), Number(req.query.lat), req.query.query, radius)
+        .then((result: any) => {
+          res.status(200).send(result);
+        }).catch(error => {
+          console.log(error);
+          res.status(400).json('No such event exists');
+        });;
     }
   };
 
