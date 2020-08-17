@@ -121,12 +121,14 @@ const byLatLong = (lon:number, lat:number, query?:any, radius?:number) => {
 
     const aggregaton = [
       {
-        near: [ lon, lat ] ,
-        distanceField: 'dist.calculated',
-        maxDistance: desiredRadius, //See TODO above
-        query: { desiredQuery },
-        includeLocs: 'dist.location',
-        spherical: true
+        $geoNear : {
+          near: [ lon, lat ] ,
+          distanceField: 'dist.calculated',
+          maxDistance: desiredRadius, //See TODO above
+          query: { desiredQuery },
+          includeLocs: 'dist.location',
+          spherical: true
+        }
       }
     ];
     Event.aggregate(aggregaton).exec(function(err:any, events:any) {
