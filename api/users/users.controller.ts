@@ -40,7 +40,7 @@ class UserController implements ControllerInterface {
     realmFunc.resendConfirmationEmail(req.body.email);
   }
 
-  registerNewUser = async(req:express.Request, res:express.Response) => {
+  registerNewUser = async (req:express.Request, res:express.Response) => {
     // TODO: accept an encrypted JSON of email & password from client, decrypt and then pass to realmFunc
     if (JSON.stringify(req.body) != JSON.stringify({})) {
       const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
@@ -64,7 +64,7 @@ class UserController implements ControllerInterface {
     }
   };
 
-  logIn = async(req:express.Request, res:express.Response) => {
+  logIn = async (req:express.Request, res:express.Response) => {
     const username = req.query.username;
     if (JSON.stringify(req.body) !== JSON.stringify({})) {
       const email = req.body.email;
@@ -78,7 +78,7 @@ class UserController implements ControllerInterface {
     }
   };
 
-  getUserData = async(req:express.Request, res: express.Response) => {
+  getUserData = async (req:express.Request, res: express.Response) => {
     const userDocument = await UserModel.getUserData(String(req.params.username)).catch((err)=>{
       console.log(err);
     });
@@ -90,7 +90,7 @@ class UserController implements ControllerInterface {
     }
   }
 
-  searchUsers = async(req:express.Request, res: express.Response) => {
+  searchUsers = async (req:express.Request, res: express.Response) => {
     let searchQuery:string = '';
     console.log(req.query.query);
     if (req.query.query != null){
@@ -123,7 +123,7 @@ class UserController implements ControllerInterface {
 
   }
 
-  listUsers = async(req:express.Request, res:express.Response) => {
+  listUsers = async (req:express.Request, res:express.Response) => {
     const userList = await UserModel.list(100, 0);
     res.json(userList);
   };

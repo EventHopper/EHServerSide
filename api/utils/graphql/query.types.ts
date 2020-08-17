@@ -1,15 +1,15 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable require-jsdoc */
-export enum QueryType{
-    EVENT,
-    USER,
-    EVENT_MANAGER,
-    USER_MANAGER,
-    VENUE
-   }
+export enum QueryType {
+  EVENT,
+  USER,
+  EVENT_MANAGER,
+  USER_MANAGER,
+  VENUE
+}
 
 export class QueryTypes {
-    private static allEvents:string = `{
+  private static allEvents: string = `{
         _id
         category
         details
@@ -27,15 +27,15 @@ export class QueryTypes {
         vendor_id
   }
 }`;
-    // TODO: Add other queryTypes e.g. users
-    public static all(type: QueryType):string {
-      switch (type) {
-        case QueryType.EVENT: return this.allEvents;
-          break;
-        default: return this.allEvents;
-          break;
-      }
+  // TODO: Add other queryTypes e.g. users
+  public static all(type: QueryType): string {
+    switch (type) {
+      case QueryType.EVENT:
+        return this.allEvents;
+        break;
+      default:
+        return this.allEvents;
+        break;
     }
+  }
 }
-
-
