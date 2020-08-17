@@ -1,5 +1,5 @@
 import {eventMongooseInstance as mongoose} from '../../services/mongoose/mongoose.events.service';
-import { MongooseDocument, Model, Mongoose } from 'mongoose';
+import { Document, Model, Mongoose } from 'mongoose';
 
 const Schema = mongoose.Schema;
 
@@ -23,7 +23,7 @@ const venueSchema = new Schema({
 }, {typeKey: '$type' });
 
 
-interface EventDoc extends MongooseDocument {
+interface EventDoc extends Document {
   vendor_id: {type: String, required: true, unique: true},
   name: String,
   details: String,
@@ -61,7 +61,7 @@ const eventSchema = new Schema({
   event_manager_id: String, // change?
 });
 
-const Event = mongoose.model('Events', eventSchema);
+const Event = mongoose.model<EventDoc>('Events', eventSchema);
 
 const saveEvent = (eventData: any) => { // saves to database
   const event = eventData;
