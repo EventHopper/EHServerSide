@@ -103,8 +103,11 @@ export default class EventsController implements ControllerInterface {
         }).catch(error => {
           res.status(400).json('No such event exists');
         });
+      const radius:number = Number(req.query.radius); //TODO: In the API Doc under "Events by Location" mention that radius is in miles
+      if(req.query.long && req.query.lat){
+        EventModel.byLatLong(Number(req.query.long), Number(req.query.lat), req.query.query, radius);
+      }
 
-      //TODO:Search by latlong
     }
   };
 

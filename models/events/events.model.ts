@@ -16,11 +16,7 @@ const venueSchema = new Schema({
     longitude: Number,
     timezone: String,
   },
-  position: {
-    type: String,
-    coordinates: [Number]
-  },
-}, {typeKey: '$type' });
+}, );
 
 
 interface EventDoc extends MongooseDocument {
@@ -55,6 +51,7 @@ const eventSchema = new Schema({
   venue: venueSchema,
   category: String,
   tags: [String],
+  position: [Number],
   image_url_full: String,
   image_url_small: String,
   public_action: String,
@@ -113,4 +110,33 @@ const byID = (idParam: string) => { // find event by ID
   });
 };
 
-export {Event, saveEvent, list, byID}; //TODO: Can't we export the whole file?
+const byLatLong = (lon:number, lat:number, query?:any, radius?:number) => {
+
+  let desiredRadius = radius ? radius : 0.002;
+  let desiredQuery = query ? query : {};
+
+  return new Promise((resolve, reject) => {
+
+    //TODO: convert radius into coordinate distance
+
+    const aggregaton = [
+      {
+        near: [ lon, lat ] ,
+        distanceField: 'dist.calculated',
+        maxDistance: desiredRadius, //See TODO above
+        query: { desiredQuery },
+        includeLocs: 'dist.location',
+        spherical: true
+      }
+    ];
+    Event.aggregate(aggregaton).exec(function(err:any, events:any) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(events);
+      }
+    });;
+  });
+}
+
+export {Event, saveEvent, list, byID, byLatLong}; //TODO: Can't we export the whole file?
