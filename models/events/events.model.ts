@@ -95,7 +95,6 @@ const list = (perPage: number, page: number, query?: Object) => { // list events
   });
 };
 
-
 const byID = (idParam: string) => { // find event by ID
   return new Promise((resolve, reject) => {
     Event.find({_id:idParam})
@@ -112,25 +111,23 @@ const byID = (idParam: string) => { // find event by ID
 
 const byLatLong = (lon:number, lat:number, query?:any, radius?:number) => {
 
-  let desiredRadius = radius ? radius : 0.002;
-  let desiredQuery = query ? query : {};
-
   return new Promise((resolve, reject) => {
 
     //TODO: convert radius into coordinate distance
-
+    query? console.log(query) : console.log('no query');
     const aggregaton = [
       {
         $geoNear : {
           near: [ lon, lat ] ,
           distanceField: 'dist.calculated',
-          maxDistance: desiredRadius, //See TODO above
-          query: { desiredQuery },
+          maxDistance: radius ? radius : 0.02, //See TODO above
+          query:  query? JSON.parse(query):{} ,
           includeLocs: 'dist.location',
           spherical: true
         }
       }
     ];
+
     Event.aggregate(aggregaton).exec(function(err:any, events:any) {
       if (err) {
         reject(err);
