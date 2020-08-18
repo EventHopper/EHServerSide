@@ -1,7 +1,6 @@
+import { Mongoose }  from 'mongoose';
 
 let count = 0;
-const Mongoose = require('mongoose').Mongoose;
-
 const eventMongooseInstance = new Mongoose();
 
 const options = {

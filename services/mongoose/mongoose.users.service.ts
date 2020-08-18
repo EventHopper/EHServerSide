@@ -1,7 +1,6 @@
+import { Mongoose }  from 'mongoose';
 
 let count = 0;
-const Mongoose = require('mongoose').Mongoose;
-
 const userMongooseInstance = new Mongoose();
 
 const options = {
