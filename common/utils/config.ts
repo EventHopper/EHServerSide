@@ -4,6 +4,7 @@ import path from 'path';
 const epath = path.join(__dirname, '../../.env');
 dotenv.config({path: epath});
 
+export const TEST_PORT = process.env.TEST_PORT;
 export const UPDATE_PORT = process.env.UPDATE_PORT;
 export const CLIENT_PORT = process.env.CLIENT_PORT;
 export const LOG_LEVEL = process.env.LOG_LEVEL;

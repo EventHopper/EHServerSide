@@ -101,11 +101,8 @@ export function importToDatabase(external_events: any[]) {
           longitude: null,
           timezone: element.venue_timezone,
         },
-        position: {
-          type: 'Point',
-          coordinates: [], //TODO: 
-        },
       },
+      position: [], //TODO: 
       category: null, // FIXME: See Internal Module #37
       tags: element.hashtag_text ? element.hashtag_text.split(' ') : null, // FIXME: See Internal Module #37
       image_url_full: element.image_url_full,

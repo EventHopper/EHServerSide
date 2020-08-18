@@ -12,10 +12,6 @@ import {ControllerInterface} from './utils/controller.interface';
 class App {
   public app: express.Application;
   public port: number;
-  /* Having trouble getting this.
-  Keep getting anTypeError: Cannot read property 'auth' of undefined
-  to replicate, uncomment line 14, comment line 29.
-  Then change all calls to auth to this.auth instead*/
   private _auth: Auth;
 
   constructor(controllers: ControllerInterface[], port: number) {
@@ -28,21 +24,17 @@ class App {
 
   private initializeMiddlewares() {
     this.app.use(bodyParser.json());
-    this.app.use(bodyParser.urlencoded());
-    // this.app.use(express.static(__dirname +'/public/assets'));
+    this.app.use(bodyParser.urlencoded({extended: true}));
+    this.app.disable('x-powered-by') //See https://expressjs.com/en/advanced/best-practice-security.html
     this.app.use(express.static(path.join(__dirname, 'public')));
-    console.log(path.join(__dirname, '/public'));
     this.app.set('view engine', 'ejs');
     this.app.use(this.authMiddleware);
   }
 
   private authMiddleware = async(request: express.Request,
-    response: express.Response, next: express.NextFunction) => { // TODO: Update Access token from cache
+    response: express.Response, next: express.NextFunction) => {
     console.log(`${request.method} ${request.path} ${String(request.query.key)}`);
-    // const auth = new Auth();
     let enumString: any;
-    //if(!this._auth.hasAccessToken())
-    // console.log('Did not have token: fetching from server');
     enumString = await this._auth.loginApiKey(String(request.query.key)).catch((err)=>{
       console.log(err);
     });
