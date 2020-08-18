@@ -1,9 +1,9 @@
-import app from '../api/app'
 import supertest from 'supertest';
 import App from '../api/app';
 import {TEST_PORT as PORT, TEST_AUTH_API_KEY as KEY} from '../common/utils/config';
 import EventsController from '../api/events/events.controller';
 import UserController from '../api/users/users.controller';
+import getType from 'jest-get-type';
 
 const request = supertest(new App([
   new EventsController(),
@@ -24,7 +24,8 @@ it('Succeeds to get the users endpoint', async done => {
   const res = await request.get(`/users?key=${KEY}`);//We may need to explicitly state keys
   expect(res.status).toBe(200);
   expect(res.body).toBeDefined();
-  done()
+  expect(getType(res.body)).toBe('array');
+  done();
 })
 
 it('Succeeds to get events by location with lat/long', async done => {
