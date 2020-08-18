@@ -14,3 +14,5 @@ export const TICKETMASTER_CONSUMER_KEY = process.env.TICKETMASTER_CONSUMER_KEY;
 export const REALM_APP_ID = process.env.REALM_APP_ID;
 export const TEST_AUTH_API_KEY = process.env.TEST_AUTH_API_KEY;
 export const GOOGLE_GEOCODING_API_KEY = process.env.GOOGLE_GEOCODING_API_KEY;
+export const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY
+export const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID

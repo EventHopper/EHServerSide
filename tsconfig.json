@@ -9,5 +9,5 @@
     "esModuleInterop": true,
     "strict": true
   },
-  "include": [".", "./jobs/pruning/*", "./api/internal/*" , "./auth/*", "./jobs/update_job/*", "./models/*", "./api/app.ts", "./services/*"]
+  "include": [".", "./*"]
 }

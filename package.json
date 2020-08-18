@@ -7,6 +7,7 @@
     "start:client": "ts-node ./api/internal/server.ts",
     "start:auth": "ts-node ./auth/server_auth.ts",
     "start:updater": "ts-node index.ts",
+    "start:storage": "ts-node ./api/internal/storage",
     "test": "jest",
     "test:watch": "jest --watch"
   },
@@ -33,6 +34,7 @@
     "@types/node-geocoder": "^3.24.1",
     "@types/set-interval-async": "^1.0.0",
     "@types/supertest": "^2.0.10",
+    "aws-sdk": "^2.736.0",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "chalk": "^4.1.0",
