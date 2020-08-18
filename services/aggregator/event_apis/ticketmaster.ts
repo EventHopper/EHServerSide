@@ -115,11 +115,9 @@ export function importToDatabase(external_events: any[]) {
           longitude: venue[0].location.longitude,
           timezone: venue[0].timezone,
         },
-        position:{
-          type: 'Point',
-          coordinates: [venue[0].location.longitude, venue[0].location.latitude],
-        },
+        
       },
+      position: [venue[0].location.longitude, venue[0].location.latitude],
       category: element.classifications[0].segment.name, // FIXME: See Internal Module #37
       tags: element.classifications[0].genre ? element.classifications[0].genre.name : null, // FIXME: See Internal Module #37
       status: 'upcoming', // FIXME:
