@@ -81,7 +81,7 @@ const saveEvent = (eventData: any) => { // saves to database
     });
 };
 
-const list = (perPage: number, page: number, query?: Object) => { // list events
+const list = (perPage: number, page: number, query?: any) => { // list events
   return new Promise((resolve, reject) => {
     console.log(query);
     Event.find(query)
