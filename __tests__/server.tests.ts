@@ -26,12 +26,12 @@ it('Succeeds to get the users endpoint', async done => {
   expect(res.body).toBeDefined();
   expect(getType(res.body)).toBe('array');
   done();
-})
+});
 
 it('Succeeds to get events by location with lat/long', async done => {
   // Sends GET Request to /test endpoint
   const res = await request.get(`/events?index=location&lat=39.9594667&long=-75.2249542&key=${KEY}&query={"category":"Music"}&radius=0.02`);
   expect(res.status).toBe(200);
   expect(res.body).toBeDefined();
-  done()
-})
+  done();
+});
