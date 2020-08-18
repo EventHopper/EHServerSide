@@ -54,7 +54,7 @@ export function aggregateExternalVendor(location: any) {
 
 // recursive http request function
 export function getEventObjects(api_url: string, page_num: number) {
-  axios.get(api_url + page_num).then(function (response) {
+  axios.get(api_url + page_num).then(function(response) {
     const events = response.data.events;
     if (events.length !== 0) {
       if (settings.LOGGING) {
@@ -66,6 +66,8 @@ export function getEventObjects(api_url: string, page_num: number) {
       }
       importToDatabase(events);
       getEventObjects(api_url, page_num + 1);
+    }else {
+      console.log('TicketLeap is Done');
     }
   }).catch((error) => {
     if (settings.LOGGING) {
@@ -98,6 +100,10 @@ export function importToDatabase(external_events: any[]) {
           latitude: null, // TODO: Convert location to lat and long
           longitude: null,
           timezone: element.venue_timezone,
+        },
+        position: {
+          type: 'Point',
+          coordinates: [], //TODO: 
         },
       },
       category: null, // FIXME: See Internal Module #37
