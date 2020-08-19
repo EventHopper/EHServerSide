@@ -31,6 +31,22 @@ export const createFolder = (bucketName: string, path: string) => {
   if (path[path.length - 1] !== '/') {
     throw new Error('path must end with "/" ');
   }
+
+  s3.headBucket(
+    {
+      Bucket: bucketName
+    },
+    (res) => console.log(res)
+    // (res) => {
+    //   if (err) {
+    //     console.log(err);
+    //   } else {
+    //     console.log(data);
+    //   }
+    //   console.log(data)
+    // }
+  );
+
   s3.putObject(
     {
       Bucket: bucketName,
