@@ -12,7 +12,8 @@ import RealmFunctions from './users.realm.functions';
 import path from 'path';
 import UserFunctions from './users.functions';
 import UserRoutes from './users.routes.config';
-// import EventModel from '../index';
+import Debug from 'debug';
+const debug = Debug('users.controller');
 
 class UserController implements ControllerInterface {
   public router = express.Router();
@@ -57,7 +58,7 @@ class UserController implements ControllerInterface {
 
         UserModel.newUser(newUser);
       }
-      console.log(result);
+      debug(result);
       res.json(result);
     } else {
       res.status(400).json('Cannot Register User, Missing Request Body');
@@ -71,7 +72,7 @@ class UserController implements ControllerInterface {
       const password = req.body.password;
       const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
       const result = await realmFunc.logIn(email, password);
-      console.log(result);
+      debug(result);
       res.json(result);
     } else {
       res.status(400).json('Could not log in user');
@@ -80,7 +81,7 @@ class UserController implements ControllerInterface {
 
   getUserData = async(req:express.Request, res: express.Response) => {
     const userDocument = await UserModel.getUserData(String(req.params.username)).catch((err)=>{
-      console.log(err);
+      debug(err);
     });
     if (userDocument == null) {
       res.status(404)
@@ -92,7 +93,7 @@ class UserController implements ControllerInterface {
 
   searchUsers = async(req:express.Request, res: express.Response) => {
     let searchQuery:string = '';
-    console.log(req.query.query);
+    debug(req.query.query);
     if (req.query.query != null){
       searchQuery = String(req.query.query);
     } 

@@ -1,7 +1,10 @@
 /* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
 import {userMongooseInstance as userMongoose} from '../../services/mongoose/mongoose.users.service';
+import Debug from 'debug';
+
 const Schema = userMongoose.Schema;
+const debug = Debug('users.model');
 
 const userSchema = new Schema({
   full_name: String,
@@ -24,7 +27,7 @@ export function saveUser(userData:any) { // saves to database
     user,
     {upsert: true, new: true, useFindAndModify: false},
     function(err:any, doc:any) {
-      console.log(doc);
+      debug(doc);
       if (err) return {status: 500, error: err};
       return ('User Succesfully Updated.');
     });
@@ -35,7 +38,7 @@ export function newUser(userData:any) { // saves to database
   return User.create(
     user,
     function(err:any, doc:any) {
-      console.log(doc);
+      debug(doc);
       if (err) return {status: 500, error: err};
       return ('User Succesfully Updated.');
     });
@@ -107,10 +110,10 @@ export function getUserData(username:string) { // list single users
     User.findOne({'username': `${query}`},
       function(err:any, userDocument:any) {
         if (err) {
-          console.log(err);
+          debug(err);
           reject(err);
         } else {
-          console.log(userDocument);
+          debug(userDocument);
           resolve(userDocument);
         }
       });

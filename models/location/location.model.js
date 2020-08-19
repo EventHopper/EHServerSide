@@ -1,5 +1,8 @@
 /* eslint-disable max-len */
 import {eventMongooseInstance} from '../../services/mongoose/mongoose.events.service';
+import Debug from 'debug';
+
+const debug = Debug('location.model');
 const Schema = eventMongooseInstance.Schema;
 
 const clientLocationSchema = new Schema({
@@ -19,14 +22,14 @@ export const Location = Location;
 
 export function saveLocation(locationData) { // saves to database
   const location = new Location(locationData);
-  // console.log(event);
+  // debug(event);
   return Location.updateOne({city: location.city,
     country: location.country,
     region: location.region}, location,
   {upsert: true, setDefaultsOnInsert: true},
   function(err, doc) {
-    // console.log(doc);
-    // console.log(err);
+    // debug(doc);
+    // debug(err);
   });
 }
 

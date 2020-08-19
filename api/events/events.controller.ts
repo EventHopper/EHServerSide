@@ -9,7 +9,8 @@ import * as express from 'express';
 import {Schema, model, Document, Model} from 'mongoose';
 import Auth from '../../auth/server_auth';
 import {ControllerInterface} from '../utils/controller.interface';
-
+import Debug from 'debug';
+const debug = Debug('events.controller');
 
 export default class EventsController implements ControllerInterface {
   public path = '/events';
@@ -80,7 +81,7 @@ export default class EventsController implements ControllerInterface {
       res.status(400).json('Invalid ID provided to search endpoint'); 
     }
     const id:string = String(req.query.id);
-    console.log('%s', id);
+    debug('%s', id);
     EventModel.byID(id)
       .then((result: any) => {
         res.status(200).send(result);
@@ -110,14 +111,14 @@ export default class EventsController implements ControllerInterface {
         .then((result: any) => {
           res.status(200).send(result);
         }).catch(error => {
-          console.log(error);
+          debug(error);
           res.status(400).json('No such event exists');
         });;
     }
   };
 
   public listAll = (res:express.Response, size:number, page:number) => {
-    console.log('%i, %i', size, page);
+    debug('%i, %i', size, page);
     EventModel.list(size, page)
       .then((result: any) => {
         res.status(200).send(result);
