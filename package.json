@@ -8,7 +8,7 @@
     "start:auth": "ts-node ./auth/server_auth.ts",
     "start:updater": "ts-node index.ts",
     "start:storage": "ts-node ./api/internal/storage",
-    "test": "jest",
+    "test": "jest --forceExit --detectOpenHandles --maxWorkers=10",
     "test:watch": "jest --watch"
   },
   "repository": {
