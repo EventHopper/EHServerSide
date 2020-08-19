@@ -1,7 +1,8 @@
 /* eslint-disable require-jsdoc */
 import nodeGeocoder, {Geocoder} from 'node-geocoder';
+import Debug from 'debug';
+const debug = Debug('location');
 require('dotenv').config();
-
 
 /* ***************************************************************************
  * Timezone and location object Integration
@@ -30,7 +31,7 @@ const geocoder = nodeGeocoder(options);
 export async function constructLocation(latitude: number, longitude:number) {
   const res = await geocoder.reverse({ lat: latitude, lon: longitude })
     .catch((err) => {
-      console.log('error: ' + err);
+      debug('error: ' + err);
     });
   if (res) {
     const result = res[0];
@@ -48,7 +49,7 @@ export async function constructLocation(latitude: number, longitude:number) {
         (result.administrativeLevels.level1short ?
           result.administrativeLevels.level1short : null) : null,
     };
-    console.log(res);
+    debug(res);
 
     return location;
   }

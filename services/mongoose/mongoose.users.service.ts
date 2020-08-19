@@ -1,5 +1,7 @@
 import { Mongoose }  from 'mongoose';
+import Debug from 'debug';
 
+const debug = Debug('mongoose.users.service');
 let count = 0;
 const userMongooseInstance = new Mongoose();
 
@@ -20,11 +22,11 @@ const options = {
 const uri = 'mongodb+srv://ransford:chiefarchitect@eventhoppertesting.mdabm.mongodb.net/user_database?retryWrites=true&w=majority';
 
 const connectWithRetry = () => {
-  console.log('MongoDB connection with retry');
+  debug('MongoDB connection with retry');
   userMongooseInstance.connect(uri, options).then(()=>{
     console.log('MongoDB - User Database is connected');
   }).catch((err:any)=>{
-    console.log('MongoDB connection unsuccessful, retry after 5 seconds. ',
+    debug('MongoDB connection unsuccessful, retry after 5 seconds. ',
       ++count);
     setTimeout(connectWithRetry, 5000);
   });
