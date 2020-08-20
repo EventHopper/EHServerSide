@@ -16,10 +16,12 @@ export default class EventsController implements ControllerInterface {
   public path = '/events';
   public router = express.Router();
   private _auth:Auth;
+  private valid_filters:string[]; 
 
   constructor() {
     this.initializeRoutes();
     this._auth = new Auth();
+    this.valid_filters = new Array('date_before','category','tags', 'date_after'); 
   }
 
   public setAuthObject = (authObject:Auth)=>{
@@ -69,61 +71,122 @@ export default class EventsController implements ControllerInterface {
     case 'location':
       this.byLocation(req,res,size,page);
       break;
+    case 'venue':
+      this.byVenue(req,res,size,page);
+      break;
     default:
       res.status(400).json('Invalid search index');
       break;
     }
   };
 
+  private generateFilterQuery = (req:express.Request, query: {[k: string]: any}) => {
+    for (var param in req.query) {
+      if(this.valid_filters.includes(param)){ //add to query
+        switch(param){
+        case 'date_after':  //find all events after this date
+          let afterDateQuery: {[k: string]: any}  = {'$gt' : new Date(`${req.query[param]}`)};
+          query['start_date_utc'] = afterDateQuery;
+          break;
+        case 'date_before':
+          let beforeDateQuery: {[k: string]: any}  = {'$lt' : new Date(`${req.query[param]}`)};
+          query['start_date_utc'] = beforeDateQuery;
+          break;
+        case 'tags': //include events which contain the specified tags
+          let tags:string[] = String(req.query[param]).split(',');
+          let tagsQuery: {[k: string]: any}  = {'$in' : tags};
+          query['tags'] = tagsQuery;
+          break;
+        case 'category': //include events which contain the specified categories
+          let category:string[] = String(req.query[param]).split(',');
+          let categoryQuery: {[k: string]: any}  = {'$in' : category};
+          query['category'] = categoryQuery;
+        default:
+          break;
+        }
+      }
+    }  
+  };
+
   private byID = (req:express.Request, res:express.Response) => {
     
     if(!req.query.id){
-      res.status(400).json('Invalid ID provided to search endpoint'); 
+      return res.status(400).json('Invalid ID provided to search endpoint'); 
     }
     const id:string = String(req.query.id);
-    debug('%s', id);
     EventModel.byID(id)
       .then((result: any) => {
-        res.status(200).send(result);
+        return res.status(200).send(result);
       }).catch(error => {
-        res.status(400).json('No such event exists');
+        return res.status(400).json('No such event exists');
       });
   };
+
+  private byVenue = (req:express.Request, res:express.Response, size:number, page:number) => {
+    
+    if(!req.query.name){ //city or coordinates not provided
+      return res.status(400).json('Invalid venue name'); 
+    }
+
+    const venueName:string = String(req.query.name);
+    let query: {[k: string]: any}  = {'venue.name' : venueName};
+
+    /*Handle filters */
+    this.generateFilterQuery(req, query); //add filter query to query objects
+    debug(query);
+   
+    EventModel.list(size, page, query)
+      .then((result: any) => {
+        return res.status(200).send(result);
+      }).catch(error => {
+        console.log(error);
+        return res.status(400).json('No such event exists');
+      });
+  }
 
   private byLocation = (req:express.Request, res:express.Response, size:number, page:number) => {
     
     if(!(req.query.city || req.query.lat)){ //city or coordinates not provided
-      res.status(400).json('Invalid query parameters provided to search endpoint'); 
+      return res.status(400).json('Invalid query parameters provided to search endpoint'); 
     }
     if(req.query.city) { //search by city
       const desiredCity:string = String(req.query.city);
-      const query = {'venue.city' : desiredCity};
+      let query: {[k: string]: any}  = {'venue.city' : desiredCity};
+      /*Handle filters */
+      this.generateFilterQuery(req, query); //add filter query to query objects
+      debug(query);
+
       EventModel.list(size, page, query)
         .then((result: any) => {
-          res.status(200).send(result);
+          return res.status(200).send(result);
         }).catch(error => {
-          res.status(400).json('No such event exists');
+          return res.status(400).json('No such event exists');
         });
     }
-    const radius:number = Number(req.query.radius); //TODO: In the API Doc under "Events by Location" mention that radius is in miles
+    const radius:number = Number(req.query.radius); 
     if(req.query.long && req.query.lat){
-      EventModel.byLatLong(Number(req.query.long), Number(req.query.lat), req.query.query, radius)
+      let query: {[k: string]: any}  = {};
+      this.generateFilterQuery(req, query); //add filter query to query objects
+      debug(query);
+      EventModel.byLatLong(size, page, Number(req.query.long), Number(req.query.lat), query, radius)
         .then((result: any) => {
-          res.status(200).send(result);
+          return res.status(200).send(result);
         }).catch(error => {
+
           debug(error);
           res.status(400).json('No such event exists');
+
         });;
     }
   };
+  public listAll = (res:express.Response, size:number, page:number) => { //all events, no query
 
-  public listAll = (res:express.Response, size:number, page:number) => {
     debug('%i, %i', size, page);
     EventModel.list(size, page)
       .then((result: any) => {
-        res.status(200).send(result);
+        return res.status(200).send(result);
       }).catch(error => {
-        res.status(500).json(error);
-      });;
+        return res.status(500).json(error);
+      });
   };
 }
