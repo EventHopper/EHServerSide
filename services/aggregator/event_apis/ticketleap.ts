@@ -19,7 +19,8 @@ const logging = false;
  * @function getEventObjects recursive middle function to access all possible events
  * @function importToDatabase saves event page to databse
  *
- * @param location EventHopper location object
+ * @param {type} location EventHopper location object
+ * @return {type} Description
  ******************************************************************************/
 
 // exports.aggregateExternalVendor = aggregateExternalVendor;

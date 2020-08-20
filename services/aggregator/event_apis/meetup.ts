@@ -19,7 +19,8 @@ const logging = false;
  * @function aggregateExternalVendor returns vendor object
  * @function importToDatabase saves aggregated events to databse
  *
- * @param location EventHopper location object
+ * @param {any} location EventHopper location object
+ * @return {string[]}
  ******************************************************************************/
 
 // exports.aggregateExternalVendor = aggregateExternalVendor;
@@ -34,10 +35,10 @@ export function aggregateExternalVendor(location: any) {
   const date = year.toString() + '-' + month.toString() + '-' + day.toString();
   const page_num = 1;
 
-  const api_url = null;
+  const api_url : null | string = null;
 
   // send http request
-  axios.get(api_url + page_num) // TODO: keep iterating the page numbers till the events array is empty
+  axios.get(api_url! + page_num) // TODO: keep iterating the page numbers till the events array is empty
     .then((response) => {
       const events = null; // array of event objects
       importToDatabase(events);
@@ -47,8 +48,8 @@ export function aggregateExternalVendor(location: any) {
     });
 };
 
-function importToDatabase(external_events) {
-  external_events.forEach((element) => {
+function importToDatabase(external_events: any[] | null) {
+  external_events!.forEach((element) => {
     console.log(element);
     eventModel.saveEvent(element);
   });

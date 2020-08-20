@@ -78,11 +78,7 @@ const saveEvent = (eventData: any) => { // saves to database
     });
 };
 
-<<<<<<< HEAD
-const list = (perPage: number, page: number, query?: Object) => { // list events
-=======
 const list = (perPage: number, page: number, query?: any) => { // list events
->>>>>>> 6b76e4f71b0d3a56331f613608b7c60a27577bf3
   return new Promise((resolve, reject) => {
     console.log(query);
     Event.find(query)
@@ -99,10 +95,6 @@ const list = (perPage: number, page: number, query?: any) => { // list events
   });
 };
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 6b76e4f71b0d3a56331f613608b7c60a27577bf3
 const byID = (idParam: string) => { // find event by ID
   return new Promise((resolve, reject) => {
     Event.find({_id:idParam})
@@ -117,9 +109,6 @@ const byID = (idParam: string) => { // find event by ID
   });
 };
 
-<<<<<<< HEAD
-export {Event, saveEvent, list, byID}; //TODO: Can't we export the whole file?
-=======
 const byLatLong = (lon:number, lat:number, query?:any, radius?:number) => {
 
   return new Promise((resolve, reject) => {
@@ -150,4 +139,3 @@ const byLatLong = (lon:number, lat:number, query?:any, radius?:number) => {
 }
 
 export {Event, saveEvent, list, byID, byLatLong}; //TODO: Can't we export the whole file?
->>>>>>> 6b76e4f71b0d3a56331f613608b7c60a27577bf3
