@@ -64,31 +64,31 @@ const Event = mongoose.model<EventDoc>('Events', eventSchema);
 
 const saveEvent = (eventData: any) => { // saves to database
   const event = eventData;
-  //console.log(event.venue.position);
+  //debug(event.venue.position);
   return Event.findOneAndUpdate(
     {vendor_id: event.vendor_id},
     event,
     {upsert: true, setDefaultsOnInsert: true, useFindAndModify: true, new: true},
     function(err: any, doc: any) {
       if (err) {
-        console.log('here is the error:', err);
+        debug('here is the error:', err);
         return {error: err};
       }
-      console.log('succesfully saved');
-      //console.log(doc);
+      debug('succesfully saved');
+      //debug(doc);
       return 'Succesfully saved.';
     });
 };
 
 const list = (perPage: number, page: number, query?: any) => { // list events
   return new Promise((resolve, reject) => {
-    console.log(query);
+    debug(query);
     Event.find(query)
       .limit(perPage)
       .skip(perPage * page)
       .exec(function(err:any, events:any) {
         if (err) {
-          console.log('here is the error:', err);
+          debug('here is the error:', err);
           return {error: err};
         } else {
           resolve(events);
@@ -102,7 +102,7 @@ const byID = (idParam: string) => { // find event by ID
     Event.find({_id:idParam})
       .exec(function(err:any, event:any) {
         if (err) {
-          console.log(err);
+          debug(err);
           reject(err);
         } else {
           resolve(event);

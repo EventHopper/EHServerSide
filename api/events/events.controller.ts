@@ -12,7 +12,6 @@ import {ControllerInterface} from '../utils/controller.interface';
 import Debug from 'debug';
 const debug = Debug('events.controller');
 
-
 export default class EventsController implements ControllerInterface {
   public path = '/events';
   public router = express.Router();
@@ -173,13 +172,15 @@ export default class EventsController implements ControllerInterface {
         .then((result: any) => {
           return res.status(200).send(result);
         }).catch(error => {
-          console.log(error);
-          return res.status(400).json('No such event exists');
+
+          debug(error);
+          res.status(400).json('No such event exists');
+
         });;
     }
   };
-
   public listAll = (res:express.Response, size:number, page:number) => { //all events, no query
+
     debug('%i, %i', size, page);
     EventModel.list(size, page)
       .then((result: any) => {

@@ -6,7 +6,8 @@
 import Auth from '../../auth/server_auth';
 import assert from 'assert';
 import {json} from 'body-parser';
-
+import Debug from 'debug';
+const debug = Debug('users.realm.functions');
 /**
  * @deprecated RealmFunctions class may soon be deprecated following decision to move
  * user authentication to the client-side. Some functions may still persist.
@@ -31,7 +32,7 @@ class RealmFunctions {
       let success = true;
       await this._auth.app.emailPasswordAuth.registerUser(email, password).catch((err)=>{
         if (err) {
-          console.log(err);
+          debug(err);
           success = false;
           return err;
         }

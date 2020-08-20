@@ -4,6 +4,8 @@ import {aggregate} from '../../services/aggregator/aggregator';
 import {list} from '../../models/location/location.model';
 import {default as constants} from './constants';
 import {setIntervalAsync} from 'set-interval-async/dynamic';
+import Debug from 'debug';
+const debug = Debug('update.job.index'); 
 
 /** *************************************************************************//**
  * EVENT Update Job
@@ -20,13 +22,13 @@ function updateJob() {
 async function updateEvents() {
   const locations = await list().catch(
     (err) => {
-      console.log(err);
+      debug(err);
     });
-  console.log(locations);
+  debug(locations);
   locations.forEach((element: any) => {
     aggregate(element);
   });
-  console.log('whats hatnin');
+  debug('whats hatnin');
 }
 
 const _updateJob = updateJob;
