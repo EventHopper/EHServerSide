@@ -1,5 +1,7 @@
 import {eventMongooseInstance as mongoose} from '../../services/mongoose/mongoose.events.service';
 import { Document, Model, Mongoose } from 'mongoose';
+import Debug from 'debug';
+const debug = Debug('events.model');
 
 const Schema = mongoose.Schema;
 
@@ -109,33 +111,36 @@ const byID = (idParam: string) => { // find event by ID
   });
 };
 
-const byLatLong = (lon:number, lat:number, query?:any, radius?:number) => {
+const byLatLong = (perPage: number, page: number, lon:number, lat:number, query?:any, radius?:number) => {
 
   return new Promise((resolve, reject) => {
 
     //TODO: convert radius into coordinate distance
-    query? console.log(query) : console.log('no query');
+    query? debug(query) : debug('no query');
     const aggregaton = [
       {
         $geoNear : {
           near: [ lon, lat ] ,
           distanceField: 'dist.calculated',
           maxDistance: radius ? radius : 0.02, //See TODO above
-          query:  query? JSON.parse(query):{} ,
+          query:  query? query:{} ,
           includeLocs: 'dist.location',
           spherical: true
         }
       }
     ];
 
-    Event.aggregate(aggregaton).exec(function(err:any, events:any) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(events);
-      }
-    });;
+    Event.aggregate(aggregaton)
+      .limit(perPage)
+      //.skip(perPage * page) This doesn't work here 
+      .exec(function(err:any, events:any) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(events);
+        }
+      });;
   });
 }
 
-export {Event, saveEvent, list, byID, byLatLong}; //TODO: Can't we export the whole file?
+export {Event, saveEvent, list, byID, byLatLong, EventDoc}; //TODO: Can't we export the whole file?
