@@ -1,5 +1,5 @@
 import { s3_utils as s3 } from './utils';
-import { createUserFolder } from './users';
+import * as user from './users';
 
 // s3
 //   .createBucket('hopper-test-bucket-1')
@@ -31,10 +31,14 @@ import { createUserFolder } from './users';
 //   .then((data) => console.log(data))
 //   .catch((err) => console.log(err));
 
-// createUserFolder('kyler')
+// user.createUserFolder('kyler')
 //   .then((data) => console.log(data))
 //   .catch((err) => console.log(err));
 
 const filePath =
   '/Users/idovenix/Desktop/hopper/Dev/EHServerSide/api/public/images/logo.png';
-s3.uploadFile('hopper-users-bucket', 'kyler/', filePath);
+user.uploadUserFile('kyler', filePath).then((data) => console.log(data));
+// s3
+//   .uploadFile('hopper-users-bucket', 'kyler/', filePath)
+//   .then((data) => console.log(data))
+//   .catch((err) => console.log(err));

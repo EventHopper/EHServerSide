@@ -1,3 +1,4 @@
+import { createFolder } from './s3_utils';
 import { awsConfig } from '.';
 import * as aws from 'aws-sdk';
 import * as fs from 'fs';
@@ -26,8 +27,9 @@ export function updateAWS(config: {
 
 /**
  * @summary List all the buckets in the s3 instance of the application 
+ * @returns {Promise<any>} List of buckets
 */
-export async function listBuckets() {
+export async function listBuckets(): Promise<any> {
   try {
     const result = await s3.listBuckets().promise();
     return result;
@@ -38,7 +40,7 @@ export async function listBuckets() {
 
 /**
  * @summary create a bucket in the s3 instance of the application 
- * @param {} bucketParams 
+ * @param {Promise<any>} bucketParams 
 */
 export const createBucket = async (bucketName: string) => {
   try {
@@ -53,9 +55,9 @@ export const createBucket = async (bucketName: string) => {
 /**@summary ceates a folder in the s3 instance of the application 
  * @param {string} bucketName
  * @param {string} path path of the folder inside the bucket
- * @yields {string} final folder ETag
+ * @returns {Promise<string}> final folder ETag
 */
-export const createFolder = async (bucketName: string, path: string) => {
+export async function createFolder(bucketName: string, path: string) {
   if (path[path.length - 1] !== '/') {
     throw new Error('path must end with "/" ');
   }
@@ -160,14 +162,14 @@ export async function listObjects(bucketName: string, path: string) {
  * @param {string} bucketName name of the bucket
  * @param {string} bucketTargetDirectory name of target directory for file
  * @param {string} filePath path of file to upload directory
+ * @returns {Promise<string>} final destination of the file in s3
  */
 export async function uploadFile(
   bucketName: string,
   bucketTargetDirectory: string,
   filePath: string
-) {
+): Promise<string> {
   const fileStream = fs.createReadStream(filePath);
-  // console.log(path.basename(filePath));
   fileStream.on('error', (err) => {
     console.log('File Error', err);
   });
@@ -176,11 +178,10 @@ export async function uploadFile(
     Key: `${bucketTargetDirectory}${path.basename(filePath)}`,
     Body: fileStream
   };
-  
-  s3.upload(uploadParam, (err: any, data: any) => {
-    if (err) {
-      console.log(err);
-    }
-    console.log(data);
-  });
+  try {
+    const result = await s3.upload(uploadParam).promise();
+    return result.Location.toString();
+  } catch (err) {
+    throw new Error(err.message);
+  }
 }
