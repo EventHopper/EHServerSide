@@ -16,3 +16,4 @@ export const TEST_AUTH_API_KEY = process.env.TEST_AUTH_API_KEY;
 export const GOOGLE_GEOCODING_API_KEY = process.env.GOOGLE_GEOCODING_API_KEY;
 export const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY
 export const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID
+export const usersBucket = process.env.USERS_BUCKET;

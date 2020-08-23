@@ -35,10 +35,21 @@ import * as user from './users';
 //   .then((data) => console.log(data))
 //   .catch((err) => console.log(err));
 
-const filePath =
-  '/Users/idovenix/Desktop/hopper/Dev/EHServerSide/api/public/images/logo.png';
-user.uploadUserFile('kyler', filePath).then((data) => console.log(data));
+// const filePath =
+//   '/Users/idovenix/Desktop/hopper/Dev/EHServerSide/api/public/images/logo.png';
+// user.uploadUserFile('kyler', filePath).then((data) => console.log(data));
 // s3
 //   .uploadFile('hopper-users-bucket', 'kyler/', filePath)
+//   .then((data) => console.log(data))
+//   .catch((err) => console.log(err));
+
+const url =
+  'http://click-labs.com/wp-content/uploads/2014/05/nodejs_logo_green.jpg';
+user
+  .uploadUserFile('kyler', url)
+  .then((data) => console.log(data))
+  .catch((err) => console.log(err));
+// s3
+//   .uploadFile('hopper-users-bucket', 'tests/', url)
 //   .then((data) => console.log(data))
 //   .catch((err) => console.log(err));

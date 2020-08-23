@@ -1,8 +1,11 @@
-import { createFolder } from './s3_utils';
-import { awsConfig } from '.';
 import * as aws from 'aws-sdk';
 import * as fs from 'fs';
+import * as http from 'http';
 import * as path from 'path';
+import { awsConfig } from '.';
+import * as validURL from 'valid-url';
+import * as stream from 'stream';
+
 aws.config.update(awsConfig);
 let s3 = new aws.S3();
 
@@ -13,7 +16,7 @@ let s3 = new aws.S3();
  * 
  * @summary Update the aws configuration of the application 
  * @param {accessKeyId: string; secretAccessKey: string;region: string; apiVersion: string;} config
- * 
+ * @returns {void}
  * */
 export function updateAWS(config: {
   accessKeyId: string;
@@ -74,7 +77,7 @@ export async function createFolder(bucketName: string, path: string) {
   } catch (err) {
     console.log(`Error during Folder Creation: ${err}`);
   }
-};
+}
 
 /**@summary Delete multiple objects in s3
  * @description 
@@ -157,27 +160,45 @@ export async function listObjects(bucketName: string, path: string) {
 }
 
 /**
- * @summary upload a file into a particular bucket and folder
+ * @summary uploads a file into a particular bucket and folder
  * @description
  * @param {string} bucketName name of the bucket
  * @param {string} bucketTargetDirectory name of target directory for file
- * @param {string} filePath path of file to upload directory
- * @returns {Promise<string>} final destination of the file in s3
+ * @param {string} filePath path/url of file to upload directory
+ * @returns {string} final destination of the file in s3
  */
 export async function uploadFile(
   bucketName: string,
   bucketTargetDirectory: string,
   filePath: string
-): Promise<string> {
-  const fileStream = fs.createReadStream(filePath);
+) {
+  const pass = new stream.PassThrough();
+  let fileStream: stream.PassThrough | fs.ReadStream;
+
+  // Input sanity check
+  if (isValidURL(filePath)) {
+    http.get(filePath, (res) => {
+      res.pipe(pass);
+    });
+    fileStream = pass;
+  } else if (isValidFile(filePath)) {
+    fileStream = fs.createReadStream(filePath);
+  } else {
+    throw new Error(
+      'file is not reachable. Make sure URL/file path is correct'
+    );
+  }
+
   fileStream.on('error', (err) => {
-    console.log('File Error', err);
+    throw new Error(`File stream error ${err.message}`);
   });
+
   const uploadParam = {
     Bucket: bucketName,
     Key: `${bucketTargetDirectory}${path.basename(filePath)}`,
     Body: fileStream
   };
+
   try {
     const result = await s3.upload(uploadParam).promise();
     return result.Location.toString();
@@ -185,3 +206,26 @@ export async function uploadFile(
     throw new Error(err.message);
   }
 }
+
+/**
+ * @summary checks if string is URL
+ * @description
+ * @param {string} url name of the bucket
+ * @returns {boolean} true if input URL is a valid url
+ */
+export function isValidURL(url: string) {
+  if (validURL.isHttpUri(url) || validURL.isHttpsUri || validURL.isWebUri) {
+    return true;
+  } else {
+    return false;
+  }
+}
+/**
+ * @summary checks if string is path to an existing local file
+ * @description
+ * @param {string} filePath local path of file
+ * @returns {boolean} true if input URL is a valid url
+ */
+export const isValidFile = (filePath: string) => {
+  return fs.existsSync(filePath);
+};
