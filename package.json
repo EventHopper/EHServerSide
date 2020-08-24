@@ -7,7 +7,7 @@
     "start:client": "ts-node ./api/internal/server.ts",
     "start:auth": "ts-node ./auth/server_auth.ts",
     "start:updater": "ts-node index.ts",
-    "test": "jest --forceExit --detectOpenHandles --maxWorkers=10",
+    "test": "jest --coverage --forceExit --detectOpenHandles --maxWorkers=10",
     "test:watch": "jest --watch --runInBand --detectOpenHandles"
   },
   "repository": {
