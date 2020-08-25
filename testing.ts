@@ -1,14 +1,9 @@
-let f = function (input: string) {
+let f = function(input: string) {
   if (input) {
-    return 'a'
+    return 'a';
   } else {
     return 'b';
   }
 };
 
 export default f;
-
-
-
-
-
