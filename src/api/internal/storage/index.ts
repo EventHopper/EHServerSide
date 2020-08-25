@@ -1,5 +1,6 @@
 import { s3_utils as s3 } from './utils';
 import * as user from './users';
+export { s3_utils as s3 } from './utils';
 
 // s3
 //   .createBucket('hopper-test-bucket-1')
@@ -36,15 +37,18 @@ import * as user from './users';
 //   .catch((err) => console.log(err));
 
 // const filePath =
-//   '/Users/idovenix/Desktop/hopper/Dev/EHServerSide/api/public/images/logo.png';
-// user.uploadUserFile('kyler', filePath).then((data) => console.log(data));
+//   '/Users/idovenix/Desktop/hopper/Dev/EHServerSide/src/api/public/images/logo.png';
+// user
+//   .uploadUserFile('kyler', filePath)
+//   .then((data) => console.log(data))
+//   .catch((err) => console.log(err));
 // s3
 //   .uploadFile('hopper-users-bucket', 'kyler/', filePath)
 //   .then((data) => console.log(data))
 //   .catch((err) => console.log(err));
-
+// console.log('hi!')
 const url =
-  'http://click-labs.com/wp-content/uploads/2014/05/nodejs_logo_green.jpg';
+  'https://cdn-images-1.medium.com/max/1600/1*4VBxaeHaxTxjZiPbI7g3kw.jpeg';
 user
   .uploadUserFile('kyler', url)
   .then((data) => console.log(data))

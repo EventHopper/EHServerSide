@@ -1,10 +1,13 @@
 import * as aws from 'aws-sdk';
 import * as fs from 'fs';
 import * as http from 'http';
+import * as https from 'https';
 import * as path from 'path';
 import { awsConfig } from '.';
 import * as validURL from 'valid-url';
+import isURL from 'is-url';
 import * as stream from 'stream';
+import got from 'got';
 
 aws.config.update(awsConfig);
 let s3 = new aws.S3();
@@ -177,9 +180,11 @@ export async function uploadFile(
 
   // Input sanity check
   if (isValidURL(filePath)) {
-    http.get(filePath, (res) => {
-      res.pipe(pass);
-    });
+    // console.log('hi!');
+    // http.get(filePath, (res) => {
+    //   res.pipe(pass);
+    // });
+    got.stream(filePath).pipe(pass);
     fileStream = pass;
   } else if (isValidFile(filePath)) {
     fileStream = fs.createReadStream(filePath);
@@ -213,12 +218,13 @@ export async function uploadFile(
  * @param {string} url name of the bucket
  * @returns {boolean} true if input URL is a valid url
  */
-export function isValidURL(url: string) {
-  if (validURL.isHttpUri(url) || validURL.isHttpsUri || validURL.isWebUri) {
-    return true;
-  } else {
-    return false;
-  }
+export function isValidURL(url: string): boolean {
+  return isURL(url);
+  // if (validURL.isHttpUri(url) || validURL.isHttpsUri || validURL.isWebUri) {
+  //   return true;
+  // } else {
+  //   return false;
+  // }
 }
 /**
  * @summary checks if string is path to an existing local file
@@ -226,6 +232,6 @@ export function isValidURL(url: string) {
  * @param {string} filePath local path of file
  * @returns {boolean} true if input URL is a valid url
  */
-export const isValidFile = (filePath: string) => {
+export const isValidFile = (filePath: string): boolean => {
   return fs.existsSync(filePath);
 };

@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
-const epath = path.join(__dirname, '../../.env');
+const epath = path.join(__dirname, '../../../.env');
 dotenv.config({path: epath});
 
 export const TEST_PORT = process.env.TEST_PORT;

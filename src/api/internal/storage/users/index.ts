@@ -6,6 +6,7 @@ import * as fileType from 'file-type';
 import * as path from 'path';
 import got from 'got';
 
+
 /**
  * @summary create a folder for a user in data lake if none exists
  * @param userId
@@ -21,7 +22,7 @@ export async function createUserFolder(userId: string) {
     const userFolder = await s3.createFolder(usersBucket!, folderPath);
     return userFolder;
   } catch (err) {
-    console.log(err);
+    throw new Error(err.sack);
   }
 }
 
@@ -31,14 +32,14 @@ export async function createUserFolder(userId: string) {
  * @param filePath local/remote path to user file
  * @returns {Promise<string>} final file URL 
  */
-export async function uploadUserFile(userId: string, filePath: string) {
+export async function uploadUserFile(userId: string, filePath: string): Promise<string> {
   //TODO: input sanity check
   // check filetype to put in appropriate folder
   let folder: string | undefined;
 
-  await _destUserFolder(filePath)
+  await _destinationFolder(filePath)
     .then(data => folder = data)
-    .catch(err => {throw new Error(err.message)})
+    .catch(err => {throw new Error(err.stack)})
 
   try {
     const results = await s3.uploadFile(
@@ -48,11 +49,11 @@ export async function uploadUserFile(userId: string, filePath: string) {
     );
     return results;
   } catch (err) {
-    throw new Error(err.message);
+    throw new Error(err.stack);
   }
 }
 
-async function _destUserFolder(filePath: string) {
+async function _destinationFolder(filePath: string) {
   let destination;
   if (s3.isValidURL(filePath)) {
     try {
@@ -62,12 +63,12 @@ async function _destUserFolder(filePath: string) {
       if (rType === 'image') {
         destination = 'images'
       } else if (rType === 'video') {
-        destination = 'video'
+        destination = 'videos'
       } else {
         destination = 'misc';
       }
     } catch (err) {
-      throw new Error(`URL File Type Read Error: ${err.message}`);
+      throw new Error(`URL File Type Read Error: ${err.stack}`);
     }
   } else if (s3.isValidFile(filePath)) {
     try {
@@ -81,7 +82,7 @@ async function _destUserFolder(filePath: string) {
         destination = 'misc';
       }
     } catch (err) {
-      throw new Error(`File Type Fetching Error ${err.message}`)
+      throw new Error(`File Type Fetching Error ${err.stack}`)
     }
   }
   return destination;

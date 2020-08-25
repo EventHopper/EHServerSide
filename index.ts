@@ -1,7 +1,7 @@
 import * as aggregator from './services/aggregator/aggregator';
 import express from 'express';
 import * as bodyParser from 'body-parser';
-import * as EventsRouter from './api/events/routes.config';
+import * as EventsRouter from './src/api/events/routes.config';
 import * as constants from './common/public/constants';
 import * as Location from './common/utils/location';
 import * as LocationModel from './models/location/location.model';

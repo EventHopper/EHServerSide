@@ -4,10 +4,10 @@
   "description": "Server Side functionality including REST API hosting and module to populate events",
   "main": "index.js",
   "scripts": {
-    "start:client": "ts-node ./api/internal/server.ts",
-    "start:auth": "ts-node ./auth/server_auth.ts",
+    "start:client": "ts-node ./src/api/internal/server.ts",
+    "start:auth": "ts-node auth/server_auth.ts",
     "start:updater": "ts-node index.ts",
-    "start:storage": "ts-node ./api/internal/storage",
+    "start:storage": "ts-node ./src/api/internal/storage",
     "test": "jest --forceExit --detectOpenHandles --maxWorkers=10",
     "test:watch": "jest --watch"
   },
@@ -29,6 +29,7 @@
   "homepage": "https://github.com/EventHopper/EHServerSide#readme",
   "dependencies": {
     "@types/dotenv": "^8.2.0",
+    "@types/is-url": "^1.2.28",
     "@types/jest": "^26.0.10",
     "@types/mongoose": "^5.7.36",
     "@types/node-geocoder": "^3.24.1",
@@ -47,6 +48,7 @@
     "file-type": "^14.7.1",
     "got": "^11.5.2",
     "i18n-iso-countries": "^6.0.0",
+    "is-url": "^1.2.4",
     "mongoose": "^5.9.25",
     "node-geocoder": "^3.27.0",
     "read-chunk": "^3.2.0",
