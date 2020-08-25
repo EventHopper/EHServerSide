@@ -7,14 +7,9 @@
     "start:client": "ts-node ./src/api/internal/server.ts",
     "start:auth": "ts-node auth/server_auth.ts",
     "start:updater": "ts-node index.ts",
-<<<<<<< HEAD
     "start:storage": "ts-node ./src/api/internal/storage",
-    "test": "jest --forceExit --detectOpenHandles --maxWorkers=10",
-    "test:watch": "jest --watch"
-=======
     "test": "jest --coverage --forceExit --detectOpenHandles --maxWorkers=10",
     "test:watch": "jest --watch --runInBand --detectOpenHandles"
->>>>>>> 22aa1eabc6e39c53f835dd88de58614659d034a5
   },
   "repository": {
     "type": "git",
