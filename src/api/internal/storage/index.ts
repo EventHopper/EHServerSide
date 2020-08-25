@@ -1,5 +1,6 @@
-import { s3_utils as s3 } from './utils';
 import * as user from './users';
+import { s3_utils as s3 } from './utils';
+import debug from 'debug';
 export { s3_utils as s3 } from './utils';
 
 // s3
@@ -47,13 +48,13 @@ export { s3_utils as s3 } from './utils';
 //   .then((data) => console.log(data))
 //   .catch((err) => console.log(err));
 // console.log('hi!')
-const url =
-  'https://cdn-images-1.medium.com/max/1600/1*4VBxaeHaxTxjZiPbI7g3kw.jpeg';
-user
-  .uploadUserFile('kyler', url)
-  .then((data) => console.log(data))
-  .catch((err) => console.log(err));
+// const url =
+//   'https://cdn-images-1.medium.com/max/1600/1*4VBxaeHaxTxjZiPbI7g3kw.jpeg';
+// user
+//   .uploadUserFile('kyler', url)
+//   .then((data) => console.log(data))
+//   .catch((err) => console.log(err));
 // s3
 //   .uploadFile('hopper-users-bucket', 'tests/', url)
-//   .then((data) => console.log(data))
+//   .then((data) => debug(data))
 //   .catch((err) => console.log(err));

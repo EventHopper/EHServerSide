@@ -8,7 +8,7 @@ import * as validURL from 'valid-url';
 import isURL from 'is-url';
 import * as stream from 'stream';
 import got from 'got';
-
+import debug from 'debug';
 aws.config.update(awsConfig);
 let s3 = new aws.S3();
 
@@ -168,13 +168,13 @@ export async function listObjects(bucketName: string, path: string) {
  * @param {string} bucketName name of the bucket
  * @param {string} bucketTargetDirectory name of target directory for file
  * @param {string} filePath path/url of file to upload directory
- * @returns {string} final destination of the file in s3
+ * @returns {Promise<string>} final destination of the file in s3
  */
 export async function uploadFile(
   bucketName: string,
   bucketTargetDirectory: string,
   filePath: string
-) {
+): Promise<string> {
   const pass = new stream.PassThrough();
   let fileStream: stream.PassThrough | fs.ReadStream;
 
