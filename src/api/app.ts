@@ -2,12 +2,15 @@
 /* eslint-disable no-invalid-this */
 /* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
+
 import express from 'express';
 import path from 'path';
 import chalk from 'chalk';
 import bodyParser from 'body-parser';
 import Auth from '../auth/server_auth';
 import {ControllerInterface} from './utils/controller.interface';
+import Debug from 'debug';
+const debug = Debug('app');
 
 class App {
   public app: express.Application;
@@ -33,18 +36,18 @@ class App {
 
   private authMiddleware = async(request: express.Request,
     response: express.Response, next: express.NextFunction) => {
-    console.log(`${request.method} ${request.path} ${String(request.query.key)}`);
+    debug(`${request.method} ${request.path} ${String(request.query.key)}`);
     let enumString: any;
     enumString = await this._auth.loginApiKey(String(request.query.key)).catch((err)=>{
-      console.log(err);
+      debug(err);
     });
 
     if (enumString === 'AUTH_SUCCESS') {
-      // console.log(chalk.greenBright('Auth Succeeded'));
-      // console.log(this._auth.getAccessToken());
+      // debug(chalk.greenBright('Auth Succeeded'));
+      // debug(this._auth.getAccessToken());
       next();
     } else if (enumString === 'AUTH_FAILED') {
-      // console.log(chalk.redBright('Auth Failed'));
+      // debug(chalk.redBright('Auth Failed'));
       response.status(400).json('Failed to authenticate request. Please ensure valid apikey');
     }
   }

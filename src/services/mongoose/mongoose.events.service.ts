@@ -1,5 +1,7 @@
 import { Mongoose }  from 'mongoose';
+import Debug from 'debug';
 
+const debug = Debug('mongoose.events.service');
 let count = 0;
 const eventMongooseInstance = new Mongoose();
 
@@ -19,11 +21,11 @@ const options = {
 };
 const uri = 'mongodb+srv://ransford:chiefarchitect@eventhoppertesting.mdabm.mongodb.net/all_events?retryWrites=true&w=majority';
 const connectWithRetry = () => {
-  console.log('MongoDB connection with retry');
+  debug('MongoDB connection with retry');
   eventMongooseInstance.connect(uri, options).then(() => {
     console.log('MongoDB - Events Database is connected');
   }).catch((err: string) => {
-    console.log('MongoDB connection unsuccessful, retry after 5 seconds. ',
+    debug('MongoDB connection unsuccessful, retry after 5 seconds. ',
       ++count);
     setTimeout(connectWithRetry, 5000);
   });

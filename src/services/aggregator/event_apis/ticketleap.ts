@@ -7,6 +7,9 @@ import * as eventModel from '../../../models/events/events.model';
 import * as countries from 'i18n-iso-countries';
 import * as config from '../../../common/utils/config';
 import {default as settings} from '../config';
+import Debug from 'debug';
+
+const debug = Debug('ticketleap');
 const logging = false;
 /** *************************************************************************//**
  * EXTERNAL VENDOR API (EVAPI) Integration
@@ -59,7 +62,7 @@ export function getEventObjects(api_url: string, page_num: number) {
     const events = response.data.events;
     if (events.length !== 0) {
       if (settings.LOGGING) {
-        console.log('_____________________ NEW PAGE _____________________\n' +
+        debug('_____________________ NEW PAGE _____________________\n' +
           'API URL: ' +
           api_url +
           page_num +
@@ -68,11 +71,11 @@ export function getEventObjects(api_url: string, page_num: number) {
       importToDatabase(events);
       getEventObjects(api_url, page_num + 1);
     }else {
-      console.log('TicketLeap is Done');
+      debug('TicketLeap is Done');
     }
   }).catch((error) => {
     if (settings.LOGGING) {
-      console.log(error);
+      debug(error);
     }
   });
 }
@@ -112,7 +115,7 @@ export function importToDatabase(external_events: any[]) {
       event_manager_id: null, // FIXME: To be added
     };
 
-    // console.log(newEvent);
+    // debug(newEvent);
     eventModel.saveEvent(newEvent);
   });
 }

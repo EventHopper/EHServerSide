@@ -7,6 +7,9 @@ import * as eventModel from '../../../models/events/events.model';
 import * as countries from 'i18n-iso-countries';
 import * as config from '../../../common/utils/config';
 import {default as settings} from '../config';
+import Debug from 'debug';
+
+const debug = Debug('ticketmaster');
 const logging = false;
 
 /** *************************************************************************//**
@@ -45,7 +48,7 @@ export function aggregateExternalVendor(location: any) {
     ':00:00Z';
   const page_num = 1;
 
-  console.log('date is: ' + date);
+  debug('date is: ' + date);
 
   const api_url =
     constants.TICKETMASTER_URL +
@@ -68,7 +71,7 @@ export function getEventObjects(api_url: string, page_num: number) {
     const events = response.data._embedded ? response.data._embedded.events : null;
     if (events !== null && events.length !== 0) {
       if (settings.LOGGING) {
-        console.log('_____________________ NEW PAGE _____________________\n' +
+        debug('_____________________ NEW PAGE _____________________\n' +
           'API URL: ' +
           api_url +
           page_num +
@@ -77,11 +80,11 @@ export function getEventObjects(api_url: string, page_num: number) {
       importToDatabase(events);
       getEventObjects(api_url, page_num + 1);
     } else {
-      console.log('TicketMaster is Done');
+      debug('TicketMaster is Done');
     }
   }).catch((error) => {
     if (settings.LOGGING) {
-      console.log(error);
+      debug(error);
     }
   });
 }
