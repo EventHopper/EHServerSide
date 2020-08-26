@@ -7,7 +7,8 @@
     "noImplicitAny": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "strict": true
+    "strict": true,
+    "baseUrl": "src"
   },
-  "include": [".", "./jobs/pruning/*", "./api/internal/*" , "./auth/*", "./jobs/update_job/*", "./models/*", "./api/app.ts", "./services/*"]
+  "include": ["src"]
 }

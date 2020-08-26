@@ -2,7 +2,9 @@
 .nyc_output
 coverage
 node_modules
+realm-object-server
+realm-object-server/*
 auth/realm-object-server
 *.realm
 *.realm.lock
-realm-object-server
+*.orig
