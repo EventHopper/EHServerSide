@@ -4,10 +4,10 @@
   "description": "Server Side functionality including REST API hosting and module to populate events",
   "main": "index.js",
   "scripts": {
-    "start:client": "ts-node ./src/api/internal/server.ts",
+    "start:client": "ts-node src/api/internal/server.ts",
     "start:auth": "ts-node auth/server_auth.ts",
     "start:updater": "ts-node index.ts",
-    "start:storage": "ts-node ./src/api/internal/storage",
+    "start:storage": "ts-node src/api/internal/storage",
     "test": "jest --coverage --forceExit --detectOpenHandles --maxWorkers=10",
     "test:watch": "jest --watch --runInBand --detectOpenHandles"
   },

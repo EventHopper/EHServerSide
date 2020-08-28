@@ -59,7 +59,7 @@ export function list(perPage:number, page:number) { // list all users
   });
 };
 
-export function search(query:string, limit?:number) { // list all users
+export function search(query:string, limit?:number) { // list users matching query
   let resultLimit:number = limit? limit: 10;
   return new Promise((resolve, reject) => {
     const aggregation = [
