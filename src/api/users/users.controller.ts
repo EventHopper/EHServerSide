@@ -9,6 +9,7 @@ import * as express from 'express';
 import Auth from '../../auth/server_auth';
 import {ControllerInterface} from '../utils/controller.interface';
 import RealmFunctions from './users.realm.functions';
+import Realm from 'realm';
 import path from 'path';
 import UserFunctions from './users.functions';
 import UserRoutes from './users.routes.config';
@@ -31,18 +32,18 @@ class UserController implements ControllerInterface {
   public initializeRoutes() {
     this.router.get(UserRoutes.rootPath, this.listUsers);
     this.router.post(UserRoutes.registrationPath, this.registerNewUser);
-    this.router.post(UserRoutes.loginPath, this.logIn);
-    this.router.post(UserRoutes.emailConfirmPath, this.resendEmailVerification);
+    // this.router.post(UserRoutes.loginPath, this.logIn);
+    // this.router.post(UserRoutes.emailConfirmPath, this.resendEmailVerification);
     this.router.get(UserRoutes.userInformation, this.getUserData);
     this.router.get(UserRoutes.userSearch, this.searchUsers)
   }
-  resendEmailVerification = (req:express.Request, res:express.Response) => {
-    const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
-    realmFunc.resendConfirmationEmail(req.body.email);
-  }
+  // resendEmailVerification = (req:express.Request, res:express.Response) => {
+  //   const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
+  //   realmFunc.resendConfirmationEmail(req.body.email);
+  // }
 
   registerNewUser = async (req:express.Request, res:express.Response) => {
-    // TODO: accept an encrypted JSON of email & password from client, decrypt and then pass to realmFunc
+
     if (JSON.stringify(req.body) != JSON.stringify({})) {
       const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
       const result = await realmFunc.registerUser(String(req.body.email), String(req.body.password));
@@ -59,25 +60,25 @@ class UserController implements ControllerInterface {
         UserModel.newUser(newUser);
       }
       debug(result);
-      res.json(result);
+      res.status(400).json(result);
     } else {
       res.status(400).json('Cannot Register User, Missing Request Body');
     }
   };
 
-  logIn = async (req:express.Request, res:express.Response) => {
-    const username = req.query.username;
-    if (JSON.stringify(req.body) !== JSON.stringify({})) {
-      const email = req.body.email;
-      const password = req.body.password;
-      const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
-      const result = await realmFunc.logIn(email, password);
-      debug(result);
-      res.json(result);
-    } else {
-      res.status(400).json('Could not log in user');
-    }
-  };
+  // logIn = async (req:express.Request, res:express.Response) => {
+  //   const username = req.query.username;
+  //   if (JSON.stringify(req.body) !== JSON.stringify({})) {
+  //     const email = req.body.email;
+  //     const password = req.body.password;
+  //     const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
+  //     const result = await realmFunc.logIn(email, password);
+  //     debug(result);
+  //     res.json(result);
+  //   } else {
+  //     res.status(400).json('Could not log in user');
+  //   }
+  // };
 
   getUserData = async (req:express.Request, res: express.Response) => {
     const userDocument = await UserModel.getUserData(String(req.params.username)).catch((err)=>{

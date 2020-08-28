@@ -34,7 +34,7 @@ class App {
     this.app.use(this.authMiddleware);
   }
 
-  private authMiddleware = async(request: express.Request,
+  private authMiddleware = async (request: express.Request,
     response: express.Response, next: express.NextFunction) => {
     debug(`${request.method} ${request.path} ${String(request.query.key)}`);
     let enumString: any;
