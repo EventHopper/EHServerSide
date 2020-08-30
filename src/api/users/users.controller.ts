@@ -14,6 +14,7 @@ import path from 'path';
 import UserFunctions from './users.functions';
 import UserRoutes from './users.routes.config';
 import Debug from 'debug';
+import { initializeUserManager } from 'models/users/user_manager.model';
 const debug = Debug('users.controller');
 
 class UserController implements ControllerInterface {
@@ -57,7 +58,13 @@ class UserController implements ControllerInterface {
           image_url: req.body.image_url ? req.body.image_url : 'null',
         };
 
-        UserModel.newUser(newUser);
+        let creationResult = await UserModel.newUser(newUser);
+        if (creationResult.status == 200) {
+          creationResult = await initializeUserManager(creationResult.userDoc.user_id);
+          res.status(creationResult.status).json(creationResult.message);
+        } else {
+          res.status(500).json('Cannot Register User, we encountered an error');
+        }
       }
       debug(result);
       res.status(400).json(result);

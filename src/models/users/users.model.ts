@@ -2,23 +2,35 @@
 /* eslint-disable require-jsdoc */
 import {userMongooseInstance as userMongoose} from '../../services/mongoose/mongoose.users.service';
 import Debug from 'debug';
+import { Document } from 'mongoose';
 
 const Schema = userMongoose.Schema;
 const debug = Debug('users.model');
 
-const userSchema = new Schema({
+export interface IUser extends Document {
+  user_id: string;
+  email: string;
+  full_name: string;
+  image_url: string;
+  friends: string[],
+  location: {
+    city: String,
+  };
+}
+
+const UserSchema = new Schema({
+  user_id: {required: true, type: String, unique: true},
   full_name: String,
   username: {required: true, type: String, unique: true},
   email: {required: true, type: String, unique:true},
   image_url: String,
-  user_id: {required: true, type: String, unique: true},
   friends: [String],
   location: {
     city: String,
   },
 });
 
-export const User = userMongoose.model('Users', userSchema);
+export const User = userMongoose.model('Users', UserSchema);
 
 export function saveUser(userData:any) { // saves to database
   const user:any = userData;
@@ -33,14 +45,14 @@ export function saveUser(userData:any) { // saves to database
     });
 };
 
-export function newUser(userData:any) { // saves to database
+export function newUser(userData:any):any { // saves to database
   const user:any = userData;
   return User.create(
     user,
-    function(err:any, doc:any) {
+    function(err:any, doc:IUser) {
       debug(doc);
-      if (err) return {status: 500, error: err};
-      return ('User Succesfully Updated.');
+      if (err) return {status: 500, message: err};
+      return {status: 200, userDoc: doc, message: 'User Succesfully Updated.'};
     });
 };
 
@@ -102,8 +114,6 @@ export function search(query:string, limit?:number) { // list users matching que
   });
 };
 
-  
-
 export function getUserData(username:string) { // list single users
   const query = username.toLowerCase();
   return new Promise((resolve, reject) => {
@@ -119,4 +129,3 @@ export function getUserData(username:string) { // list single users
       });
   });
 };
-
