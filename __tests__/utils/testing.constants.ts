@@ -1,0 +1,1 @@
+export const longString = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam facilisis elementum orci, a pellentesque nisl dapibus ac placerat.';

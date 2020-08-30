@@ -4,6 +4,7 @@ import {TEST_PORT as PORT, TEST_AUTH_API_KEY as KEY} from '../src/common/utils/c
 import EventsController from '../src/api/events/events.controller';
 import UserController from '../src/api/users/users.controller';
 import {EventDoc} from '../src/models/events/events.model';
+import * as TestingConstants from './utils/testing.constants';
 import getType from 'jest-get-type';
 
 const request = supertest(new App([
@@ -74,7 +75,7 @@ it('Fails to register password too long', async done => {
   const res = await request
     .post(`/users/register?key=${KEY}`)
     .set('Content-Type', 'application/json')
-    .send('{"username": "spiderman","email":"spiderman@wedoo.app","password": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}');
+    .send(`{"username": "spiderman","email":"spiderman@wedoo.app","password": ${TestingConstants.longString}}`);
   expect(res.status).toBe(400);
   expect(res.body).toBeDefined();
   expect(getType(res.body)).toBe('object');
