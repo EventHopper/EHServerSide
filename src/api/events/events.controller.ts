@@ -6,7 +6,6 @@
 // const EventModel = require('../../models/events/events.model');
 import * as EventModel from '../../models/events/events.model';
 import * as express from 'express';
-import {Schema, model, Document, Model} from 'mongoose';
 import Auth from '../../auth/server_auth';
 import {ControllerInterface} from '../utils/controller.interface';
 import Debug from 'debug';
