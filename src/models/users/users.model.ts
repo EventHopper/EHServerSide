@@ -3,18 +3,21 @@
 import {userMongooseInstance as userMongoose} from '../../services/mongoose/mongoose.users.service';
 import Debug from 'debug';
 import { Document } from 'mongoose';
+import { initializeUserManager } from './user_manager.model';
 
 const Schema = userMongoose.Schema;
 const debug = Debug('users.model');
 
-export interface IUser extends Document {
+export interface IUser extends Partial<Document> {
   user_id: string;
+  username: string;
   email: string;
-  full_name: string;
-  image_url: string;
-  friends: string[],
-  location: {
-    city: String,
+  full_name?: string;
+  image_url?: string;
+  friends?: string[];
+  user_manager_id: string;
+  location?: {
+    city: string;
   };
 }
 
@@ -25,6 +28,7 @@ const UserSchema = new Schema({
   email: {required: true, type: String, unique:true},
   image_url: String,
   friends: [String],
+  user_manager_id: {required: true, type: String, unique: true},
   location: {
     city: String,
   },
@@ -45,15 +49,23 @@ export function saveUser(userData:any) { // saves to database
     });
 };
 
-export function newUser(userData:any):any { // saves to database
-  const user:any = userData;
-  return User.create(
-    user,
-    function(err:any, doc:IUser) {
-      debug(doc);
-      if (err) return {status: 500, message: err};
-      return {status: 200, userDoc: doc, message: 'User Succesfully Updated.'};
-    });
+export async function newUser(userData:IUser){ // saves to database
+  let creationResult:any = await initializeUserManager(userData.user_id);
+  if(creationResult.status == 200){
+    userData.user_manager_id = creationResult.user_manager_doc._id;
+    let userDoc:any;
+    User.findOneAndUpdate(
+      {user_id: userData.user_id},
+      userData,
+      {upsert: true, new: true, useFindAndModify: false},
+      function(err:any, doc:any) {
+        debug(doc);
+        userDoc = doc;
+        if (err) creationResult = {status: 500, message: err};
+      });
+    creationResult = {status: 200, userDoc: userDoc, message: 'User Succesfully Updated.'};
+  }
+  return creationResult;
 };
 
 export function list(perPage:number, page:number) { // list all users

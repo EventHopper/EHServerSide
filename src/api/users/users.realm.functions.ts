@@ -8,6 +8,7 @@ import assert from 'assert';
 import Realm from 'realm';
 import { json } from 'body-parser';
 import Debug from 'debug';
+import e from 'express';
 const debug = Debug('users.realm.functions');
 /**
  * @deprecated RealmFunctions class may soon be deprecated following decision to move
@@ -47,6 +48,7 @@ class RealmFunctions {
         }
       });
     if (success) {
+      result = await this.logIn(email, password);
       return result;
     } else {
       return result;
@@ -63,25 +65,25 @@ class RealmFunctions {
   //   return await this._auth.app.emailPasswordAuth.sendResetPasswordEmail(email);
   // };
 
-  // public logIn = async (email: string, password: string) => {
-  //   const credentials = Realm.Credentials.emailPassword(email, password);
-  //   let result;
-  //   await this._auth.app.logIn(credentials).then((user) => {
-  //     result = {
-  //       message: `LOGIN_SUCCESS: {userID: ${user.id}}`,
-  //       code: 200,
-  //       userInstance: user
-  //     };
-  //   }).catch((err)=>{
-  //     result = {
-  //       message: `LOGIN_FAILED: {userID: ${user.id}}`,
-  //       code: 200,
-  //       userInstance: user
-  //     };
-  //   });
-  //   return result;
-  //   //   this._auth.app.switchUser(this._auth.app.currentUser);
-  // };
+  public logIn = async (email: string, password: string) => {
+    const credentials = Realm.Credentials.emailPassword(email, password);
+    let result;
+    await this._auth.app.logIn(credentials).then((user) => {
+      result = {
+        message: `LOGIN_SUCCESS: {userID: ${user.id}}`,
+        code: 200,
+        userInstance: user
+      };
+    }).catch((err)=>{
+      result = {
+        message: `LOGIN_FAILED: {userID: ${null}}`,
+        code: 200,
+        userInstance: null
+      };
+    });
+    return result;
+    //   this._auth.app.switchUser(this._auth.app.currentUser);
+  };
 
   // Let logged in users log out
   // public logOut = async (userID: string) => {

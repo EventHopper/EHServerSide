@@ -10,7 +10,6 @@ import {default as settings} from '../config';
 import Debug from 'debug';
 
 const debug = Debug('ticketmaster');
-const logging = false;
 
 /** *************************************************************************//**
  * EXTERNAL VENDOR API (EVAPI) Integration
@@ -70,22 +69,18 @@ export function getEventObjects(api_url: string, page_num: number) {
   axios.get(api_url + page_num).then(function(response) {
     const events = response.data._embedded ? response.data._embedded.events : null;
     if (events !== null && events.length !== 0) {
-      if (settings.LOGGING) {
-        debug('_____________________ NEW PAGE _____________________\n' +
+      debug('_____________________ NEW PAGE _____________________\n' +
           'API URL: ' +
           api_url +
           page_num +
           '\n___________________________________________________\n');
-      }
       importToDatabase(events);
       getEventObjects(api_url, page_num + 1);
     } else {
       debug('TicketMaster is Done');
     }
   }).catch((error) => {
-    if (settings.LOGGING) {
-      debug(error);
-    }
+    debug(error);
   });
 }
 

@@ -1,10 +1,11 @@
 import {userMongooseInstance as userMongoose} from '../../services/mongoose/mongoose.users.service';
 import { Schema, Document } from 'mongoose';
+import { ResponseObject } from '../utils/model_response.object'
 import Debug from 'debug';
 
 const debug = Debug('user_manager.model');
 
-interface IUserManager extends Document {
+interface IUserManager extends Partial<Document> {
   user_id: string,
   device_info: Object,
   fcm_tokens: string[],
@@ -40,16 +41,40 @@ const UserManagerSchema = new Schema({
 
 const UserManager = userMongoose.model('UserManager', UserManagerSchema);
 
-export function initializeUserManager(userData:any) { // saves to database
-  const user:any = userData;
-  return UserManager.findOneAndUpdate(
-    {user_id: user.user_id},
-    user,
-    {upsert: true, new: true, useFindAndModify: false},
-    function(err:any, doc:any) {
-      debug(doc);
-      if (err) return {status: 500, message: err};
-      return {status: 200, message: 'UserManager Succesfully Updated.'};
-    }
-  );
+/****************************************************************************//**
+ * @summary initializes user manager in MongoDB
+ * @description creates a user manager for the assosciated user id
+ * @param {string} user_id - user id of associated  
+ * @return returns a promise of type ResponseObject containing a status, message and user manager document on success. 
+ * Omits document on failure.
+ * 
+ * ****************************************************************************/
+export async function initializeUserManager(user_id:string):Promise<Partial<ResponseObject>> { // saves to database
+  
+  var result={};
+  
+  const managerInit:IUserManager = {
+    user_id: user_id,
+    device_info: {},
+    fcm_tokens: [],
+    event_preferences: [],
+    calendar_credentials: {},
+    log_url: '',
+    friend_rank: [],
+    event_left: [],
+    event_right: [],
+    event_up: [],
+    location : {
+      city: '',
+    },
+  };
+
+  let manager = new UserManager(managerInit);
+  await manager.save()
+    .then(doc => {
+      result = {status: 200, user_manager_doc: doc, message: 'UserManager Succesfully Initialized.'};
+    }).catch(err => {
+      result = {status: 500, message: err}; 
+    });
+  return result;
 };

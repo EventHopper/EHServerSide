@@ -10,11 +10,11 @@ import Auth from '../../auth/server_auth';
 import {ControllerInterface} from '../utils/controller.interface';
 import RealmFunctions from './users.realm.functions';
 import Realm from 'realm';
-import path from 'path';
+import path, { relative } from 'path';
 import UserFunctions from './users.functions';
 import UserRoutes from './users.routes.config';
 import Debug from 'debug';
-import { initializeUserManager } from 'models/users/user_manager.model';
+import { initializeUserManager } from '../../models/users/user_manager.model';
 const debug = Debug('users.controller');
 
 class UserController implements ControllerInterface {
@@ -50,42 +50,46 @@ class UserController implements ControllerInterface {
       const result = await realmFunc.registerUser(String(req.body.email), String(req.body.password));
       if (result?.code==200) {
         const user:Realm.User = result!.userInstance!;
-        const newUser = {
+        const newUser:UserModel.IUser = {
           username: String(req.body.username).toLowerCase(),
           email: req.body.email,
           user_id: user.id,
           full_name: req.body.full_name ? req.body.full_name : 'null',
           image_url: req.body.image_url ? req.body.image_url : 'null',
+          user_manager_id: '',
         };
-
+        console.log ('this is the user id: ', user.id);
         let creationResult = await UserModel.newUser(newUser);
         if (creationResult.status == 200) {
-          creationResult = await initializeUserManager(creationResult.userDoc.user_id);
           res.status(creationResult.status).json(creationResult.message);
+          return;
         } else {
           res.status(500).json('Cannot Register User, we encountered an error');
+          return;
         }
       }
       debug(result);
       res.status(400).json(result);
+      return;
     } else {
       res.status(400).json('Cannot Register User, Missing Request Body');
+      return;
     }
   };
 
-  // logIn = async (req:express.Request, res:express.Response) => {
-  //   const username = req.query.username;
-  //   if (JSON.stringify(req.body) !== JSON.stringify({})) {
-  //     const email = req.body.email;
-  //     const password = req.body.password;
-  //     const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
-  //     const result = await realmFunc.logIn(email, password);
-  //     debug(result);
-  //     res.json(result);
-  //   } else {
-  //     res.status(400).json('Could not log in user');
-  //   }
-  // };
+  logIn = async (req:express.Request, res:express.Response) => {
+    const username = req.query.username;
+    if (JSON.stringify(req.body) !== JSON.stringify({})) {
+      const email = req.body.email;
+      const password = req.body.password;
+      const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
+      const result = await realmFunc.logIn(email, password);
+      debug(result);
+      res.json(result);
+    } else {
+      res.status(400).json('Could not log in user');
+    }
+  };
 
   getUserData = async (req:express.Request, res: express.Response) => {
     const userDocument = await UserModel.getUserData(String(req.params.username)).catch((err)=>{
