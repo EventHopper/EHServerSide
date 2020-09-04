@@ -10,7 +10,6 @@ import {default as settings} from '../config';
 import Debug from 'debug';
 
 const debug = Debug('ticketmaster');
-const logging = false;
 
 /** *************************************************************************//**
  * EXTERNAL VENDOR API (EVAPI) Integration
@@ -30,7 +29,6 @@ const logging = false;
 
 export function aggregateExternalVendor(location: any) {
   // Construct URL
-
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth() + 1; // January is 0
@@ -70,22 +68,19 @@ export function getEventObjects(api_url: string, page_num: number) {
   axios.get(api_url + page_num).then(function(response) {
     const events = response.data._embedded ? response.data._embedded.events : null;
     if (events !== null && events.length !== 0) {
-      if (settings.LOGGING) {
-        debug('_____________________ NEW PAGE _____________________\n' +
+      console.log('_____________________ NEW PAGE _____________________\n' +
           'API URL: ' +
           api_url +
           page_num +
           '\n___________________________________________________\n');
-      }
       importToDatabase(events);
       getEventObjects(api_url, page_num + 1);
     } else {
       debug('TicketMaster is Done');
     }
   }).catch((error) => {
-    if (settings.LOGGING) {
-      debug(error);
-    }
+    console.log(error);
+    debug(error);
   });
 }
 
@@ -128,6 +123,6 @@ export function importToDatabase(external_events: any[]) {
       public_action: element.url,
       event_manager_id: null, // TODO: Add later
     };
-    eventModel.saveEvent(newEvent);
+    eventModel.saveEvent(newEvent);   
   });
 }
