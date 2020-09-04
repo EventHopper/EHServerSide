@@ -1,6 +1,7 @@
 import {eventMongooseInstance as mongoose} from '../../services/mongoose/mongoose.events.service';
 import { Document, Model, Mongoose } from 'mongoose';
 import Debug from 'debug';
+import {initializeEventManager} from './event_manager.model';
 const debug = Debug('events.model');
 
 const Schema = mongoose.Schema;
@@ -62,8 +63,11 @@ const eventSchema = new Schema({
 
 const Event = mongoose.model('Events', eventSchema);
 
-const saveEvent = (eventData: any) => { // saves to database
+const saveEvent = async (eventData: any) => { // saves to database
   const event = eventData;
+  const manager_id = await initializeEventManager(event.vendor_id);
+  console.log('manager_id: ', manager_id);
+  event.event_manager_id = manager_id;
   //debug(event.venue.position);
   return Event.findOneAndUpdate(
     {vendor_id: event.vendor_id},
@@ -71,6 +75,7 @@ const saveEvent = (eventData: any) => { // saves to database
     {upsert: true, setDefaultsOnInsert: true, useFindAndModify: true, new: true},
     function(err: any, doc: any) {
       if (err) {
+        console.log('error in event: ', err);
         debug('here is the error:', err);
         return {error: err};
       }
@@ -79,6 +84,7 @@ const saveEvent = (eventData: any) => { // saves to database
       return 'Succesfully saved.';
     });
 };
+
 
 const list = (perPage: number, page: number, query?: any) => { // list events
   return new Promise((resolve, reject) => {
