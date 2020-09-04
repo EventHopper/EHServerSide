@@ -68,7 +68,7 @@ export function getEventObjects(api_url: string, page_num: number) {
   axios.get(api_url + page_num).then(function(response) {
     const events = response.data._embedded ? response.data._embedded.events : null;
     if (events !== null && events.length !== 0) {
-      console.log('_____________________ NEW PAGE _____________________\n' +
+      debug('_____________________ NEW PAGE _____________________\n' +
           'API URL: ' +
           api_url +
           page_num +
@@ -79,7 +79,6 @@ export function getEventObjects(api_url: string, page_num: number) {
       debug('TicketMaster is Done');
     }
   }).catch((error) => {
-    console.log(error);
     debug(error);
   });
 }
