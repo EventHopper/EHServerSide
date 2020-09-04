@@ -35,7 +35,7 @@ it('Fails to register existing user', async done => {
   const res = await request
     .post(`/users/register?key=${KEY}`)
     .set('Content-Type', 'application/json')
-    .send('{"username": "spiderman","email":"spiderman@wedoo.app","password": "googleking"}');
+    .send(`{"username": "${TestingConstants.testUsername}","email":"${TestingConstants.testEmail}","password": "${TestingConstants.testPassword}"}`);
   expect(res.status).toBe(400);
   expect(res.body).toBeDefined();
   expect(getType(res.body)).toBe('object');
@@ -53,7 +53,7 @@ it('Fails to register user malformatted email', async done => {
   expect(res.status).toBe(400);
   expect(res.body.message).toBeDefined();
   expect(getType(res.body)).toBe('object');
-  expect(res.body.message).toMatch('');
+  expect(res.body.message).toMatch('malformatted email');
   done();
 });
   
@@ -75,7 +75,7 @@ it('Fails to register password too long', async done => {
   const res = await request
     .post(`/users/register?key=${KEY}`)
     .set('Content-Type', 'application/json')
-    .send(`{"username": "spiderman","email":"spiderman@wedoo.app","password": ${TestingConstants.longString}}`);
+    .send(`{"username": "spiderman","email":"spiderman@wedoo.app","password":"${TestingConstants.longString}"}`);
   expect(res.status).toBe(400);
   expect(res.body).toBeDefined();
   expect(getType(res.body)).toBe('object');
@@ -86,22 +86,40 @@ it('Fails to register password too long', async done => {
 it('Succeeds to search for user', async done => {
   // Sends GET Request to /test endpoint
   const res = await request
-    .get(`/search/users?key=${KEY}&query=kyler&limit=1`);
+    .get(`/search/users?key=${KEY}&query=${TestingConstants.testUsername}&limit=1`);
   expect(res.status).toBe(200);
   expect(res.body).toBeDefined();
   expect(getType(res.body)).toBe('array');
-  expect(res.body[0].username).toMatch('kyler');
+  expect(res.body[0].username).toMatch(TestingConstants.testUsername);
   done();
 });
   
 it('Succeeds to get user based on username', async done => {
   // Sends GET Request to /test endpoint
   const res = await request
-    .get(`/users/kyler?key=${KEY}`);
+    .get(`/users/${TestingConstants.testUsername}?key=${KEY}`);
   expect(res.status).toBe(200);
   expect(res.body).toBeDefined();
   expect(getType(res.body)).toBe('object');
-  expect(res.body.username).toMatch('kyler');
+  expect(res.body.username).toMatch(TestingConstants.testUsername);
+  done();
+});
+  
+it('Succeeds to update user based on username', async done => {
+  // Sends GET Request to /test endpoint
+  const firstResponse = await request
+    .post(`/users/${TestingConstants.testUsername}?key=${KEY}`)
+    .set('Content-Type', 'application/json')
+    .send('{"full_name":"Johnny Karate"}');
+  expect(firstResponse.status).toBe(200);
+  expect(firstResponse.body).toBeDefined();
+  expect(getType(firstResponse.body)).toBe('object');
+  expect(String(firstResponse.body.message)).toMatch('User Succesfully Updated.');
+  const secondResponse = await request
+    .get(`/users/${TestingConstants.testUsername}?key=${KEY}`)
+  expect(secondResponse.status).toBe(200);
+  expect(secondResponse.body).toBeDefined();
+  expect(secondResponse.body.full_name).toBe('Johnny Karate');
   done();
 });
   
@@ -120,6 +138,16 @@ it('Fails to get user due to not found', async done => {
   const res = await request
     .get(`/users/.asd?key=${KEY}`);
   expect(res.status).toBe(404);
+  expect(res.body).toBeDefined();
+  expect(getType(res.body)).toBe('object');
+  done();
+});
+
+it('User manager successfully created', async done => {
+  // Sends GET Request to /test endpoint
+  const res = await request
+    .get(`/manager/users/${TestingConstants.testUsername}?key=${KEY}`);
+  expect(res.status).toBe(200);
   expect(res.body).toBeDefined();
   expect(getType(res.body)).toBe('object');
   done();

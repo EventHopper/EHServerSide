@@ -14,6 +14,7 @@ import path, { relative } from 'path';
 import UserFunctions from './users.functions';
 import UserRoutes from './users.routes.config';
 import Debug from 'debug';
+import validator from 'validator';
 import { initializeUserManager } from '../../models/users/user_manager.model';
 const debug = Debug('users.controller');
 
@@ -36,8 +37,10 @@ class UserController implements ControllerInterface {
     // this.router.post(UserRoutes.loginPath, this.logIn);
     // this.router.post(UserRoutes.emailConfirmPath, this.resendEmailVerification);
     this.router.get(UserRoutes.userInformation, this.getUserData);
-    this.router.get(UserRoutes.userSearch, this.searchUsers)
+    this.router.post(UserRoutes.userInformation, this.updateUserData);
+    this.router.get(UserRoutes.userSearch, this.searchUsers);
   }
+
   // resendEmailVerification = (req:express.Request, res:express.Response) => {
   //   const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
   //   realmFunc.resendConfirmationEmail(req.body.email);
@@ -46,6 +49,12 @@ class UserController implements ControllerInterface {
   registerNewUser = async (req:express.Request, res:express.Response) => {
 
     if (JSON.stringify(req.body) != JSON.stringify({})) {
+      
+      if (!validator.isEmail(req.body.email)) {
+        res.status(400).send({ message: 'malformatted email', code: 49, userInstance: null });
+        return;
+      }
+
       const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
       const result = await realmFunc.registerUser(String(req.body.email), String(req.body.password));
       if (result?.code==200) {
@@ -59,12 +68,13 @@ class UserController implements ControllerInterface {
           user_manager_id: '',
         };
         console.log ('this is the user id: ', user.id);
-        let creationResult = await UserModel.newUser(newUser);
+        let creationResult = await UserModel.initializeUserData(newUser);
+
         if (creationResult.status == 200) {
           res.status(creationResult.status).json(creationResult.message);
           return;
         } else {
-          res.status(500).json('Cannot Register User, we encountered an error');
+          res.status(500).send({ message: 'Cannot Register User, we encountered an error', code: 500, userInstance: null });
           return;
         }
       }
@@ -72,7 +82,7 @@ class UserController implements ControllerInterface {
       res.status(400).json(result);
       return;
     } else {
-      res.status(400).json('Cannot Register User, Missing Request Body');
+      res.status(400).send({ message: 'Cannot Register User, missing request body', code: 400, userInstance: null });
       return;
     }
   };
@@ -87,14 +97,24 @@ class UserController implements ControllerInterface {
       debug(result);
       res.json(result);
     } else {
-      res.status(400).json('Could not log in user');
+      res.status(400).send({ message: 'Could not log in user', code: 400, userInstance: null });
     }
   };
 
   getUserData = async (req:express.Request, res: express.Response) => {
-    const userDocument = await UserModel.getUserData(String(req.params.username)).catch((err)=>{
-      debug(err);
-    });
+    const userDocument = await UserModel.getUserData(String(req.params.username));
+    if (userDocument == null) {
+      res.status(404)
+        .render(path.join(__dirname, '../public/views/user-not-found'), {username: String(req.params.username)});
+    } else {
+      res.send(userDocument);
+    }
+  }
+
+  updateUserData = async (req:express.Request, res: express.Response) => {
+    const updates:UserModel.IUserUpdate = req.body;
+    const username = req.params.username;
+    const userDocument = await UserModel.updateUser(username, updates);
     if (userDocument == null) {
       res.status(404)
         .render(path.join(__dirname, '../public/views/user-not-found'), {username: String(req.params.username)});

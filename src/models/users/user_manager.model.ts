@@ -41,10 +41,12 @@ const UserManagerSchema = new Schema({
 
 const UserManager = userMongoose.model('UserManager', UserManagerSchema);
 
+
+
 /****************************************************************************//**
  * @summary initializes user manager in MongoDB
  * @description creates a user manager for the assosciated user id
- * @param {string} user_id - user id of associated  
+ * @param {string} user_id - id of associated user
  * @return returns a promise of type ResponseObject containing a status, message and user manager document on success. 
  * Omits document on failure.
  * 
@@ -78,3 +80,21 @@ export async function initializeUserManager(user_id:string):Promise<Partial<Resp
     });
   return result;
 };
+
+/****************************************************************************//**
+ * @summary deletes user manager in MongoDB
+ * @description deletes user manager for the assosciated id
+ * @param {string} user_id - id of associated user account
+ * @return returns a promise of type ResponseObject containing a status, message and user manager document on success. 
+ * Omits document on failure.
+ * 
+ * ****************************************************************************/
+export async function deleteUserManager(user_id:string):Promise<Partial<ResponseObject>> { // deletes from database
+  var result={};
+  await UserManager.find({user_id: user_id}).remove().exec().then(doc => {
+    result = {status: 200, user_manager_doc: doc, message: `UserManager associated with ${user_id} Deleted.`};
+  }).catch(err => {
+    result = {status: 500, message: err}; 
+  });
+  return result;
+}
