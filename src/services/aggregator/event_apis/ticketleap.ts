@@ -10,7 +10,6 @@ import {default as settings} from '../config';
 import Debug from 'debug';
 
 const debug = Debug('ticketleap');
-
 /** *************************************************************************//**
  * EXTERNAL VENDOR API (EVAPI) Integration
  * @host Ticketleap

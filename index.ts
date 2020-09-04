@@ -1,11 +1,10 @@
-import * as aggregator from './services/aggregator/aggregator';
+import * as aggregator from './src/services/aggregator/aggregator';
 import express from 'express';
 import * as bodyParser from 'body-parser';
-import * as EventsRouter from './src/api/events/routes.config';
-import * as constants from './common/public/constants';
-import * as Location from './common/utils/location';
-import * as LocationModel from './models/location/location.model';
-import {UPDATE_PORT as PORT} from './common/utils/config';
+import * as constants from './src/common/public/constants';
+import * as Location from './src/common/utils/location';
+import * as LocationModel from './src/models/location/location.model';
+import {UPDATE_PORT as PORT} from './src/common/utils/config';
 
 
 const app = express();
@@ -28,7 +27,7 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
-EventsRouter.routesConfig(app);
+//EventsRouter.routesConfig(app);
 
 /* <-------------------------------------------------------------
 Sanity check */

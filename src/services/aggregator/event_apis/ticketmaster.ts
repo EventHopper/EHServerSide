@@ -29,7 +29,6 @@ const debug = Debug('ticketmaster');
 
 export function aggregateExternalVendor(location: any) {
   // Construct URL
-
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth() + 1; // January is 0
@@ -123,6 +122,6 @@ export function importToDatabase(external_events: any[]) {
       public_action: element.url,
       event_manager_id: null, // TODO: Add later
     };
-    eventModel.saveEvent(newEvent);
+    eventModel.saveEvent(newEvent);   
   });
 }
