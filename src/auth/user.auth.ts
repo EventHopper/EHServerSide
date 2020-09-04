@@ -6,10 +6,16 @@ import Realm from 'realm';
 export async function checkCredentials(email:string, password:string):Promise<any> {
   const app: Realm.App = new Realm.App({id: `${ID}`});
   const userCredentials = Realm.Credentials.emailPassword(email, password);
-  const user: Realm.User = await app.logIn(userCredentials);
-  if (user) {
+  let user:any;
+  try {
+    user = await app.logIn(userCredentials);
+  } catch (error) {
+    user = null;
+  }
+  
+  if (user!=null) {
     return await getUserData(undefined, email);
   } else {
-    return undefined;
+    return {message : 'invalid username/password',}
   }
 };

@@ -181,18 +181,32 @@ export function search(query:string, limit?:number) { // list users matching que
  * ****************************************************************************/
 export function getUserData(username?:string, email?:string):any { // list single users
   const query = username? username.toLowerCase():email?.toLowerCase();
-  const property = username?'username':'email';
   return new Promise((resolve, reject) => {
-    User.findOne({'username': `${query}`},
-      function(err:any, userDocument:any) {
-        if (err) {
-          debug(err);
-          reject(err);
-        } else {
-          debug(userDocument);
-          resolve(userDocument);
-        }
-      });
+    if (username) {
+      User.findOne({username : `${query}`},
+        function(err:any, userDocument:any) {
+          if (err) {
+            debug(err);
+            reject(err);
+          } else {
+            debug(userDocument);
+            resolve(userDocument);
+          }
+        });
+    } else if(email){
+      User.findOne({email : `${query}`},
+        function(err:any, userDocument:any) {
+          if (err) {
+            debug(err);
+            reject(err);
+          } else {
+            debug(userDocument);
+            resolve(userDocument);
+          }
+        });
+    } else {
+      return {message:'No email or username provided'}
+    }
   });
 };
 
