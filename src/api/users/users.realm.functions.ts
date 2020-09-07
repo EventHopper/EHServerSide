@@ -76,8 +76,8 @@ class RealmFunctions {
       };
     }).catch((err)=>{
       result = {
-        message: `LOGIN_FAILED: {userID: ${null}}`,
-        code: 200,
+        message: `LOGIN_FAILED: ${err}`,
+        code: 400,
         userInstance: null
       };
     });

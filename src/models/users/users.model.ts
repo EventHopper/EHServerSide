@@ -4,7 +4,7 @@ import {userMongooseInstance as userMongoose} from '../../services/mongoose/mong
 import Debug from 'debug';
 import { Document } from 'mongoose';
 import { initializeUserManager, deleteUserManager } from './user_manager.model';
-import { rejects } from 'assert';
+import { deleteUserAccount } from '../../auth/user.auth'
 import { checkCredentials } from '../../auth/user.auth';
 
 const Schema = userMongoose.Schema;
@@ -179,11 +179,23 @@ export function search(query:string, limit?:number) { // list users matching que
  * @return returns Promise of user document or error on fail
  * 
  * ****************************************************************************/
-export function getUserData(username?:string, email?:string):any { // list single users
-  const query = username? username.toLowerCase():email?.toLowerCase();
+export function getUserData(username?:string, email?:string, id?:string):any { // list single users
   return new Promise((resolve, reject) => {
-    if (username) {
-      User.findOne({username : `${query}`},
+
+    if(id) {
+      User.findOne({user_id : `${id}`},
+        function(err:any, userDocument:any) {
+          if (err) {
+            debug(err);
+            reject(err);
+          } else {
+            debug(userDocument);
+            resolve(userDocument);
+          }
+        });
+    }
+    else if (username) {
+      User.findOne({username : `${username}`},
         function(err:any, userDocument:any) {
           if (err) {
             debug(err);
@@ -194,7 +206,7 @@ export function getUserData(username?:string, email?:string):any { // list singl
           }
         });
     } else if(email){
-      User.findOne({email : `${query}`},
+      User.findOne({email : `${email}`},
         function(err:any, userDocument:any) {
           if (err) {
             debug(err);
@@ -218,22 +230,34 @@ export function getUserData(username?:string, email?:string):any { // list singl
  * @return returns response object with fields message, status
  * 
  * ****************************************************************************/
-export async function wipeUserData(email:string, password:string){ // deletes from database
-  let result = {};
-  const userData:IUser = await checkCredentials(email, password);
+export async function wipeUserData(email:string, password:string) { // deletes from database
+  let result = {status: 500, message: 'Internal Error'};
+  const userData:IUser = (await checkCredentials(email, password, undefined, true)).userData;
+  console.log(userData);
   if (userData) {
-    let deletionResult:any = await deleteUserManager(userData.user_id);
-    if(deletionResult.status == 200){
-      User.find({user_id:userData.user_id}).remove().exec().then(doc => {
-        result = {status: 200, message: `UserManager associated with ${userData.user_id} Deleted.`};
-      }).catch(err => {
-        result = {status: 500, message: err}; 
-      });
+    let accountDeletionResult = await deleteUserAccount(email, password);
+    console.log(accountDeletionResult);
+    if (accountDeletionResult.status == 204) {
+      let deletionResult:any = await deleteUserManager(userData.user_id);
+      if(deletionResult.status == 200) {
+        result = await User.find({user_id:userData.user_id}).remove().exec().then(doc => {
+          result = {status: 200, message: `UserManager associated with ${userData.user_id} deleted.`};
+          return result;
+        }).catch(err => {
+          result = {status: 500, message: err}; 
+          return result;
+        });
+      } else {
+        result = {status: 400, message: 'Was unable to perform deletion. Please try again later.'};
+        return result;
+      }
     } else {
       result = {status: 400, message: 'Was unable to perform deletion. Please try again later.'};
+      return result;
     }
   }else {
     result = {status: 400, message: 'Invalid credentials. Cannot perform acoount deletion'};
+    return result;
   }
   return result;
 };

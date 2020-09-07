@@ -38,11 +38,12 @@ class UserController implements ControllerInterface {
     // this.router.post(UserRoutes.emailConfirmPath, this.resendEmailVerification);
     this.router.get(UserRoutes.userInformation, this.getUserData);
     this.router.post(UserRoutes.userInformation, this.updateUserData);
+    this.router.delete(UserRoutes.userInformation, this.deleteUserAccount);
     this.router.get(UserRoutes.userSearch, this.searchUsers);
   }
 
   // resendEmailVerification = (req:express.Request, res:express.Response) => {
-  //   const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
+  //   const realmFunc:RealmFunctions = new RealmFunctionsd(this._auth);
   //   realmFunc.resendConfirmationEmail(req.body.email);
   // }
 
@@ -58,6 +59,7 @@ class UserController implements ControllerInterface {
       const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
       const result = await realmFunc.registerUser(String(req.body.email), String(req.body.password));
       if (result?.code==200) {
+        console.log(result);
         const user:Realm.User = result!.userInstance!;
         const newUser:UserModel.IUser = {
           username: String(req.body.username).toLowerCase(),
@@ -67,11 +69,11 @@ class UserController implements ControllerInterface {
           image_url: req.body.image_url ? req.body.image_url : 'null',
           user_manager_id: '',
         };
-        console.log ('this is the user id: ', user.id);
+        
         let creationResult = await UserModel.initializeUserData(newUser);
 
         if (creationResult.status == 200) {
-          res.status(creationResult.status).json(creationResult.message);
+          res.status(creationResult.status).json('Successfully registered user');
           return;
         } else {
           res.status(500).send({ message: 'Cannot Register User, we encountered an error', code: 500, userInstance: null });
@@ -120,6 +122,15 @@ class UserController implements ControllerInterface {
         .render(path.join(__dirname, '../public/views/user-not-found'), {username: String(req.params.username)});
     } else {
       res.send(userDocument);
+    }
+  }
+
+  deleteUserAccount = async (req:express.Request, res: express.Response) => {
+    const result = await UserModel.wipeUserData(req.body.email, req.body.password);
+    if (result.status == 200) {
+      res.status(200).send(result);
+    } else {
+      res.status(result.status).send(result);
     }
   }
 
