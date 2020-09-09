@@ -31,6 +31,18 @@ it('Succeeds to get the users endpoint and list users', async done => {
   done();
 });
 
+it('Wipe User Data', async done => {
+  // Sends GET Request to /test endpoint
+  const res = await request
+    .delete(`/users/${TestingConstants.testUsername}?key=${KEY}`)
+    .set('Content-Type', 'application/json')
+    .send(`{"email":"${TestingConstants.testEmail}","password": "${TestingConstants.testPassword}"}`);
+  expect(res.status).toBe(200);
+  expect(res.body).toBeDefined();
+  expect(String(res.body.message)).toMatch('UserManager associated with');
+  done();
+});
+
 it('Succeeds to register user', async done => {
   // Sends POST Request to /test endpoint
   const res = await request
@@ -176,15 +188,5 @@ it('User manager successfully created', async done => {
 //   done();
 // });
 
-it('Wipe User Data', async done => {
-  // Sends GET Request to /test endpoint
-  const res = await request
-    .delete(`/users/${TestingConstants.testUsername}?key=${KEY}`)
-    .set('Content-Type', 'application/json')
-    .send(`{"email":"${TestingConstants.testEmail}","password": "${TestingConstants.testPassword}"}`);
-  expect(res.status).toBe(200);
-  expect(res.body).toBeDefined();
-  expect(String(res.body.message)).toMatch('UserManager associated with');
-  done();
-});
+
   
