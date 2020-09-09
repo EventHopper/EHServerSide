@@ -37,7 +37,6 @@ export const initializeEventManager = async (eventID: string) => { // saves to d
     log_url: '',
     conversions: []  
   } ;
-
   const eventManager:IEventManager = manager;
   let result:any;
   await EventManager.findOneAndUpdate(
@@ -57,3 +56,33 @@ export const initializeEventManager = async (eventID: string) => { // saves to d
   return result;
 };
 
+export const updateEventManager = async (eventID: string, updateFields: any) => { // saves to database
+  
+  let result:any;
+  let update_1 = { $push: updateFields};
+  let update_2 = {log_url : 'fordo', $push: updateFields};
+  let fieldsUpdate = updateFields.log_url ? update_2 : update_1;
+
+  await EventManager.findOneAndUpdate(
+    {event_id: eventID},
+    fieldsUpdate,
+    {setDefaultsOnInsert: true, useFindAndModify: true, new: true},
+    function(err: any, doc: any) {
+      if (err) {
+        console.log('error in manager: ', err);
+        debug('here is the error:', err);
+        result = {error: err};
+      }
+      debug('succesfully saved event manager');
+      //console.log(doc._id);
+      result = doc._id;
+    });
+  return result;
+}; 
+
+/*
+PersonModel.update(
+    { _id: person._id }, 
+    { $push: { friends: friend, } },
+    done
+);  */
