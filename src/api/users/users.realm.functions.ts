@@ -10,17 +10,14 @@ import { json } from 'body-parser';
 import Debug from 'debug';
 import e from 'express';
 const debug = Debug('users.realm.functions');
-/**
- * @deprecated RealmFunctions class may soon be deprecated following decision to move
- * user authentication to the client-side. Some functions may still persist.
- */
+
 class RealmFunctions {
   private _auth: Auth;
 
   constructor(auth: Auth) {
-    console.warn(`Some functions in the RealmFunctions class may soon be deprecated 
-      following decision to move user authentication to the client-side. 
-      Some functions may still persist.`);
+    // console.warn(`Some functions in the RealmFunctions class may soon be deprecated 
+    //   following decision to move user authentication to the client-side. 
+    //   Some functions may still persist.`);
     this._auth = auth;
   }
 
@@ -76,8 +73,8 @@ class RealmFunctions {
       };
     }).catch((err)=>{
       result = {
-        message: `LOGIN_FAILED: {userID: ${null}}`,
-        code: 200,
+        message: `LOGIN_FAILED: ${err}`,
+        code: 400,
         userInstance: null
       };
     });

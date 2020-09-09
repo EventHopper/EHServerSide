@@ -27,14 +27,13 @@ it('Fails to get home route', async done => {
 });
 
 it(`should return user object of ${TestingConstants.testUsername}`, async done => {
-  const userObject = await Auth.checkCredentials(TestingConstants.testEmail, TestingConstants.testPassword);
+  const userObject = (await Auth.checkCredentials(TestingConstants.testEmail, TestingConstants.testPassword)).userData;
   expect(userObject.username).toBe(TestingConstants.testUsername);
-  console.log(userObject);
   done();
 });
 
 it(`should fail to return the user object of ${TestingConstants.testUsername}`, async done => {
   const userObject = await Auth.checkCredentials(TestingConstants.testEmail, (TestingConstants.testPassword+'wrong'));
-  expect(userObject.message).toBe('invalid username/password');
+  expect(userObject.message).toBe('Could not delete account due to error: invalid username/password');
   done();
 });

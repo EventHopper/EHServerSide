@@ -43,8 +43,8 @@ module.exports = {
   coverageThreshold: {
     'global': {
       'branches': 50,
-      'functions': 75,
-      'lines': 75,
+      'functions': 70,
+      'lines': 70,
       'statements': -300
     }
   },
@@ -90,7 +90,7 @@ module.exports = {
   // moduleNameMapper: {},
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
-  // modulePathIgnorePatterns: [],
+  modulePathIgnorePatterns: ['./src/api/internal/storage/users/index.ts'],
 
   // Activates notifications for test results
   // notify: false,
