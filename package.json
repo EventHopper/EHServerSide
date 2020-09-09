@@ -9,9 +9,9 @@
     "start:updater": "ts-node index.ts",
     "start:storage": "ts-node src/api/internal/storage",
     "test": "jest --coverage --runInBand --forceExit --detectOpenHandles",
-    "test:users": "jest --coverage --runInBand --forceExit --detectOpenHandles users.tests.ts",
-    "test:events": "jest --coverage --runInBand --forceExit --detectOpenHandles events.tests.ts",
-    "test:server": "jest --coverage --runInBand --forceExit --detectOpenHandles server.tests.ts",
+    "test:users": "jest users.tests.ts --coverage --runInBand --forceExit --detectOpenHandles --collectCoverageFrom=src/**/users/*.ts",
+    "test:events": "jest events.tests.ts --coverage --runInBand --forceExit --detectOpenHandles --collectCoverageFrom=src/**/events/*.ts",
+    "test:server": "jest server.tests.ts --runInBand --forceExit --detectOpenHandles",
     "test:watch": "jest --watch --runInBand --detectOpenHandles"
   },
   "repository": {

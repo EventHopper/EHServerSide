@@ -11,7 +11,7 @@ import {ControllerInterface} from '../utils/controller.interface';
 import RealmFunctions from './users.realm.functions';
 import Realm from 'realm';
 import path, { relative } from 'path';
-import UserFunctions from './users.functions';
+// import UserFunctions from './users.functions';
 import UserRoutes from './users.routes.config';
 import Debug from 'debug';
 import validator from 'validator';
@@ -42,11 +42,19 @@ class UserController implements ControllerInterface {
     this.router.get(UserRoutes.userSearch, this.searchUsers);
   }
 
-  // resendEmailVerification = (req:express.Request, res:express.Response) => {
-  //   const realmFunc:RealmFunctions = new RealmFunctionsd(this._auth);
-  //   realmFunc.resendConfirmationEmail(req.body.email);
-  // }
+  /**
+   * @route GET /users
+   * @documentaiton {https://docs.eventhopper.app/users#h.28k4ntj99bnx}
+   */
+  listUsers = async (req:express.Request, res:express.Response) => {
+    const userList = await UserModel.list(100, 0);
+    res.json(userList);
+  };
 
+  /**
+   * @route POST /users/register
+   * @documentaiton {https://docs.eventhopper.app/users#h.tdqa8qxms843}
+   */
   registerNewUser = async (req:express.Request, res:express.Response) => {
 
     if (JSON.stringify(req.body) != JSON.stringify({})) {
@@ -76,7 +84,7 @@ class UserController implements ControllerInterface {
           res.status(creationResult.status).json('Successfully registered user');
           return;
         } else {
-          res.status(500).send({ message: 'Cannot Register User, we encountered an error', code: 500, userInstance: null });
+          res.status(400).send({ message: 'Cannot Register User, we encountered an error', code: 400, userInstance: null });
           return;
         }
       }
@@ -89,20 +97,10 @@ class UserController implements ControllerInterface {
     }
   };
 
-  logIn = async (req:express.Request, res:express.Response) => {
-    const username = req.query.username;
-    if (JSON.stringify(req.body) !== JSON.stringify({})) {
-      const email = req.body.email;
-      const password = req.body.password;
-      const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
-      const result = await realmFunc.logIn(email, password);
-      debug(result);
-      res.json(result);
-    } else {
-      res.status(400).send({ message: 'Could not log in user', code: 400, userInstance: null });
-    }
-  };
-
+  /**
+   * @route GET /users/:username
+   * @documentaiton {https://docs.eventhopper.app/users#h.8ck31sozoexm}
+   */
   getUserData = async (req:express.Request, res: express.Response) => {
     const userDocument = await UserModel.getUserData(String(req.params.username));
     if (userDocument == null) {
@@ -113,6 +111,10 @@ class UserController implements ControllerInterface {
     }
   }
 
+  /**
+   * @route POST /users/:username
+   * @documentaiton {https://docs.eventhopper.app/users#h.dap8ntvndtu3}
+   */
   updateUserData = async (req:express.Request, res: express.Response) => {
     const updates:UserModel.IUserUpdate = req.body;
     const username = req.params.username;
@@ -125,6 +127,10 @@ class UserController implements ControllerInterface {
     }
   }
 
+  /**
+   * @route DELETE /users/:username
+   * @documentaiton {https://docs.eventhopper.app/users#h.fzbj7ypc3ybm}
+   */
   deleteUserAccount = async (req:express.Request, res: express.Response) => {
     const result = await UserModel.wipeUserData(req.body.email, req.body.password);
     if (result.status == 200) {
@@ -134,6 +140,10 @@ class UserController implements ControllerInterface {
     }
   }
 
+  /**
+   * @route GET /search/users
+   * @documentaiton {https://docs.eventhopper.app/users#h.s2q7rru30coi}
+   */
   searchUsers = async (req:express.Request, res: express.Response) => {
     let searchQuery:string = '';
     debug(req.query.query);
@@ -155,22 +165,6 @@ class UserController implements ControllerInterface {
     }
   }
 
-  sendFriendRequest = (req:express.Request, res: express.Response) => {
-    if (JSON.stringify(req.body) !== JSON.stringify({})) {
-
-    } else {
-
-    }
-  }
-
-  verifyPassword = function(username:string, password:string, done:Function) {
-
-  }
-
-  listUsers = async (req:express.Request, res:express.Response) => {
-    const userList = await UserModel.list(100, 0);
-    res.json(userList);
-  };
 }
 
 export default UserController;
