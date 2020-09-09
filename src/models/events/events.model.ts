@@ -105,7 +105,7 @@ const list = (perPage: number, page: number, query?: any) => { // list events
 
 const byID = (idParam: string) => { // find event by ID
   return new Promise((resolve, reject) => {
-    Event.find({_id:idParam})
+    Event.find({venddor_id:idParam})
       .exec(function(err:any, event:any) {
         if (err) {
           debug(err);

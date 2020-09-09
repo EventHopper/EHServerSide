@@ -31,31 +31,31 @@ it('Succeeds to get the users endpoint and list users', async done => {
   done();
 });
 
-it('Wipe User Data', async done => {
-  // Sends GET Request to /test endpoint
-  const res = await request
-    .delete(`/users/${TestingConstants.testUsername}?key=${KEY}`)
-    .set('Content-Type', 'application/json')
-    .send(`{"email":"${TestingConstants.testEmail}","password": "${TestingConstants.testPassword}"}`);
-  expect(res.status).toBe(200);
-  expect(res.body).toBeDefined();
-  expect(String(res.body.message)).toMatch('UserManager associated with');
-  done();
-});
+// it('Wipe User Data', async done => {
+//   // Sends GET Request to /test endpoint
+//   const res = await request
+//     .delete(`/users/${TestingConstants.testUsername}?key=${KEY}`)
+//     .set('Content-Type', 'application/json')
+//     .send(`{"email":"${TestingConstants.testEmail}","password": "${TestingConstants.testPassword}"}`);
+//   expect(res.status).toBe(200);
+//   expect(res.body).toBeDefined();
+//   expect(String(res.body.message)).toMatch('UserManager associated with');
+//   done();
+// });
 
-it('Succeeds to register user', async done => {
-  // Sends POST Request to /test endpoint
-  const res = await request
-    .post(`/users/register?key=${KEY}`)
-    .set('Content-Type', 'application/json')
-    .send(`{"username": "${TestingConstants.testUsername}","email":"${TestingConstants.testEmail}","password": "${TestingConstants.testPassword}"}`);
-  expect(res.status).toBe(200);
-  expect(res.body).toBeDefined();
-  expect(getType(res.body)).toBe('string');
-  console.log(res.body);
-  expect(res.body).toMatch('Successfully registered user');
-  done();
-});
+// it('Succeeds to register user', async done => {
+//   // Sends POST Request to /test endpoint
+//   const res = await request
+//     .post(`/users/register?key=${KEY}`)
+//     .set('Content-Type', 'application/json')
+//     .send(`{"username": "${TestingConstants.testUsername}","email":"${TestingConstants.testEmail}","password": "${TestingConstants.testPassword}"}`);
+//   expect(res.status).toBe(200);
+//   expect(res.body).toBeDefined();
+//   expect(getType(res.body)).toBe('string');
+//   console.log(res.body);
+//   expect(res.body).toMatch('Successfully registered user');
+//   done();
+// });
   
 it('Fails to register existing user', async done => {
   // Sends POST Request to /test endpoint
