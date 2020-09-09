@@ -13,7 +13,6 @@ export async function checkCredentials(email:string, password:string, accessToke
   try {
 
     let user:Realm.User = await app.logIn(userCredentials);
-    console.log(user);
 
     if (accessToken) {
       token = user.accessToken;
@@ -31,7 +30,6 @@ export async function checkCredentials(email:string, password:string, accessToke
 export async function deleteUserAccount(email:string, password:string) {
 
   const responseObject = (await checkCredentials(email, password, true));
-  console.log(responseObject);
   let accessToken = responseObject.token;
   const uid = responseObject.userData.user_id;
 
@@ -52,7 +50,6 @@ export async function deleteUserAccount(email:string, password:string) {
       Authorization: `Bearer ${accessToken}`
     }
   });
-  console.log(res.data);
   return {
     status : 204,
     data : res.data

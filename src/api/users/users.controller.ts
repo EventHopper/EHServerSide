@@ -67,7 +67,6 @@ class UserController implements ControllerInterface {
       const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
       const result = await realmFunc.registerUser(String(req.body.email), String(req.body.password));
       if (result?.code==200) {
-        console.log(result);
         const user:Realm.User = result!.userInstance!;
         const newUser:UserModel.IUser = {
           username: String(req.body.username).toLowerCase(),

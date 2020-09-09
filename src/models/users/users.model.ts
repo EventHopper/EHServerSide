@@ -233,10 +233,8 @@ export function getUserData(username?:string, email?:string, id?:string):any { /
 export async function wipeUserData(email:string, password:string) { // deletes from database
   let result = {status: 500, message: 'Internal Error'};
   const userData:IUser = (await checkCredentials(email, password, undefined, true)).userData;
-  console.log(userData);
   if (userData) {
     let accountDeletionResult = await deleteUserAccount(email, password);
-    console.log(accountDeletionResult);
     if (accountDeletionResult.status == 204) {
       let deletionResult:any = await deleteUserManager(userData.user_id);
       if(deletionResult.status == 200) {

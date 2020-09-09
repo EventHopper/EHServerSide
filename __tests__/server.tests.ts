@@ -28,7 +28,6 @@ it('Fails to get home route', async done => {
 
 it(`should return user object of ${TestingConstants.testUsername}`, async done => {
   const userObject = (await Auth.checkCredentials(TestingConstants.testEmail, TestingConstants.testPassword)).userData;
-  console.log(userObject);
   expect(userObject.username).toBe(TestingConstants.testUsername);
   done();
 });

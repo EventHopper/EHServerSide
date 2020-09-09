@@ -93,7 +93,6 @@ export async function deleteUserManager(user_id:string):Promise<Partial<Response
   var result={};
   result = await UserManager.find({user_id: user_id}).remove().exec().then(doc => {
     if (doc) {
-      console.log(doc);
       return {status: 200, user_manager_doc: doc, message: `UserManager associated with ${user_id} Deleted.`};
     } else {
       return{status: 400, message: `Error: UserManager associated with ${user_id} not found.`}; 
