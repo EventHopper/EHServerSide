@@ -9,17 +9,22 @@ class Auth {
   public app: Realm.App = new Realm.App({id: `${ID}`});
   public authUser!: Realm.User;
 
-  //WIP
-  // public getAccessToken() {
-  //   return this.authUser.accessToken;
-  // }
+  /** 
+  * WIP
+  */
+  public getAccessToken() {
+    return this.authUser.accessToken;
+  }
 
-  //WIP
-  // public refreshToken() {
-  //   return this.authUser.refreshToken;
-  // }
-
-  //WIP
+  /** 
+   * WIP
+  */
+  public refreshToken() {
+    return this.authUser.refreshToken;
+  }
+  /** 
+   * WIP
+  */
   // public hasAccessToken() {
   //   if (!this.authUser) {
   //     return false;
@@ -35,7 +40,7 @@ class Auth {
   * @param {string} apiKey The API key.
   * @return {int} The sum of the two numbers.
   */
-  public loginApiKey = async (apiKey: string) => {
+  public loginApiKey = async (apiKey: string, returnToken?:boolean) => {
     // Create an API Key credential
     const credentials = Realm.Credentials.serverApiKey(apiKey);
 
@@ -46,11 +51,16 @@ class Auth {
       // `App.currentUser` updates to match the logged in user
       assert(user.id === this.app.currentUser!.id);
       this.authUser = user;
+
+      if (returnToken)
+        return this.authUser.accessToken;
+
       return 'AUTH_SUCCESS';
     } catch (err) {
       return 'AUTH_FAILED';
     }
   }
+
 }
 
 export default Auth;

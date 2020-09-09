@@ -91,10 +91,15 @@ export async function initializeUserManager(user_id:string):Promise<Partial<Resp
  * ****************************************************************************/
 export async function deleteUserManager(user_id:string):Promise<Partial<ResponseObject>> { // deletes from database
   var result={};
-  await UserManager.find({user_id: user_id}).remove().exec().then(doc => {
-    result = {status: 200, user_manager_doc: doc, message: `UserManager associated with ${user_id} Deleted.`};
+  result = await UserManager.find({user_id: user_id}).remove().exec().then(doc => {
+    if (doc) {
+      return {status: 200, user_manager_doc: doc, message: `UserManager associated with ${user_id} Deleted.`};
+    } else {
+      return{status: 400, message: `Error: UserManager associated with ${user_id} not found.`}; 
+    }
   }).catch(err => {
-    result = {status: 500, message: err}; 
+    return {status: 500, message: err}; 
   });
+
   return result;
 }

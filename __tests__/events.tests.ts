@@ -36,6 +36,20 @@ it('Fails to get the events venue endpoint due to lack of venue name', async don
   expect(res.body).toContain('Invalid venue name');
   done()
 });
+
+it('Succeeds to get event by ID', async done => {
+  // Sends GET Request to /test endpoint
+  const res = await request.get(`/events?index=id&id=1d1d88a8-35aa-11ea-81de-22000b39e366-001&key=${KEY}`);
+  expect(res.status).toBe(200);
+  done()
+});
+
+it('Succeeds to get event by city', async done => {
+  // Sends GET Request to /test endpoint
+  const res = await request.get(`/events?index=location&city=philadelphia&key=${KEY}`);
+  expect(res.status).toBe(200);
+  done()
+});
   
 it('Succeeds to get events by Location with filters', async done => {
   // Sends GET Request to /event endpoint
