@@ -59,9 +59,8 @@ export const initializeEventManager = async (eventID: string) => { // saves to d
 export const updateEventManager = async (eventID: string, updateFields: any) => { // saves to database
   
   let result:any;
-  let update_1 = { $push: updateFields};
-  let update_2 = {log_url : 'fordo', $push: updateFields};
-  let fieldsUpdate = updateFields.log_url ? update_2 : update_1;
+  let update_1 = { $push: updateFields}; //for updating arrays
+  let fieldsUpdate = updateFields.log_url ? {log_url: updateFields.log_url} : update_1;
 
   await EventManager.findOneAndUpdate(
     {event_id: eventID},
@@ -73,16 +72,9 @@ export const updateEventManager = async (eventID: string, updateFields: any) => 
         debug('here is the error:', err);
         result = {error: err};
       }
-      debug('succesfully saved event manager');
+      debug('succesfully updated event manager');
       //console.log(doc._id);
       result = doc._id;
     });
   return result;
 }; 
-
-/*
-PersonModel.update(
-    { _id: person._id }, 
-    { $push: { friends: friend, } },
-    done
-);  */
