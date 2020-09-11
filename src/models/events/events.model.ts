@@ -85,6 +85,24 @@ const saveEvent = async (eventData: any) => { // saves to database
     });
 };
 
+const updateEvent = async (eventData: any) => { // saves to database
+  const event = eventData;
+  //debug(event.venue.position);
+  return Event.findOneAndUpdate(
+    {vendor_id: event.vendor_id},
+    event,
+    {setDefaultsOnInsert: true, useFindAndModify: true, new: true},
+    function(err: any, doc: any) {
+      if (err) {
+        console.log('error in event: ', err);
+        debug('here is the error:', err);
+        return {error: err};
+      }
+      debug('succesfully saved');
+      return 'Succesfully saved.';
+    });
+};
+
 
 const list = (perPage: number, page: number, query?: any) => { // list events
   return new Promise((resolve, reject) => {
@@ -149,4 +167,4 @@ const byLatLong = (perPage: number, page: number, lon:number, lat:number, query?
   });
 }
 
-export {Event, saveEvent, list, byID, byLatLong, EventDoc}; //TODO: Can't we export the whole file?
+export {Event, saveEvent, updateEvent, list, byID, byLatLong, EventDoc}; //TODO: Can't we export the whole file?
