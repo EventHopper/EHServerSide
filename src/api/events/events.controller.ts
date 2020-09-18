@@ -5,6 +5,7 @@
 /* eslint-disable max-len */
 // const EventModel = require('../../models/events/events.model');
 import * as EventModel from '../../models/events/events.model';
+import * as EventManager from '../../models/events/event_manager.model';
 import * as express from 'express';
 import Auth from '../../auth/server_auth';
 import {ControllerInterface} from '../utils/controller.interface';
@@ -13,6 +14,7 @@ const debug = Debug('events.controller');
 
 export default class EventsController implements ControllerInterface {
   public path = '/events';
+  public updatePath = '/events/:id';
   public router = express.Router();
   private _auth:Auth;
   private valid_filters:string[]; 
@@ -29,17 +31,17 @@ export default class EventsController implements ControllerInterface {
 
   public initializeRoutes() {
     this.router.get(this.path, this.pathResolver);
-    this.router.post(this.path, this.insert);
+    this.router.post(this.updatePath, this.update);
   }
 
-  public insert = (req:express.Request, res:express.Response) => {
-    if (JSON.stringify(req.body) !== JSON.stringify({})) {
-      EventModel.saveEvent(req.body)
+  public update = (req:express.Request, res:express.Response) => {
+    if (req.body) {
+      EventManager.updateEventManager(req.params.id, req.body)
         .then((result:any) => {
           return res.status(201).send({id: result._id});
         });
     } else {
-      res.json('Cannot Create EventHopper Event: Request Body Empty');
+      res.json('Cannot Update EventManager Event: Request Body Empty');
     }
   };
 
@@ -58,7 +60,7 @@ export default class EventsController implements ControllerInterface {
       page = Number.isInteger(pageParam) ? pageParam : 0;
     }
 
-    /*Parse endpoints  */
+    /*  Parse endpoints  */
     if(!req.query.index){ //no query index, return all events 
       return this.listAll(res, size, page);
     }
