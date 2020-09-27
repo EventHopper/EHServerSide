@@ -38,9 +38,15 @@ class App {
     response: express.Response, next: express.NextFunction) => {
     debug(`${request.method} ${request.path} ${String(request.query.key)}`);
     let enumString: any;
-    enumString = await this._auth.loginApiKey(String(request.query.key)).catch((err)=>{
-      debug(err);
-    });
+    if (request.query.key) {
+      enumString = await this._auth.loginApiKey(String(request.query.key)).catch((err)=>{
+        debug(err);
+      });
+    } else {
+      enumString = await this._auth.loginApiKey(String(request.headers.authorization)).catch((err)=>{
+        debug(err);
+      });
+    }
 
     if (enumString === 'AUTH_SUCCESS') {
       // debug(chalk.greenBright('Auth Succeeded'));
