@@ -12,6 +12,19 @@ on:
       - master
 jobs:
   build-and-deploy:
+    env:
+        TEST_PORT: 1025
+        UPDATE_PORT: 1026
+        TEST_AUTH_API_KEY: ${{ secrets.SERVER_API_KEY }}
+        REALM_APP_ID: ${{ secrets.REALM_APP_ID }}
+        TICKETMASTER_CONSUMER_KEY: ${{ secrets.TICKETMASTER }}
+        TICKETLEAP_API_KEY: ${{ secrets.TICKETLEAP }}
+        ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+        GOOGLE_GEOCODING_API_KEY: ${{ secrets.GEOCODING }}
+        REALM_PUBLIC_KEY: ${{ secrets.REALM_PUBLIC_KEY }}
+        REALM_PRIVATE_KEY: ${{ secrets.REALM_PRIVATE_KEY }}
+        MONGO_PROJECT_ID: ${{ secrets.MONGO_PROJECT_ID }}
+        REALM_NUMERICAL_APP_ID: ${{ secrets.REALM_NUMERICAL_APP_ID }}
     runs-on: ubuntu-latest
 
     steps:
