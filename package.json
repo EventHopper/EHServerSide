@@ -4,7 +4,7 @@
   "description": "Server Side functionality including REST API hosting and module to populate events",
   "main": "index.js",
   "scripts": {
-    "start": "npm ci && npm install && ts-node src/api/internal/server.ts",
+    "start": "ts-node src/api/internal/server.ts",
     "start:client": "ts-node src/api/internal/server.ts",
     "start:updater": "ts-node index.ts",
     "start:storage": "ts-node src/api/internal/storage",
