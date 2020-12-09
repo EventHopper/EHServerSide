@@ -5,7 +5,7 @@
 
 import Auth from '../../auth/server_auth';
 import assert from 'assert';
-import Realm from 'realm';
+import Realm from 'realm'; 
 import { json } from 'body-parser';
 import Debug from 'debug';
 import e from 'express';

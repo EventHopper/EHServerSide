@@ -8,6 +8,7 @@ import * as UserModel from '../../models/users/users.model';
 import * as express from 'express';
 import Auth from '../../auth/server_auth';
 import {ControllerInterface} from '../utils/controller.interface';
+import FirebaseFunctions from '../../services/firebase/index';
 import RealmFunctions from './users.realm.functions';
 import Realm from 'realm';
 import path, { relative } from 'path';
@@ -64,14 +65,15 @@ class UserController implements ControllerInterface {
         return;
       }
 
-      const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
-      const result = await realmFunc.registerUser(String(req.body.email), String(req.body.password));
+      // const realmFunc:RealmFunctions = new RealmFunctions(this._auth);
+      const firebaseFunc:FirebaseFunctions = new FirebaseFunctions();
+      const result = await firebaseFunc.registerUser(String(req.body.email), String(req.body.password));
       if (result?.code==200) {
-        const user:Realm.User = result!.userInstance!;
+        // const user:Realm.User = result!.userInstance!;
         const newUser:UserModel.IUser = {
           username: String(req.body.username).toLowerCase(),
           email: req.body.email,
-          user_id: user.id,
+          user_id: result.userID,
           full_name: req.body.full_name ? req.body.full_name : 'null',
           image_url: req.body.image_url ? req.body.image_url : 'null',
           user_manager_id: '',
@@ -131,7 +133,7 @@ class UserController implements ControllerInterface {
    * @documentaiton {https://docs.eventhopper.app/users#h.fzbj7ypc3ybm}
    */
   deleteUserAccount = async (req:express.Request, res: express.Response) => {
-    const result = await UserModel.wipeUserData(req.body.email, req.body.password);
+    const result = await UserModel.wipeUserData(req.body.tokenID);
     if (result.status == 200) {
       res.status(200).send(result);
     } else {

@@ -39,7 +39,7 @@ const location = {
   city: 'Philadelphia',
 };
 
-(async() => {
+(async () => {
   // let location = await getLocation();
   // console.log(location);
 
