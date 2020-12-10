@@ -272,11 +272,11 @@ export async function wipeUserDataOld(email:string, password:string) { // delete
  * 
  * ****************************************************************************/
 export async function wipeUserData(tokenID:string,) { // deletes from database
-  let result = {status: 500, message: 'Internal Error'};
+  let result = {status: 400, message: 'No TokenID provided'};
 
   if (tokenID) {
-    var accountDeletionResult = await new FirebaseFunctions().deleteUserAccount(tokenID);
-    const userData:IUser = accountDeletionResult.data.userData;
+    let accountDeletionResult = await new FirebaseFunctions().deleteUserAccount(tokenID);
+    const userData:any = accountDeletionResult.data.userData;
     if (accountDeletionResult.status == 204) {
       let deletionResult:any = await deleteUserManager(accountDeletionResult.data.uid);
       if(deletionResult.status == 200) {
@@ -288,11 +288,11 @@ export async function wipeUserData(tokenID:string,) { // deletes from database
           return result;
         });
       } else {
-        result = {status: 400, message: 'Was unable to perform deletion. Please try again later.'};
+        result = {status: 400, message: 'Was unable to perform deletion Please try again later.'};
         return result;
       }
     } else {
-      result = {status: 400, message: 'Was unable to perform deletion. Please try again later.'};
+      result = {status: 400, message: `Was unable to perform deletion - ${accountDeletionResult.message}`};
       return result;
     }
   }

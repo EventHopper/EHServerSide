@@ -5,13 +5,17 @@ import * as UserModel from '../../models/users/users.model';
 
 const debug = Debug('firebase.admin.service');
 var serviceAccount = require('./hopperclient-3194b-firebase-adminsdk-j6r97-d5ff9e857f.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 class FirebaseFunctions {
 
   constructor(){
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount)
-    });
+   
   }
+
+  
 
 public registerUser = async (email: string, password: string, phoneNumber?: string) => {
   if (password.length < 6 || password.length > 127) {
@@ -52,19 +56,19 @@ public registerUser = async (email: string, password: string, phoneNumber?: stri
   return result;
 }
 
-public deleteUserAccount = async (idToken: string) => {
-  let result:any='';
-  let uid:string = '';
-  admin.auth().verifyIdToken(idToken).then( async (decodedToken)=>{
+public deleteUserAccount = async (tokenID: string) => {
+  let result:any;
+  let uid:string = tokenID;
+  result =  admin.auth().verifyIdToken(tokenID).then( async (decodedToken)=>{
     uid = decodedToken.uid;
   }).catch((error)=>{
     debug('Error deleting user:', error);
     result = {message : `Could not delete account due to error: ${error['message']}`,};
     return result;
-  })
-  if (!result) {
+  });
+  if (result) {
     const userData:IUser = await UserModel.getUserData(undefined, undefined, uid);
-    admin
+    result = admin
       .auth()
       .deleteUser(uid)
       .then(() => {
@@ -74,7 +78,7 @@ public deleteUserAccount = async (idToken: string) => {
       })
       .catch((error) => {
         debug('Error deleting user:', error);
-        result = {message : `Could not delete account due to error: ${error['message']}`,};
+        result = {status:500, data: {uid: null, userData: null}, message : `Could not delete account due to error: ${error['message']}`,};
         return result;
       });
   } else {
