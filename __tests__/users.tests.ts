@@ -1,12 +1,16 @@
 import supertest from 'supertest';
 import App from '../src/api/app';
-import {TEST_PORT as PORT, TEST_AUTH_API_KEY as KEY} from '../src/common/utils/config';
+import  * as Config from '../src/common/utils/config';
 import EventsController from '../src/api/events/events.controller';
 import UserController from '../src/api/users/users.controller';
 import { deleteUserManager } from '../src/models/users/user_manager.model';
 import * as TestingConstants from './utils/testing.constants';
 import getType from 'jest-get-type';
 import { getUserData } from '../src/models/users/users.model';
+
+
+const PORT = Config.variables.ports.testPort;
+const KEY = Config.variables.environment.testAuthApiKey;
 
 const request = supertest(new App([
   new EventsController(),
@@ -66,7 +70,7 @@ it('Fails to register existing user', async done => {
   expect(res.status).toBe(400);
   expect(res.body).toBeDefined();
   expect(getType(res.body)).toBe('object');
-  expect(res.body.message).toMatch('name already in use');
+  expect(res.body.message).toMatch('An error occured: Error: The email address is already in use by another account.');
   done();
 });
   
@@ -110,7 +114,7 @@ it('Fails to register password too long', async done => {
   done();
 });
   
-it('Succeeds to search for user', async done => {
+it('Succeeds to search for user (limit)', async done => {
   // Sends GET Request to /test endpoint
   const res = await request
     .get(`/search/users?key=${KEY}&query=${TestingConstants.testUsername}&limit=1`);
@@ -118,6 +122,28 @@ it('Succeeds to search for user', async done => {
   expect(res.body).toBeDefined();
   expect(getType(res.body)).toBe('array');
   expect(res.body[0].username).toMatch(TestingConstants.testUsername);
+  done();
+});
+
+it('Succeeds to search for user (no limit)', async done => {
+  // Sends GET Request to /test endpoint
+  const res = await request
+    .get(`/search/users?key=${KEY}&query=${TestingConstants.testUsername}`);
+  expect(res.status).toBe(200);
+  expect(res.body).toBeDefined();
+  expect(getType(res.body)).toBe('array');
+  expect(res.body[0].username).toMatch(TestingConstants.testUsername);
+  done();
+});
+
+it('No result on search for impossible user', async done => {
+  // Sends GET Request to /test endpoint
+  const res = await request
+    .get(`/search/users?key=${KEY}&query=${1234567890}`);
+  expect(res.status).toBe(200);
+  expect(res.body).toBeDefined();
+  expect(getType(res.body)).toBe('string');
+  expect(res.body).toMatch('No Search Results');
   done();
 });
   
@@ -129,6 +155,24 @@ it('Succeeds to get user based on username', async done => {
   expect(res.body).toBeDefined();
   expect(getType(res.body)).toBe('object');
   expect(res.body.username).toMatch(TestingConstants.testUsername);
+  done();
+});
+
+it('Succeeds to get user based on id', async done => {
+  // Sends GET Request to /test endpoint
+  const res = await getUserData(null, null, TestingConstants.testID);
+  expect(getType(res)).toBe('object');
+  console.log(`This is the object: /n ${res}`);
+  expect(res.username).toMatch(TestingConstants.testUsername);
+  done();
+});
+
+it('Succeeds to get user based on email', async done => {
+  // Sends GET Request to /test endpoint
+  const res = await getUserData(null, TestingConstants.testEmail, null);
+  expect(getType(res)).toBe('object');
+  console.log(`This is the object: /n ${res}`);
+  expect(res.username).toMatch(TestingConstants.testUsername);
   done();
 });
   

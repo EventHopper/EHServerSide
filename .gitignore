@@ -8,3 +8,4 @@ auth/realm-object-server
 *.realm
 *.realm.lock
 *.orig
+src/services/firebase/hopperclient-3194b-firebase-adminsdk-j6r97-d5ff9e857f.json
