@@ -27,31 +27,31 @@ export async function checkCredentials(email:string, password:string, accessToke
   }
 };
 
-export async function deleteUserAccount(email:string, password:string) {
+// export async function deleteUserAccount(email:string, password:string) {
 
-  const responseObject = (await checkCredentials(email, password, true));
-  let accessToken = responseObject.token;
-  const uid = responseObject.userData.user_id;
+//   const responseObject = (await checkCredentials(email, password, true));
+//   let accessToken = responseObject.token;
+//   const uid = responseObject.userData.user_id;
 
-  const response = await axios.post('https://realm.mongodb.com/api/admin/v3.0/auth/providers/mongodb-cloud/login',  {
-    'username': PUBLIC_KEY, 
-    'apiKey': PRIVATE_KEY
-  },  {
-    headers: {
-      'Content-Type' : 'application/json',
-    },
-  });
+//   const response = await axios.post('https://realm.mongodb.com/api/admin/v3.0/auth/providers/mongodb-cloud/login',  {
+//     'username': PUBLIC_KEY, 
+//     'apiKey': PRIVATE_KEY
+//   },  {
+//     headers: {
+//       'Content-Type' : 'application/json',
+//     },
+//   });
   
-  accessToken = response.data.access_token;
+//   accessToken = response.data.access_token;
   
-  const api_url = `https://realm.mongodb.com/api/admin/v3.0/groups/${PROJECT_ID}/apps/${APP_ID}/users/${uid}`;
-  const res = await axios.delete(api_url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  });
-  return {
-    status : 204,
-    data : res.data
-  };
-}
+//   const api_url = `https://realm.mongodb.com/api/admin/v3.0/groups/${PROJECT_ID}/apps/${APP_ID}/users/${uid}`;
+//   const res = await axios.delete(api_url, {
+//     headers: {
+//       Authorization: `Bearer ${accessToken}`
+//     }
+//   });
+//   return {
+//     status : 204,
+//     data : res.data
+//   };
+// }
