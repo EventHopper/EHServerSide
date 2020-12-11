@@ -25,6 +25,16 @@ jobs:
         REALM_PRIVATE_KEY: ${{ secrets.REALM_PRIVATE_KEY }}
         MONGO_PROJECT_ID: ${{ secrets.MONGO_PROJECT_ID }}
         REALM_NUMERICAL_APP_ID: ${{ secrets.REALM_NUMERICAL_APP_ID }}
+        FSAV_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.FSAV_AUTH_PROVIDER_X509_CERT_URL }}
+        FSAV_AUTH_URI: ${{ secrets.FSAV_AUTH_URI }}
+        FSAV_CLIENT_EMAIL: ${{ secrets.FSAV_CLIENT_EMAIL }}
+        FSAV_CLIENT_ID: ${{ secrets.FSAV_CLIENT_ID }}
+        FSAV_CLIENT_X509_CERT_URL: ${{ secrets.FSAV_CLIENT_X509_CERT_URL }}
+        FSAV_PRIVATE_KEY: ${{ secrets.FSAV_PRIVATE_KEY }}
+        FSAV_PRIVATE_KEY_ID: ${{ secrets.FSAV_PRIVATE_KEY_ID }}
+        FSAV_PROJECT_ID: ${{ secrets.FSAV_PROJECT_ID }}
+        FSAV_TOKEN_URI: ${{ secrets.FSAV_TOKEN_URI }}
+        FSAV_TYPE: ${{ secrets.FSAV_TYPE }}
     runs-on: ubuntu-latest
 
     steps:
