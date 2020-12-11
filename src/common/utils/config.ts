@@ -56,7 +56,6 @@ export const variables = {
         'auth_provider_x509_cert_url': String(process.env.FSAV_AUTH_PROVIDER_X509_CERT_URL),
         'client_x509_cert_url': String(process.env.FSAV_CLIENT_X509_CERT_URL)
       },
-      serviceAccountWholeObject: process.env.FIREBASE_SERVICE_ACCOUNT,
     }
   },
   aggregator: {

@@ -7,7 +7,7 @@ import * as ServerConfig from '../../common/utils/config';
 const debug = Debug('firebase.admin.service');
 
 admin.initializeApp({
-  credential: admin.credential.cert(ServerConfig.variables.services.firebase.serviceAccountWholeObject as admin.ServiceAccount)
+  credential: admin.credential.cert(ServerConfig.variables.services.firebase.serviceAccountObject as admin.ServiceAccount)
 });
 class FirebaseFunctions {
 
