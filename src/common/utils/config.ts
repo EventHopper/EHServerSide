@@ -54,7 +54,7 @@ export const variables = {
         'type': String(process.env.FSAV_TYPE),
         'project_id': String(process.env.FSAV_PROJECT_ID),
         'private_key_id': String(process.env.FSAV_PRIVATE_KEY_ID),
-        'private_key': String(process.env.FSAV_PRIVATE_KEY).replace(/\\n/g, '\n'),
+        'private_key': String(process.env.FSAV_PRIVATE_KEY),
         'client_email': String(process.env.FSAV_CLIENT_EMAIL),
         'client_id': String(process.env.FSAV_CLIENT_ID),
         'auth_uri': String(process.env.FSAV_AUTH_URI),

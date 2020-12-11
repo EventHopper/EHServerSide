@@ -7,9 +7,9 @@ import * as ServerConfig from '../../common/utils/config';
 const debug = Debug('firebase.admin.service');
 
 var serviceConfig = Buffer.from(JSON.stringify(ServerConfig.variables.services.firebase.serviceAccountObject)).toString('base64');
-
+// console.log(JSON.parse(Buffer.from(serviceConfig, 'base64').toString('ascii')));
 admin.initializeApp({
-  credential: admin.credential.cert( JSON.parse(Buffer.from(serviceConfig, 'base64').toString('ascii')))
+  credential: admin.credential.cert(JSON.parse(Buffer.from(serviceConfig, 'base64').toString('ascii')))
 });
 class FirebaseFunctions {
 
