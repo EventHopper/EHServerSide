@@ -2,12 +2,12 @@ import Debug from 'debug';
 import * as admin from 'firebase-admin';
 import { IUser } from '../../models/users/users.model';
 import * as UserModel from '../../models/users/users.model';
+import * as ServerConfig from '../../common/utils/config';
 
 const debug = Debug('firebase.admin.service');
-var serviceAccount = require('./hopperclient-3194b-firebase-adminsdk-j6r97-d5ff9e857f.json');
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(ServerConfig.variables.services.firebase.serviceAccountWholeObject as admin.ServiceAccount)
 });
 class FirebaseFunctions {
 
