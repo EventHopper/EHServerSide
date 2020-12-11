@@ -27,6 +27,7 @@ public registerUser = async (email: string, password: string, phoneNumber?: stri
   }
   let result;
   let success = true;
+  let userRecordTemp:any;
   await admin
     .auth()
     .createUser({
@@ -34,25 +35,26 @@ public registerUser = async (email: string, password: string, phoneNumber?: stri
       emailVerified: true,
       password: `${password}`,
       disabled: false,
-    })
-    .then((userRecord) => {
+    }).then((userRecord) => {
       // See the UserRecord reference doc for the contents of userRecord.
-      console.log('Successfully created new user:', userRecord.uid);
-      if (success) {
-        result = {message: 'success', code: 200, userID: userRecord.uid};
-      } 
+      userRecordTemp = userRecord;
     })
     .catch((error) => {
       if (error) {
         debug(error);
         success = false;
         result = {
-          message: error,
+          message: `An error occured: ${error}`,
           code: 400,
           userID: null
         };;
       }
     });
+
+  if (success) {
+    result = {message: 'success', code: 200, userID: userRecordTemp.uid};
+    console.log('Successfully created new user:', userRecordTemp.uid);
+  } 
   return result;
 }
 

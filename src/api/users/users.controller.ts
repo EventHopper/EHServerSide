@@ -9,27 +9,21 @@ import * as express from 'express';
 import Auth from '../../auth/server_auth';
 import {ControllerInterface} from '../utils/controller.interface';
 import FirebaseFunctions from '../../services/firebase/index';
-import RealmFunctions from './users.realm.functions';
-import Realm from 'realm';
-import path, { relative } from 'path';
+import path from 'path';
 // import UserFunctions from './users.functions';
 import UserRoutes from './users.routes.config';
 import Debug from 'debug';
 import validator from 'validator';
-import { initializeUserManager } from '../../models/users/user_manager.model';
 const debug = Debug('users.controller');
 
 class UserController implements ControllerInterface {
   public router = express.Router();
-  private _auth:Auth;
 
   constructor() {
     this.initializeRoutes();
-    this._auth = new Auth();
   }
 
   public setAuthObject = (authObject:Auth) => {
-    this._auth = authObject;
   }
 
   public initializeRoutes() {

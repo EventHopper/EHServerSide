@@ -11,10 +11,10 @@ export const ENVIRONMENT = process.env.ENVIRONMENT;
 export const MONGO_PROJECT_ID = process.env.MONGO_PROJECT_ID;
 export const TICKETLEAP_API_KEY = process.env.TICKETLEAP_API_KEY;
 export const TICKETMASTER_CONSUMER_KEY = process.env.TICKETMASTER_CONSUMER_KEY;
-// export const REALM_APP_ID = process.env.REALM_APP_ID;
-// export const REALM_NUMERICAL_APP_ID = process.env.REALM_NUMERICAL_APP_ID;
-// export const REALM_PRIVATE_KEY = process.env.REALM_PRIVATE_KEY;
-// export const REALM_PUBLIC_KEY = process.env.REALM_PUBLIC_KEY;
+export const REALM_APP_ID = process.env.REALM_APP_ID;
+export const REALM_NUMERICAL_APP_ID = process.env.REALM_NUMERICAL_APP_ID;
+export const REALM_PRIVATE_KEY = process.env.REALM_PRIVATE_KEY;
+export const REALM_PUBLIC_KEY = process.env.REALM_PUBLIC_KEY;
 export const TEST_AUTH_API_KEY = process.env.TEST_AUTH_API_KEY;
 export const GOOGLE_GEOCODING_API_KEY = process.env.GOOGLE_GEOCODING_API_KEY;
 export const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY
@@ -24,7 +24,7 @@ export const usersBucket = process.env.USERS_BUCKET;
 
 export const variables = {
   ports:{
-    port: process.env.TEST_PORT,
+    testPort: process.env.TEST_PORT,
     updatePort: process.env.UPDATE_PORT,
     clientPort: process.env.CLIENT_PORT,
   },
@@ -43,12 +43,18 @@ export const variables = {
     google: {
       geocodingApiKey: process.env.GOOGLE_GEOCODING_API_KEY,
     },
+    realm: {
+      appId: process.env.REALM_APP_ID,
+      numericalAppId: process.env.REALM_NUMERICAL_APP_ID,
+      privateKey: process.env.REALM_PRIVATE_KEY,
+      publicKey: process.env.REALM_PUBLIC_KEY
+    },
     firebase: {
       serviceAccountObject: {
         'type': String(process.env.FSAV_TYPE),
         'project_id': String(process.env.FSAV_PROJECT_ID),
         'private_key_id': String(process.env.FSAV_PRIVATE_KEY_ID),
-        'private_key': JSON.parse(String(process.env.FSAV_PRIVATE_KEY)),
+        'private_key': String(process.env.FSAV_PRIVATE_KEY).replace(/\\n/g, '\n'),
         'client_email': String(process.env.FSAV_CLIENT_EMAIL),
         'client_id': String(process.env.FSAV_CLIENT_ID),
         'auth_uri': String(process.env.FSAV_AUTH_URI),
