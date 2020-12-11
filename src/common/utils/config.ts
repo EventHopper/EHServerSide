@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
-const epath = path.join('__dirname, ../../../.env');
+const epath = path.join(__dirname, '../../../.env');
 dotenv.config({path: epath});
 
 export const TEST_PORT = process.env.TEST_PORT;
@@ -51,16 +51,16 @@ export const variables = {
     },
     firebase: {
       serviceAccountObject: {
-        type: String(process.env.FSAV_TYPE),
-        project_id: String(process.env.FSAV_PROJECT_ID),
-        private_key_id: String(process.env.FSAV_PRIVATE_KEY_ID),
-        private_key: String(process.env.FSAV_PRIVATE_KEY),
-        client_email: String(process.env.FSAV_CLIENT_EMAIL),
-        client_id: String(process.env.FSAV_CLIENT_ID),
-        auth_uri: String(process.env.FSAV_AUTH_URI),
-        token_uri: String(process.env.FSAV_TOKEN_URI),
-        auth_provider_x509_cert_url: String(process.env.FSAV_AUTH_PROVIDER_X509_CERT_URL),
-        client_x509_cert_url: String(process.env.FSAV_CLIENT_X509_CERT_URL)
+        'type': String(process.env.FSAV_TYPE),
+        'project_id': String(process.env.FSAV_PROJECT_ID),
+        'private_key_id': String(process.env.FSAV_PRIVATE_KEY_ID),
+        'private_key': String(process.env.FSAV_PRIVATE_KEY),
+        'client_email': String(process.env.FSAV_CLIENT_EMAIL),
+        'client_id': String(process.env.FSAV_CLIENT_ID),
+        'auth_uri': String(process.env.FSAV_AUTH_URI),
+        'token_uri': String(process.env.FSAV_TOKEN_URI),
+        'auth_provider_x509_cert_url': String(process.env.FSAV_AUTH_PROVIDER_X509_CERT_URL),
+        'client_x509_cert_url': String(process.env.FSAV_CLIENT_X509_CERT_URL)
       },
     }
   },

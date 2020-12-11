@@ -11,12 +11,6 @@ admin.initializeApp({
 });
 class FirebaseFunctions {
 
-  constructor(){
-   
-  }
-
-  
-
 public registerUser = async (email: string, password: string, phoneNumber?: string) => {
   if (password.length < 6 || password.length > 127) {
     return {
