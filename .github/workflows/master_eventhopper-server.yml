@@ -25,6 +25,7 @@ jobs:
         REALM_PRIVATE_KEY: ${{ secrets.REALM_PRIVATE_KEY }}
         MONGO_PROJECT_ID: ${{ secrets.MONGO_PROJECT_ID }}
         REALM_NUMERICAL_APP_ID: ${{ secrets.REALM_NUMERICAL_APP_ID }}
+        SERVICE_ACCOUNT: ${{secrets.SERVICE_ACCOUNT }}
     runs-on: ubuntu-latest
 
     steps:
