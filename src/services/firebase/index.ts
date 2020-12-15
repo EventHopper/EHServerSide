@@ -74,7 +74,7 @@ public deleteUserAccount = async (tokenID: string) => {
       })
       .catch((error) => {
         debug('Error deleting user:', error);
-        result = {status:500, data: {uid: null, userData: null}, message : `Could not delete account due to error: ${error['message']}`,};
+        result = {status: 500, data: {uid: null, userData: null}, message : `Could not delete account due to error: ${error['message']}`,};
         return result;
       });
   } else {
