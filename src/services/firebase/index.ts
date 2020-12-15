@@ -39,16 +39,16 @@ public registerUser = async (email: string, password: string, phoneNumber?: stri
         success = false;
         result = {
           message: `An error occured: ${error}`,
-          code: 400,
+          code: error,
           userID: null
         };;
       }
     });
 
   if (success) {
-    result = {message: 'success', code: 200, userID: userRecordTemp.uid};
+    result = {message: 'Successfully created new user', code: 10, userID: userRecordTemp.uid};
     console.log('Successfully created new user:', userRecordTemp.uid);
-  } 
+  }
   return result;
 }
 

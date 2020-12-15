@@ -76,7 +76,7 @@ class UserController implements ControllerInterface {
         let creationResult = await UserModel.initializeUserData(newUser);
 
         if (creationResult.status == 200) {
-          res.status(creationResult.status).json('Successfully registered user');
+          res.status(creationResult.status).json(result);
           return;
         } else {
           res.status(400).send({ message: 'Cannot Register User, we encountered an error', code: 400, userInstance: null });
