@@ -6,7 +6,7 @@ export const longString = 'Lorem ipsum dolor sit amet, consectetur adipiscing el
 export const testUsername = 'kanga';
 export const testEmail = 'kangaroo@eventhopper.app';
 export const testPassword = 'password';
-export const testID = 'bg7dug4wF4g8IkV47t0goUu1Fly1'
+export const testID = '3LoUabnfbNfwgieGST7aVfSMk3l2'
 
 //This is a sanity test to ensure that the test packages are working as intended
 describe('Sample Test', () => {
