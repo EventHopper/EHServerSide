@@ -109,8 +109,7 @@ export async function deleteUserManager(user_id:string):Promise<Partial<Response
  * @description updates user manager for the assosciated id
  * @param {string} user_id - id of associated user account
  * @param {string} updateFields - fields to be updated
- * @return returns a promise of type ResponseObject containing a status, message and user manager document on success. 
- * Omits document on failure.
+ * @return returns a 
  * 
  * ****************************************************************************/
 export const updateUserManager = async (user_id: string, updateFields: any) => { // saves to database
