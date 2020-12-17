@@ -59,7 +59,7 @@ export const initializeEventManager = async (eventID: string) => { // saves to d
 export const updateEventManager = async (eventID: string, updateFields: any) => { // saves to database
   
   let result:any;
-  let update_1 = { $push: updateFields}; //for updating arrays
+  let update_1 = { $addToSet: updateFields}; //for updating arrays
   let fieldsUpdate = updateFields.log_url ? {log_url: updateFields.log_url} : update_1;
 
   await EventManager.findOneAndUpdate(

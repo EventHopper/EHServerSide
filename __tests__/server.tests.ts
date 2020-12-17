@@ -4,7 +4,7 @@ import {TEST_PORT as PORT, TEST_AUTH_API_KEY as KEY} from '../src/common/utils/c
 import * as TestingConstants from './utils/testing.constants';
 import EventsController from '../src/api/events/events.controller';
 import UserController from '../src/api/users/users.controller';
-import * as Auth from '../src/auth/user.auth';
+// import * as Auth from '../src/auth/user.auth';
 
 const request = supertest(new App([
   new EventsController(),
@@ -32,8 +32,8 @@ it('Fails to get home route', async done => {
 //   done();
 // });
 
-it(`should fail to return the user object of ${TestingConstants.testUsername}`, async done => {
-  const userObject = await Auth.checkCredentials(TestingConstants.testEmail, (TestingConstants.testPassword+'wrong'));
-  expect(userObject.message).toBe('Could not delete account due to error: invalid username/password');
-  done();
-});
+// it(`should fail to return the user object of ${TestingConstants.testUsername}`, async done => {
+//   const userObject = await Auth.checkCredentials(TestingConstants.testEmail, (TestingConstants.testPassword+'wrong'));
+//   expect(userObject.message).toBe('Could not delete account due to error: invalid username/password');
+//   done();
+// });

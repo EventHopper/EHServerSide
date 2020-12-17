@@ -5,7 +5,7 @@ import Debug from 'debug';
 import { Document } from 'mongoose';
 import { initializeUserManager, deleteUserManager } from './user_manager.model';
 import FirebaseFunctions from '../../services/firebase/index'
-import { checkCredentials } from '../../auth/user.auth';
+
 
 const Schema = userMongoose.Schema;
 const debug = Debug('users.model');

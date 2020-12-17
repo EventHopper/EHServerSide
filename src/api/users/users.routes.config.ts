@@ -10,6 +10,7 @@ class UserRoutes {
     static userInformation = `${UserRoutes.rootPath}/:username`;
     static userSearch = `/search${UserRoutes.rootPath}`;
     static userUpdate = `${UserRoutes.rootPath}/:username`;
+    static swipe = `${UserRoutes.rootPath}/swipe/:id`
 };
 
 export default UserRoutes;
