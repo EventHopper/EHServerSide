@@ -224,6 +224,18 @@ it('User manager successfully created', async done => {
   done();
 });
 
+it('User manager updated', async done => {
+  // Sends GET Request to /test endpoint
+  const res = await request
+    .post(`/users/swipe/${TestingConstants.testID}?key=${KEY}`)
+    .set('Content-Type', 'application/json')
+    .send('{"event_left":"test"}');
+  expect(res.status).toBe(200);
+  expect(res.body).toBeDefined();
+  expect(getType(res.body)).toBe('object');
+  done();
+});
+
 // it('Invalid ID for User Manager Deletion', async done => {
 //   // Sends GET Request to /test endpoint
 //   const res = await deleteUserManager('');

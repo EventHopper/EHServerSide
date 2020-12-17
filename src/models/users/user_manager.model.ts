@@ -103,3 +103,35 @@ export async function deleteUserManager(user_id:string):Promise<Partial<Response
 
   return result;
 }
+
+/****************************************************************************//**
+ * @summary updates user manager in MongoDB
+ * @description updates user manager for the assosciated id
+ * @param {string} user_id - id of associated user account
+ * @param {string} updateFields - fields to be updated
+ * @return returns a 
+ * 
+ * ****************************************************************************/
+export const updateUserManager = async (user_id: string, updateFields: any) => { // saves to database
+  
+  let result:any;
+  let update_1 = { $addToSet: updateFields}; //for updating arrays
+  let fieldsUpdate = updateFields.log_url ? {log_url: updateFields.log_url} : update_1;
+
+  await UserManager.findOneAndUpdate(
+    {user_id: user_id},
+    fieldsUpdate,
+    {setDefaultsOnInsert: true, useFindAndModify: true, new: true},
+    function(err: any, doc: any) {
+      if (err) {
+        console.log('error in manager: ', err);
+        debug('here is the error:', err);
+        result = {error: err};
+      }
+      debug('succesfully updated user manager');
+      //console.log(doc._id);
+      result = doc._id;
+    });
+  return result;
+}; 
+

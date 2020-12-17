@@ -38,7 +38,7 @@ export default class EventsController implements ControllerInterface {
     if (req.body) {
       EventManager.updateEventManager(req.params.id, req.body)
         .then((result:any) => {
-          return res.status(201).send({id: result._id});
+          return res.status(200).send({id: result._id});
         });
     } else {
       res.json('Cannot Update EventManager Event: Request Body Empty');

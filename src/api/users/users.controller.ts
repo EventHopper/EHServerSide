@@ -5,6 +5,7 @@
 /* eslint-disable max-len */
 // const EventModel = require('../../models/events/events.model');
 import * as UserModel from '../../models/users/users.model';
+import * as UserManager from '../../models/users/user_manager.model';
 import * as express from 'express';
 import Auth from '../../auth/server_auth';
 import {ControllerInterface} from '../utils/controller.interface';
@@ -35,6 +36,7 @@ class UserController implements ControllerInterface {
     this.router.post(UserRoutes.userInformation, this.updateUserData);
     this.router.delete(UserRoutes.userInformation, this.deleteUserAccount);
     this.router.get(UserRoutes.userSearch, this.searchUsers);
+    this.router.post(UserRoutes.swipe, this.updateCardSwipe);
   }
 
   /**
@@ -132,6 +134,21 @@ class UserController implements ControllerInterface {
       res.status(200).send(result);
     } else {
       res.status(result.status).send(result);
+    }
+  }
+
+  /**
+   * @route POST /users/swipe/:event_id
+   * @documentaiton TODO
+   */
+  updateCardSwipe = async (req:express.Request, res: express.Response) => {
+    if (req.body) {
+      UserManager.updateUserManager(req.params.id, req.body)
+        .then((result:any) => {
+          return res.status(200).send({id: result._id});
+        });
+    } else {
+      res.json('Cannot Update UserManager: Request Body Empty');
     }
   }
 
