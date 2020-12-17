@@ -98,3 +98,44 @@
 // }
 
 // export default RealmFunctions;
+
+// /****************************************************************************//**
+//  * @summary deletes associated user data from database
+//  * @description deletes User document and User Manager document from user database
+//  * @param {string} email email associated with account
+//  * @param {string} password password associated with account
+//  * @return returns response object with fields message, status
+//  * 
+//  * ****************************************************************************/
+// /**
+//  * @deprecated - this was the old way of wiping a user's data
+//  */
+// export async function wipeUserDataOld(email:string, password:string) { // deletes from database
+//   let result = {status: 500, message: 'Internal Error'};
+//   const userData:IUser = (await checkCredentials(email, password, undefined, true)).userData;
+//   if (userData) {
+//     let accountDeletionResult = await deleteUserAccount(email, password);
+//     if (accountDeletionResult.status == 204) {
+//       let deletionResult:any = await deleteUserManager(userData.user_id);
+//       if(deletionResult.status == 200) {
+//         result = await User.find({user_id:userData.user_id}).remove().exec().then(doc => {
+//           result = {status: 200, message: `UserManager associated with ${userData.user_id} deleted.`};
+//           return result;
+//         }).catch(err => {
+//           result = {status: 500, message: err}; 
+//           return result;
+//         });
+//       } else {
+//         result = {status: 400, message: 'Was unable to perform deletion. Please try again later.'};
+//         return result;
+//       }
+//     } else {
+//       result = {status: 400, message: 'Was unable to perform deletion. Please try again later.'};
+//       return result;
+//     }
+//   }else {
+//     result = {status: 400, message: 'Invalid credentials. Cannot perform acoount deletion'};
+//     return result;
+//   }
+//   return result;
+// };
