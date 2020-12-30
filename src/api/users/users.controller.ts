@@ -18,6 +18,7 @@ import validator from 'validator';
 import { error } from 'console';
 
 import * as Event from '../../models/events/events.model';
+
 import * as  EventManager from '../../models/events/event_manager.model';
 const debug = Debug('users.controller');
 
