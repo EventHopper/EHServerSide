@@ -8,9 +8,9 @@ const debug = Debug('events_manager.model');
  interface IEventManager extends Document {
   event_id: string,
   users_attended: string[],
-  left_swipe: string[],
-  right_swiped_users: string[],
-  up_swipe: string[],
+  event_left_swipe: [String],
+  event_right_swipe: [String],
+  event_up_swipe: [String],
   log_url: string,
   conversions: string[]
 }
@@ -18,9 +18,9 @@ const debug = Debug('events_manager.model');
 const EventManagerSchema = new Schema({
   event_id: {type: String, required: true, unique: true},
   users_attended: [String],
-  left_swipe: [String],
-  right_swiped_users: [String],
-  up_swipe: [String],
+  event_left_swipe: [String],
+  event_right_swipe: [String],
+  event_up_swipe: [String],
   log_url: String,
   conversions: [String]
 });
@@ -31,9 +31,9 @@ export const initializeEventManager = async (eventID: string) => { // saves to d
   const manager:any = {
     event_id: eventID,
     users_attended: [],
-    left_swipe: [],
-    right_swiped_users: [],
-    up_swipe: [],
+    event_left_swipe: [],
+    event_right_swiped_users: [],
+    event_up_swipe: [],
     log_url: '',
     conversions: []  
   } ;

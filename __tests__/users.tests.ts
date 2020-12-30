@@ -236,6 +236,17 @@ it('User manager updated', async done => {
   done();
 });
 
+
+it('List retrieved from User Manager', async done => {
+  // Sends GET Request to /test endpoint
+  const res = await request
+    .get(`/users/manager/${TestingConstants.testID}/event_left?key=${KEY}`)
+  expect(res.status).toBe(200);
+  expect(res.body).toBeDefined();
+  expect(getType(res.body)).toBe('object');
+  done();
+});
+
 // it('Invalid ID for User Manager Deletion', async done => {
 //   // Sends GET Request to /test endpoint
 //   const res = await deleteUserManager('');

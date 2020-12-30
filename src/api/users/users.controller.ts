@@ -15,6 +15,11 @@ import path from 'path';
 import UserRoutes from './users.routes.config';
 import Debug from 'debug';
 import validator from 'validator';
+import { error } from 'console';
+
+import * as Event from '../../models/events/events.model';
+
+import * as  EventManager from '../../models/events/event_manager.model';
 const debug = Debug('users.controller');
 
 class UserController implements ControllerInterface {
@@ -37,6 +42,7 @@ class UserController implements ControllerInterface {
     this.router.delete(UserRoutes.userInformation, this.deleteUserAccount);
     this.router.get(UserRoutes.userSearch, this.searchUsers);
     this.router.post(UserRoutes.swipe, this.updateCardSwipe);
+    this.router.get(UserRoutes.userManager, this.getEventList);
   }
 
   /**
@@ -142,13 +148,23 @@ class UserController implements ControllerInterface {
    * @documentaiton TODO
    */
   updateCardSwipe = async (req:express.Request, res: express.Response) => {
-    if (req.body) {
-      UserManager.updateUserManager(req.params.id, req.body)
+    if (req.body.event_manager_update && req.body.user_manager_update ) { //TODO: assign an interface to the update bodies
+      let error_message;
+      var proceed = UserManager.updateUserManager(req.body.user_id, req.body.user_manager_update)
         .then((result:any) => {
-          return res.status(200).send({id: result._id});
+          return true;
+        }).catch((error)=> {
+          error_message = error;
+          return false;
         });
+      proceed ? EventManager.updateEventManager(req.params.event_id, req.body.event_manager_update)
+        .then((result:any) => {
+          return res.status(200).send({code: 10, message: 'successfully registered swipe'});
+        }).catch((error)=> {
+          return res.status(200).send({error: error, code: 13});
+        }) : res.json({message: 'failed to register swipe', code: 13, error: error_message});;
     } else {
-      res.json('Cannot Update UserManager: Request Body Empty');
+      res.json({message: 'failed to register swipe', code: 14, error: 'body must contain updates for event and corresponding user manager'});;
     }
   }
 
@@ -175,6 +191,26 @@ class UserController implements ControllerInterface {
     } else {
       res.status(200).json('No Search Results');
     }
+  }
+
+  /**
+   * @route GET /users/manager/:user_id
+   * @documentaiton {WIP}
+   */
+  getEventList = async (req:express.Request, res:express.Response) => {
+    const list_type = req.params.list_type;
+    const user_id = req.params.user_id; 
+
+    if (!list_type||!user_id) {
+      res.status(400).json();
+    }
+    const event_list = await UserManager.getUserEventList(user_id, list_type);
+    // debug(`user_id: ${user_id}\n list_type: ${list_type}\nevent list is: ${event_list}`);
+    
+    const events = await Event.byID(event_list);
+    
+    res.status(200).json({'count':event_list.length, 'events':events,});
+   
   }
 
 }
