@@ -13,9 +13,9 @@ interface IUserManager extends Partial<Document> {
   calendar_credentials: Object,
   log_url: string,
   friend_rank: string[],
-  user_left_swipe: string[],
-  user_right_swipe: string[],
-  user_up_swipe: string[],
+  event_left: string[],
+  event_right: string[],
+  event_up: string[],
   location : {
     city: string,
   },
@@ -29,9 +29,9 @@ const UserManagerSchema = new Schema({
   calendar_credentials: Object,
   log_url: String,
   friend_rank: [String],
-  user_left_swipe: [String],
-  user_right_swipe: [String],
-  user_up_swipe: [String],
+  event_left: [String],
+  event_right: [String],
+  event_up: [String],
   location : {
     city: String,
   },
@@ -63,9 +63,9 @@ export async function initializeUserManager(user_id:string):Promise<Partial<Resp
     calendar_credentials: {},
     log_url: '',
     friend_rank: [],
-    user_left_swipe: [],
-    user_right_swipe: [],
-    user_up_swipe: [],
+    event_left: [],
+    event_right: [],
+    event_up: [],
     location : {
       city: '',
     },
@@ -112,8 +112,8 @@ export async function deleteUserManager(user_id:string):Promise<Partial<Response
  * @return returns a 
  * 
  * ****************************************************************************/
-export const updateUserManager = async (user_id: string, updateFields: any) => { // saves to database
-  
+export const updateUserManager = async (user_id: string, updateFields: any) => { // updates database
+   
   let result:any;
   let update_1 = { $addToSet: updateFields}; //for updating arrays
   let fieldsUpdate = updateFields.log_url ? {log_url: updateFields.log_url} : update_1;
@@ -132,6 +132,33 @@ export const updateUserManager = async (user_id: string, updateFields: any) => {
       //console.log(doc._id);
       result = doc._id;
     });
+  return result;
+}; 
+
+/****************************************************************************//**
+ * @summary 
+ * @description 
+ * @param {string} user_id - id of associated user account
+ * @param {string} list_type - fields to be updated
+ * @return returns a 
+ * 
+ * ****************************************************************************/
+export const getUserEventList = async (user_id: string, list_type: string) => { // retrieves from database
+  let result:any;
+  await UserManager.find(
+    {user_id: user_id},
+    list_type,
+    function(err: any, doc: any) {
+      if (err) {
+        console.log('error in manager: ', err);
+        debug('here is the error:', err);
+        result = {error: err};
+      } else {
+        debug('succesfully retrieved document');
+        result = doc[0][list_type];
+      }
+    });
+
   return result;
 }; 
 
