@@ -1,7 +1,7 @@
-import {eventMongooseInstance as mongoose} from '../../services/mongoose/mongoose.events.service';
+import { eventMongooseInstance as mongoose } from '../../services/mongoose/mongoose.events.service';
 import { Document, Model, Mongoose } from 'mongoose';
 import Debug from 'debug';
-import {initializeEventManager} from './event_manager.model';
+import { initializeEventManager } from './event_manager.model';
 const debug = Debug('events.model');
 
 const Schema = mongoose.Schema;
@@ -19,11 +19,11 @@ const venueSchema = new Schema({
     longitude: Number,
     timezone: String,
   },
-}, );
+});
 
 
 interface EventDoc extends Document {
-  vendor_id: {type: String, required: true, unique: true},
+  vendor_id: { type: String, required: true, unique: true },
   name: String,
   details: String,
   start_date_utc: Date,
@@ -42,7 +42,7 @@ interface EventDoc extends Document {
 }
 
 const eventSchema = new Schema({
-  vendor_id: {type: String, required: true, unique: true},
+  vendor_id: { type: String, required: true, unique: true },
   name: String,
   details: String,
   start_date_utc: Date,
@@ -70,14 +70,14 @@ const saveEvent = async (eventData: any) => { // saves to database
   event.event_manager_id = manager_id;
   //debug(event.venue.position);
   return Event.findOneAndUpdate(
-    {vendor_id: event.vendor_id},
+    { vendor_id: event.vendor_id },
     event,
-    {upsert: true, setDefaultsOnInsert: true, useFindAndModify: true, new: true},
+    { upsert: true, setDefaultsOnInsert: true, useFindAndModify: true, new: true },
     function(err: any, doc: any) {
       if (err) {
         console.log('error in event: ', err);
         debug('here is the error:', err);
-        return {error: err};
+        return { error: err };
       }
       debug('succesfully saved');
       //debug(doc);
@@ -89,14 +89,14 @@ const updateEvent = async (eventData: any) => { // saves to database
   const event = eventData;
   //debug(event.venue.position);
   return Event.findOneAndUpdate(
-    {vendor_id: event.vendor_id},
+    { vendor_id: event.vendor_id },
     event,
-    {setDefaultsOnInsert: true, useFindAndModify: true, new: true},
+    { setDefaultsOnInsert: true, useFindAndModify: true, new: true },
     function(err: any, doc: any) {
       if (err) {
         console.log('error in event: ', err);
         debug('here is the error:', err);
-        return {error: err};
+        return { error: err };
       }
       debug('succesfully saved');
       return 'Succesfully saved.';
@@ -110,10 +110,10 @@ const list = (perPage: number, page: number, query?: any) => { // list events
     Event.find(query)
       .limit(perPage)
       .skip(perPage * page)
-      .exec(function(err:any, events:any) {
+      .exec(function(err: any, events: any) {
         if (err) {
           debug('here is the error:', err);
-          return {error: err};
+          return { error: err };
         } else {
           resolve(events);
         }
@@ -121,33 +121,34 @@ const list = (perPage: number, page: number, query?: any) => { // list events
   });
 };
 
-const byID = (idParam: string) => { // find event by ID
+const byID = (idParam: any) => { // find event by ID
   return new Promise((resolve, reject) => {
-    Event.find({venddor_id:idParam})
-      .exec(function(err:any, event:any) {
+    Event.find(
+      { vendor_id: { $in: idParam } })
+      .exec(function(err: any, events: any) {
         if (err) {
           debug(err);
           reject(err);
         } else {
-          resolve(event);
+          resolve(events);
         }
       });
   });
 };
 
-const byLatLong = (perPage: number, page: number, lon:number, lat:number, query?:any, radius?:number) => {
+const byLatLong = (perPage: number, page: number, lon: number, lat: number, query?: any, radius?: number) => {
 
   return new Promise((resolve, reject) => {
 
     //TODO: convert radius into coordinate distance
-    query? debug(query) : debug('no query');
+    query ? debug(query) : debug('no query');
     const aggregaton = [
       {
-        $geoNear : {
-          near: [ lon, lat ] ,
+        $geoNear: {
+          near: [lon, lat],
           distanceField: 'dist.calculated',
           maxDistance: radius ? radius : 0.02, //See TODO above
-          query:  query? query:{} ,
+          query: query ? query : {},
           includeLocs: 'dist.location',
           spherical: true
         }
@@ -157,7 +158,7 @@ const byLatLong = (perPage: number, page: number, lon:number, lat:number, query?
     Event.aggregate(aggregaton)
       .limit(perPage)
       //.skip(perPage * page) This doesn't work here 
-      .exec(function(err:any, events:any) {
+      .exec(function(err: any, events: any) {
         if (err) {
           reject(err);
         } else {
@@ -167,4 +168,4 @@ const byLatLong = (perPage: number, page: number, lon:number, lat:number, query?
   });
 }
 
-export {Event, saveEvent, updateEvent, list, byID, byLatLong, EventDoc}; //TODO: Can't we export the whole file?
+export { Event, saveEvent, updateEvent, list, byID, byLatLong, EventDoc }; //TODO: Can't we export the whole file?
