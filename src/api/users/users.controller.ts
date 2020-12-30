@@ -45,26 +45,6 @@ class UserController implements ControllerInterface {
   }
 
   /**
-   * @route GET /users/manager/:user_id
-   * @documentaiton {WIP}
-   */
-  getEventList = async (req:express.Request, res:express.Response) => {
-    const list_type = req.params.list_type;
-    const user_id = req.params.user_id; 
-
-    if (!list_type||!user_id) {
-      res.status(400).json();
-    }
-    const event_list = await UserManager.getUserEventList(user_id, list_type);
-    // debug(`user_id: ${user_id}\n list_type: ${list_type}\nevent list is: ${event_list}`);
-    
-    const events = await Event.byID(event_list);
-    
-    res.status(200).json({'count':event_list.length, 'events':events,});
-   
-  }
-
-  /**
    * @route GET /users
    * @documentaiton {https://docs.eventhopper.app/users#h.28k4ntj99bnx}
    */
@@ -210,6 +190,26 @@ class UserController implements ControllerInterface {
     } else {
       res.status(200).json('No Search Results');
     }
+  }
+
+  /**
+   * @route GET /users/manager/:user_id
+   * @documentaiton {WIP}
+   */
+  getEventList = async (req:express.Request, res:express.Response) => {
+    const list_type = req.params.list_type;
+    const user_id = req.params.user_id; 
+
+    if (!list_type||!user_id) {
+      res.status(400).json();
+    }
+    const event_list = await UserManager.getUserEventList(user_id, list_type);
+    // debug(`user_id: ${user_id}\n list_type: ${list_type}\nevent list is: ${event_list}`);
+    
+    const events = await Event.byID(event_list);
+    
+    res.status(200).json({'count':event_list.length, 'events':events,});
+   
   }
 
 }
