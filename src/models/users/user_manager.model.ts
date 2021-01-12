@@ -129,9 +129,65 @@ export const updateUserManager = async (user_id: string, updateFields: any) => {
         result = {error: err};
       }
       debug('succesfully updated user manager');
+
       //console.log(doc._id);
       result = doc._id;
     });
+  return result;
+}; 
+
+
+/****************************************************************************//**
+ * @summary updates user event lists in MongoDB
+ * @description updates user manager event lists for the assosciated id, and removes events from other lists
+ * @param {string} user_id - id of associated user account
+ * @param {string} update_fields - fields to be updated
+ * @param {string} list_type - list that retains event
+ * @return returns a 
+ * 
+ * ****************************************************************************/
+export const updateUserManagerEventList = async (user_id: string, update_fields: any, list_type: String) => { // updates database
+  const list_types = ['event_left', 'event_up', 'event_right'];
+  let result:any;
+  let update_1 = { $addToSet: update_fields}; //for updating arrays
+  let update_2 = { $pull: update_fields}; //for ensuring arrays do not hold duplicates
+  
+  await UserManager.findOneAndUpdate(
+    {user_id: user_id},
+    update_1,
+    {setDefaultsOnInsert: true, useFindAndModify: true, new: true},
+    function(err: any, doc: any) {
+      if (err) {
+        console.log('error in manager: ', err);
+        debug('here is the error:', err);
+        result = {error: err};
+      }
+      debug('succesfully updated user manager');
+
+      //console.log(doc._id);
+      result = doc._id;
+    });
+  
+  list_types.forEach((value)=>{
+    if ( value != list_type) {
+      UserManager.findOneAndUpdate(
+        {user_id: user_id},
+        update_2,
+        {setDefaultsOnInsert: true, useFindAndModify: true, new: true},
+        function(err: any, doc: any) {
+          if (err) {
+            console.log('error in manager: ', err);
+            debug('here is the error:', err);
+            result = {error: err};
+          }
+          debug('succesfully updated user manager');
+    
+          //console.log(doc._id);
+          result = doc._id;
+        }) 
+    } else{ return; }
+  });
+  
   return result;
 }; 
 
@@ -140,7 +196,7 @@ export const updateUserManager = async (user_id: string, updateFields: any) => {
  * @description 
  * @param {string} user_id - id of associated user account
  * @param {string} list_type - fields to be updated
- * @return returns a 
+ * @return returns a list of event ids from given list_type
  * 
  * ****************************************************************************/
 export const getUserEventList = async (user_id: string, list_type: string) => { // retrieves from database
@@ -158,7 +214,6 @@ export const getUserEventList = async (user_id: string, list_type: string) => { 
         result = doc[0][list_type];
       }
     });
-
   return result;
 }; 
 
