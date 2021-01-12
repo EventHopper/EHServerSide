@@ -137,7 +137,6 @@ const byID = (idParam: any) => { // find event by ID
 };
 
 const byLatLong = (perPage: number, page: number, lon: number, lat: number, query?: any, radius?: number) => {
-
   return new Promise((resolve, reject) => {
 
     //TODO: convert radius into coordinate distance
