@@ -150,14 +150,14 @@ class UserController implements ControllerInterface {
   updateCardSwipe = async (req:express.Request, res: express.Response) => {
     if (req.body.event_manager_update && req.body.user_manager_update ) { //TODO: assign an interface to the update bodies
       let error_message;
-      var proceed = UserManager.updateUserManager(req.body.user_id, req.body.user_manager_update)
+      var proceed = UserManager.updateUserManagerEventList(req.body.user_id, req.body.user_manager_update, req.body.direction)
         .then((result:any) => {
           return true;
         }).catch((error)=> {
           error_message = error;
           return false;
         });
-      proceed ? EventManager.updateEventManager(req.params.event_id, req.body.event_manager_update)
+      proceed ? EventManager.updateEventManagerUserList(req.params.event_id, req.body.event_manager_update,  `${req.body.direction}_swipe`)
         .then((result:any) => {
           return res.status(200).send({code: 10, message: 'successfully registered swipe'});
         }).catch((error)=> {

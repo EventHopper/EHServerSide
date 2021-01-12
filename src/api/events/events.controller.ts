@@ -6,6 +6,7 @@
 // const EventModel = require('../../models/events/events.model');
 import * as EventModel from '../../models/events/events.model';
 import * as EventManager from '../../models/events/event_manager.model';
+import * as UserManager from '../../models/users/user_manager.model';
 import * as express from 'express';
 import Auth from '../../auth/server_auth';
 import { ControllerInterface } from '../utils/controller.interface';
@@ -146,7 +147,7 @@ export default class EventsController implements ControllerInterface {
       });
   }
 
-  private byLocation = (req: express.Request, res: express.Response, size: number, page: number) => {
+  private byLocation = async (req: express.Request, res: express.Response, size: number, page: number) => {
 
     if (!(req.query.city || req.query.lat)) { //city or coordinates not provided
       return res.status(400).json('Invalid query parameters provided to search endpoint');
@@ -159,7 +160,12 @@ export default class EventsController implements ControllerInterface {
       debug(query);
 
       EventModel.list(size, page, query)
-        .then((result: any) => {
+        .then(async (result: any) => {
+          if (req.query?.swipe === 'true'){
+            result = await this.filterEventList(String(req.query.user_id), result);
+            debug('it worked!');
+          }
+          debug('it reached here!');
           return res.status(200).send(result);
         }).catch(error => {
           return res.status(400).json('No such event exists');
@@ -171,7 +177,13 @@ export default class EventsController implements ControllerInterface {
       this.generateFilterQuery(req, query); //add filter query to query objects
       debug(query);
       EventModel.byLatLong(size, page, Number(req.query.long), Number(req.query.lat), query, radius)
-        .then((result: any) => {
+        .then(async (result: any) => {
+
+          if (req.query?.swipe === 'true'){
+            result = await this.filterEventList(String(req.query.user_id), result);
+            debug('it worked!');
+          }
+
           return res.status(200).send(result);
         }).catch(error => {
 
@@ -191,4 +203,19 @@ export default class EventsController implements ControllerInterface {
         return res.status(500).json(error);
       });
   };
+
+private filterEventList = async (user_id:string, event_list:any[]) => {
+
+  const left:Set<string> = new Set(await UserManager.getUserEventList(user_id, 'event_left'));
+  const right:Set<string> = new Set(await UserManager.getUserEventList(user_id, 'event_right'));
+  const up:Set<string> = new Set(await UserManager.getUserEventList(user_id, 'event_up'));
+  debug(`list before: ${event_list.length}`);
+  const result_list:any[] = event_list.filter(function(event) {
+    return !(left.has(event['vendor_id']) || right.has(event['vendor_id']) || (up.has(event['vendor_id'])));
+  });
+  debug(`list after: ${result_list.length}`);
+  return result_list;
+}
+
+
 }

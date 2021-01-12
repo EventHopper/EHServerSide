@@ -2,6 +2,7 @@ import { eventMongooseInstance as mongoose } from '../../services/mongoose/mongo
 import { Document, Model, Mongoose } from 'mongoose';
 import Debug from 'debug';
 import { initializeEventManager } from './event_manager.model';
+import { resolve } from 'path';
 const debug = Debug('events.model');
 
 const Schema = mongoose.Schema;
@@ -137,7 +138,6 @@ const byID = (idParam: any) => { // find event by ID
 };
 
 const byLatLong = (perPage: number, page: number, lon: number, lat: number, query?: any, radius?: number) => {
-
   return new Promise((resolve, reject) => {
 
     //TODO: convert radius into coordinate distance
@@ -168,4 +168,28 @@ const byLatLong = (perPage: number, page: number, lon: number, lat: number, quer
   });
 }
 
-export { Event, saveEvent, updateEvent, list, byID, byLatLong, EventDoc }; //TODO: Can't we export the whole file?
+const eventBySample = (sample_size:Number) =>{
+  return new Promise((resolve, reject) => {
+    const aggregaton = [
+      {
+        $sample: { 
+          size: sample_size
+        }
+      }
+    ];
+
+    Event.aggregate(aggregaton).exec(function(err:any, events:any) {
+      if (err){
+        reject(err);
+      } else{
+        resolve(events);
+      }
+    })
+
+  }
+  )
+  
+  
+}
+
+export { Event, saveEvent, updateEvent, list, byID, byLatLong, eventBySample, EventDoc }; //TODO: Can't we export the whole file?
