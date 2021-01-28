@@ -22,6 +22,20 @@ const venueSchema = new Schema({
   },
 });
 
+interface IVenue extends Document{
+  name: String,
+  city: String,
+  country_code: String,
+  street: String,
+  zip: String,
+  state: String,
+  imageURL: String,
+  location: {
+    latitude: Number,
+    longitude: Number,
+    timezone: String,
+  },
+};
 
 interface EventDoc extends Document {
   vendor_id: { type: String, required: true, unique: true },
@@ -33,7 +47,7 @@ interface EventDoc extends Document {
   end_date_local: Date,
   source: String,
   organizer: String,
-  venue: typeof venueSchema,
+  venue: IVenue,
   category: String,
   tags: [String],
   image_url_full: String,
@@ -123,7 +137,7 @@ const list = (perPage: number, page: number, query?: any) => { // list events
 };
 
 const byID = (idParam: any) => { // find event by ID
-  return new Promise((resolve, reject) => {
+  return new Promise<EventDoc[]>((resolve, reject) => {
     Event.find(
       { vendor_id: { $in: idParam } })
       .exec(function(err: any, events: any) {

@@ -42,6 +42,9 @@ export const variables = {
     },
     google: {
       geocodingApiKey: process.env.GOOGLE_GEOCODING_API_KEY,
+      authClientID: process.env.GCP_CLIENT_ID,
+      authClientSecret: process.env.GCP_CLIENT_SECRET,
+      authRedirectURI: process.env.GCP_REDIRECT_URI,
     },
     realm: {
       appId: process.env.REALM_APP_ID,

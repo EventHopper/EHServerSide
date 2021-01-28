@@ -47,7 +47,7 @@ class UserController implements ControllerInterface {
 
   /**
    * @route GET /users
-   * @documentaiton {https://docs.eventhopper.app/users#h.28k4ntj99bnx}
+   * @documentation {https://docs.eventhopper.app/users#h.28k4ntj99bnx}
    */
   listUsers = async (req:express.Request, res:express.Response) => {
     const userList = await UserModel.list(100, 0);
@@ -56,7 +56,7 @@ class UserController implements ControllerInterface {
 
   /**
    * @route POST /users/register
-   * @documentaiton {https://docs.eventhopper.app/users#h.tdqa8qxms843}
+   * @documentation {https://docs.eventhopper.app/users#h.tdqa8qxms843}
    */
   registerNewUser = async (req:express.Request, res:express.Response) => {
 
@@ -102,7 +102,7 @@ class UserController implements ControllerInterface {
 
   /**
    * @route GET /users/:username
-   * @documentaiton {https://docs.eventhopper.app/users#h.8ck31sozoexm}
+   * @documentation {https://docs.eventhopper.app/users#h.8ck31sozoexm}
    */
   getUserData = async (req:express.Request, res: express.Response) => {
     const userDocument = await UserModel.getUserData(String(req.params.username));
@@ -116,7 +116,7 @@ class UserController implements ControllerInterface {
 
   /**
    * @route POST /users/:username
-   * @documentaiton {https://docs.eventhopper.app/users#h.dap8ntvndtu3}
+   * @documentation {https://docs.eventhopper.app/users#h.dap8ntvndtu3}
    */
   updateUserData = async (req:express.Request, res: express.Response) => {
     const updates:UserModel.IUserUpdate = req.body;
@@ -132,7 +132,7 @@ class UserController implements ControllerInterface {
 
   /**
    * @route DELETE /users/:username
-   * @documentaiton {https://docs.eventhopper.app/users#h.fzbj7ypc3ybm}
+   * @documentation {https://docs.eventhopper.app/users#h.fzbj7ypc3ybm}
    */
   deleteUserAccount = async (req:express.Request, res: express.Response) => {
     const result = await UserModel.wipeUserData(req.body.tokenID);
@@ -145,7 +145,7 @@ class UserController implements ControllerInterface {
 
   /**
    * @route POST /users/swipe/:event_id
-   * @documentaiton TODO
+   * @documentation TODO
    */
   updateCardSwipe = async (req:express.Request, res: express.Response) => {
     if (req.body.event_manager_update && req.body.user_manager_update ) { //TODO: assign an interface to the update bodies
@@ -170,7 +170,7 @@ class UserController implements ControllerInterface {
 
   /**
    * @route GET /search/users
-   * @documentaiton {https://docs.eventhopper.app/users#h.s2q7rru30coi}
+   * @documentation {https://docs.eventhopper.app/users#h.s2q7rru30coi}
    */
   searchUsers = async (req:express.Request, res: express.Response) => {
     let searchQuery:string = '';
@@ -195,7 +195,7 @@ class UserController implements ControllerInterface {
 
   /**
    * @route GET /users/manager/:user_id
-   * @documentaiton {WIP}
+   * @documentation {WIP}
    */
   getEventList = async (req:express.Request, res:express.Response) => {
     const list_type = req.params.list_type;
