@@ -19,6 +19,11 @@ interface IUserManager extends Partial<Document> {
   location : {
     city: string,
   },
+  google_calendar : {
+    refresh_token: string,
+    primary_email: string,
+    calendar_ids: string[],
+  },
 } 
 
 const UserManagerSchema = new Schema({
@@ -34,6 +39,11 @@ const UserManagerSchema = new Schema({
   event_up: [String],
   location : {
     city: String,
+  },
+  google_calendar : {
+    refresh_token: String,
+    primary_email: String,
+    calendar_ids: [String],
   },
 }, {
   timestamps: true
@@ -68,6 +78,11 @@ export async function initializeUserManager(user_id:string):Promise<Partial<Resp
     event_up: [],
     location : {
       city: '',
+    },
+    google_calendar : {
+      refresh_token: '',
+      primary_email: '',
+      calendar_ids: [],
     },
   };
 
@@ -195,7 +210,7 @@ export const updateUserManagerEventList = async (user_id: string, update_fields:
  * @summary 
  * @description 
  * @param {string} user_id - id of associated user account
- * @param {string} list_type - fields to be updated
+ * @param {string} list_type - fields to be retrieved
  * @return returns a list of event ids from given list_type
  * 
  * ****************************************************************************/
@@ -212,6 +227,31 @@ export const getUserEventList = async (user_id: string, list_type: string) => { 
       } else {
         debug('succesfully retrieved document');
         result = doc[0][list_type];
+      }
+    });
+  return result;
+}; 
+
+/****************************************************************************//**
+ * @summary 
+ * @description 
+ * @param {string} user_id - id of associated user account
+ * @return returns the google calendar credentials for the given user
+ * 
+ * ****************************************************************************/
+export const getUserCalendarCredentials = async (user_id: string) => { // retrieves from database
+  let result:any;
+  await UserManager.find(
+    {user_id: user_id},
+    'google_calendar',
+    function(err: any, doc: any) {
+      if (err) {
+        console.log('error in manager: ', err);
+        debug('here is the error:', err);
+        result = {error: err};
+      } else {
+        debug('succesfully retrieved document');
+        result = doc[0]['google_calendar'];
       }
     });
   return result;

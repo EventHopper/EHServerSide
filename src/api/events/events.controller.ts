@@ -117,12 +117,12 @@ export default class EventsController implements ControllerInterface {
     if (!req.query.id) {
       return res.status(400).json('Invalid ID provided to search endpoint');
     }
-    const id: string[] = String(req.params.id).split(',');
+    const id: string[] = String(req.query.id).split(',');
     EventModel.byID(id)
       .then((result: any) => {
         return res.status(200).send(result);
       }).catch(error => {
-        return res.status(400).json('No such event exists');
+        return res.status(400).json('No such event exists: ' + error);
       });
   };
 
