@@ -43,6 +43,8 @@ class UserController implements ControllerInterface {
     this.router.get(UserRoutes.userSearch, this.searchUsers);
     this.router.post(UserRoutes.swipe, this.updateCardSwipe);
     this.router.get(UserRoutes.userManager, this.getEventList);
+    this.router.post(UserRoutes.userOAuthGrant, this.addUserOAuthData);
+
   }
 
   /**
@@ -144,6 +146,32 @@ class UserController implements ControllerInterface {
   }
 
   /**
+   * @route POST /users/:user_id/oauth/grant
+   * @documentation {https://docs.eventhopper.app/users#h.dap8ntvndtu3}
+   */
+  addUserOAuthData = async (req:express.Request, res: express.Response) => {
+    const oAuthData:UserManager.IUserOAuthData = req.body;
+    const name = req.body.provider_name;
+    let oAuthUpdateQuery; 
+    name == 'SPOTIFY' ? oAuthUpdateQuery = {spotify_oauth: oAuthData} : 
+      name == 'GOOGLE' ? oAuthUpdateQuery = {google_oauth: oAuthData}  : 
+        oAuthUpdateQuery = 'error';
+    if (oAuthUpdateQuery == 'error') {
+      res.status(400).json({message: 'provider not supported', code: -1});
+      return;
+    }
+    
+    console.log(oAuthData);
+    const userManagerDocument = await UserManager.updateUserManager(req.params.user_id, oAuthUpdateQuery);
+    if (userManagerDocument == null) {
+      res.status(404)
+        .render(path.join(__dirname, '../public/views/user-not-found'), {username: String(req.params.username)});
+    } else {
+      res.send(userManagerDocument);
+    }
+  }
+  
+  /**
    * @route POST /users/swipe/:event_id
    * @documentation TODO
    */
@@ -212,6 +240,8 @@ class UserController implements ControllerInterface {
     res.status(200).json({'count':event_list.length, 'events':events,});
    
   }
+
+
 
 }
 
