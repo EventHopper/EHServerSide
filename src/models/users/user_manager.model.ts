@@ -54,11 +54,6 @@ const UserManagerSchema = new Schema({
   location : {
     city: String,
   },
-  // google_calendar : {
-  //   refresh_token: String,
-  //   primary_email: String,
-  //   calendar_ids: [String],
-  // },
   spotify_oauth: userOAuthSchema,
   google_oauth: userOAuthSchema,
 }, {
@@ -256,7 +251,7 @@ export const getUserCalendarCredentials = async (user_id: string) => { // retrie
   let result:any;
   await UserManager.find(
     {user_id: user_id},
-    'google_calendar',
+    'google_oauth',
     function(err: any, doc: any) {
       if (err) {
         console.log('error in manager: ', err);
@@ -264,7 +259,8 @@ export const getUserCalendarCredentials = async (user_id: string) => { // retrie
         result = {error: err};
       } else {
         debug('succesfully retrieved document');
-        result = doc[0]['google_calendar'];
+        console.log(doc);
+        result = doc[0]['google_oauth'];
       }
     });
   return result;

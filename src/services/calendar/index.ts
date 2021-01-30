@@ -7,9 +7,13 @@ import * as ServerConfig from '../../common/utils/config';
 
 class CalendarFunctions {
 
-   public oAuth2Client: OAuth2Client = new google.auth.OAuth2({clientId: ServerConfig.variables.services.google.authClientID, redirectUri:ServerConfig.variables.services.google.authRedirectURI});
+  public oAuth2Client: OAuth2Client;
 
-   /**
+  constructor(client_id:any){
+    this.oAuth2Client = new google.auth.OAuth2({clientId: client_id, redirectUri:ServerConfig.variables.services.google.authRedirectURI});
+  }
+
+  /**
  * Lists the next n events on the user's primary calendar.
  * @param {string} token The refresh token of the user.
  * @param {number} NumberOfEvents The number of upcoming events to list from the user's calendar.
