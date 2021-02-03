@@ -29,10 +29,7 @@ interface IUserManager extends Partial<Document> {
     primary_email: string,
     calendar_ids: string[],
   },
-<<<<<<< HEAD
-=======
   oauth_data: IUserOAuthData[],
->>>>>>> 9ded09e78e8e06a0163d1e59299a9036131fbb85
 } 
 
 const userOAuthSchema = new Schema({
@@ -57,16 +54,8 @@ const UserManagerSchema = new Schema({
   location : {
     city: String,
   },
-<<<<<<< HEAD
-  google_calendar : {
-    refresh_token: String,
-    primary_email: String,
-    calendar_ids: [String],
-  },
-=======
   spotify_oauth: userOAuthSchema,
   google_oauth: userOAuthSchema,
->>>>>>> 9ded09e78e8e06a0163d1e59299a9036131fbb85
 }, {
   timestamps: true
 });
@@ -104,10 +93,7 @@ export async function initializeUserManager(user_id:string):Promise<Partial<Resp
       primary_email: '',
       calendar_ids: [],
     },
-<<<<<<< HEAD
-=======
     oauth_data: [],
->>>>>>> 9ded09e78e8e06a0163d1e59299a9036131fbb85
   };
 
   let manager = new UserManager(managerInit);
@@ -265,11 +251,7 @@ export const getUserCalendarCredentials = async (user_id: string) => { // retrie
   let result:any;
   await UserManager.find(
     {user_id: user_id},
-<<<<<<< HEAD
-    'google_calendar',
-=======
     'google_oauth',
->>>>>>> 9ded09e78e8e06a0163d1e59299a9036131fbb85
     function(err: any, doc: any) {
       if (err) {
         console.log('error in manager: ', err);
@@ -277,12 +259,8 @@ export const getUserCalendarCredentials = async (user_id: string) => { // retrie
         result = {error: err};
       } else {
         debug('succesfully retrieved document');
-<<<<<<< HEAD
-        result = doc[0]['google_calendar'];
-=======
         console.log(doc);
         result = doc[0]['google_oauth'];
->>>>>>> 9ded09e78e8e06a0163d1e59299a9036131fbb85
       }
     });
   return result;
