@@ -138,7 +138,6 @@ class CalendarController implements ControllerInterface {
       const result = await calendarFunc.getFreeBusy(calendarCredentials['refresh_token'], startRange, endRange, ['primary']);
       final_result.push(result);
     }
-
     res.status(200).json(final_result);
     return;
   };
