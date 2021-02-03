@@ -5,6 +5,11 @@ import Debug from 'debug';
 
 const debug = Debug('user_manager.model');
 
+export interface IUserOAuthData extends Partial<Document>{
+  provider_name: string, // SPOTIFY | GOOGLE | PANDORA
+  client_id: string, // CLIENT ID USED FOR GRANT FLOW ON CLIENT
+  refresh_token: string, // TO BE STORED FOR PROVIDER API ACCCESS 
+}
 interface IUserManager extends Partial<Document> {
   user_id: string,
   device_info: Object,
@@ -24,7 +29,19 @@ interface IUserManager extends Partial<Document> {
     primary_email: string,
     calendar_ids: string[],
   },
+<<<<<<< HEAD
+=======
+  oauth_data: IUserOAuthData[],
+>>>>>>> 9ded09e78e8e06a0163d1e59299a9036131fbb85
 } 
+
+const userOAuthSchema = new Schema({
+  provider_name: {required: true, type: String, unique: true},
+  client_id: {required: true, type: String},
+  refresh_token: {required: true, type: String},
+}, {
+  timestamps: true
+});
 
 const UserManagerSchema = new Schema({
   user_id: String,
@@ -40,18 +57,21 @@ const UserManagerSchema = new Schema({
   location : {
     city: String,
   },
+<<<<<<< HEAD
   google_calendar : {
     refresh_token: String,
     primary_email: String,
     calendar_ids: [String],
   },
+=======
+  spotify_oauth: userOAuthSchema,
+  google_oauth: userOAuthSchema,
+>>>>>>> 9ded09e78e8e06a0163d1e59299a9036131fbb85
 }, {
   timestamps: true
 });
 
 const UserManager = userMongoose.model('UserManager', UserManagerSchema);
-
-
 
 /****************************************************************************//**
  * @summary initializes user manager in MongoDB
@@ -84,6 +104,10 @@ export async function initializeUserManager(user_id:string):Promise<Partial<Resp
       primary_email: '',
       calendar_ids: [],
     },
+<<<<<<< HEAD
+=======
+    oauth_data: [],
+>>>>>>> 9ded09e78e8e06a0163d1e59299a9036131fbb85
   };
 
   let manager = new UserManager(managerInit);
@@ -127,15 +151,14 @@ export async function deleteUserManager(user_id:string):Promise<Partial<Response
  * @return returns a 
  * 
  * ****************************************************************************/
-export const updateUserManager = async (user_id: string, updateFields: any) => { // updates database
+export const updateUserManager = async (user_id: string, updateFields: any, isArray:boolean = false) => { // updates database
    
   let result:any;
-  let update_1 = { $addToSet: updateFields}; //for updating arrays
-  let fieldsUpdate = updateFields.log_url ? {log_url: updateFields.log_url} : update_1;
+  let update_1 = isArray ? { $addToSet: updateFields}: updateFields; //for updating arrays
 
   await UserManager.findOneAndUpdate(
     {user_id: user_id},
-    fieldsUpdate,
+    update_1,
     {setDefaultsOnInsert: true, useFindAndModify: true, new: true},
     function(err: any, doc: any) {
       if (err) {
@@ -144,9 +167,8 @@ export const updateUserManager = async (user_id: string, updateFields: any) => {
         result = {error: err};
       }
       debug('succesfully updated user manager');
-
       //console.log(doc._id);
-      result = doc._id;
+      result = doc?._id;
     });
   return result;
 }; 
@@ -243,7 +265,11 @@ export const getUserCalendarCredentials = async (user_id: string) => { // retrie
   let result:any;
   await UserManager.find(
     {user_id: user_id},
+<<<<<<< HEAD
     'google_calendar',
+=======
+    'google_oauth',
+>>>>>>> 9ded09e78e8e06a0163d1e59299a9036131fbb85
     function(err: any, doc: any) {
       if (err) {
         console.log('error in manager: ', err);
@@ -251,7 +277,12 @@ export const getUserCalendarCredentials = async (user_id: string) => { // retrie
         result = {error: err};
       } else {
         debug('succesfully retrieved document');
+<<<<<<< HEAD
         result = doc[0]['google_calendar'];
+=======
+        console.log(doc);
+        result = doc[0]['google_oauth'];
+>>>>>>> 9ded09e78e8e06a0163d1e59299a9036131fbb85
       }
     });
   return result;

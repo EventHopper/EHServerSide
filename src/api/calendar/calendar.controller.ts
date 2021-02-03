@@ -21,6 +21,10 @@ class CalendarController implements ControllerInterface {
   }
 
   public setAuthObject = (authObject:Auth) => {
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 9ded09e78e8e06a0163d1e59299a9036131fbb85
   }
 
   public initializeRoutes() {
@@ -42,7 +46,8 @@ class CalendarController implements ControllerInterface {
     } 
     const numberOfEvents:number = req.query.number? Number(req.query.number) : 10;
    
-    const calendarFunc:CalendarFunctions = new CalendarFunctions();
+    const client_id: String = calendarCredentials.client_id;
+    const calendarFunc:CalendarFunctions = new CalendarFunctions(client_id);
     const result = await calendarFunc.listEvents(calendarCredentials['refresh_token'], numberOfEvents);
     res.status(200).send(result);
     return;
@@ -53,7 +58,7 @@ class CalendarController implements ControllerInterface {
       res.status(400).send({ message: 'Invalid Request. Please provide a user id', code: -1, result: ''});
       return null;
     }
-    const calendarCredentials= await UserManager.getUserCalendarCredentials(String(userID));
+    const calendarCredentials = await UserManager.getUserCalendarCredentials(String(userID));
     if (calendarCredentials == null) {
       res.status(404).send({ message: 'Error: User Not Found', code: -1, result: ''});
       return null;
@@ -75,8 +80,13 @@ class CalendarController implements ControllerInterface {
     if(id == null){
       res.status(400).send({ message: 'Error: No Event ID present', code: -1, link: ''});
     }
+<<<<<<< HEAD
   
     const calendarFunc:CalendarFunctions = new CalendarFunctions();
+=======
+    const client_id: String = calendarCredentials.client_id;
+    const calendarFunc:CalendarFunctions = new CalendarFunctions(client_id);
+>>>>>>> 9ded09e78e8e06a0163d1e59299a9036131fbb85
     const result = await calendarFunc.addToCalendar(calendarCredentials['refresh_token'], id);
 
     if(result!.code == -1){
@@ -102,7 +112,12 @@ class CalendarController implements ControllerInterface {
     const emails:string[] = String(req.query.emails).split(',');
     const startRange: Date = new Date(String(req.query.start));
     const endRange: Date = new Date(String(req.query.end));
+<<<<<<< HEAD
     const calendarFunc:CalendarFunctions = new CalendarFunctions();
+=======
+    const client_id: String = calendarCredentials.client_id;
+    const calendarFunc:CalendarFunctions = new CalendarFunctions(client_id);
+>>>>>>> 9ded09e78e8e06a0163d1e59299a9036131fbb85
     const result = await calendarFunc.getFreeBusy(calendarCredentials['refresh_token'], startRange, endRange, emails);
     res.status(200).json(result);
     return;
