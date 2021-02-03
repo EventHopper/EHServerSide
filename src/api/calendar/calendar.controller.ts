@@ -129,7 +129,7 @@ class CalendarController implements ControllerInterface {
     for (const id of ids){
       const calendarCredentials = await this.getCalendarCredentials(id, res);
       if (calendarCredentials == null) {
-        return; //skip this iteration
+        continue; //skip this iteration
       }
       const startRange: Date = new Date(String(req.query.start));
       const endRange: Date = new Date(String(req.query.end));
