@@ -53,12 +53,12 @@ class CalendarController implements ControllerInterface {
 
   getCalendarCredentials = async (userID:string, res:express.Response) => {
     if(userID == null){
-      res.status(400).send({ message: 'Invalid Request. Please provide a user id', code: -1, result: ''});
+      res.status(400).send({ message: 'Invalid Request. Please provide a user id', code: -2, result: ''});
       return null;
     }
     const calendarCredentials = await UserManager.getUserCalendarCredentials(String(userID));
     if (calendarCredentials == null) {
-      res.status(404).send({ message: 'Error: User Not Found', code: -1, result: ''});
+      res.status(404).send({ message: 'Error: User consent not given', code: -1, result: ''});
       return null;
     } 
     return calendarCredentials
@@ -76,13 +76,13 @@ class CalendarController implements ControllerInterface {
     } 
     const id:string = req.body.eventid;
     if(id == null){
-      res.status(400).send({ message: 'Error: No Event ID present', code: -1, link: ''});
+      res.status(400).send({ message: 'Error: No Event ID present', code: -3, link: ''});
     }
     const client_id: String = calendarCredentials.client_id;
     const calendarFunc:CalendarFunctions = new CalendarFunctions(client_id);
     const result = await calendarFunc.addToCalendar(calendarCredentials['refresh_token'], id);
 
-    if(result!.code == -1){
+    if(result!.code != 0){
       res.status(404).send(result);
     }else{
       res.status(200).json(result);
