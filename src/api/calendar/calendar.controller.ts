@@ -27,6 +27,7 @@ class CalendarController implements ControllerInterface {
   public initializeRoutes() {
     this.router.post(CalendarRoutes.addEventPath, this.addEventToCalendar);
     this.router.get(CalendarRoutes.freeBusyPath, this.getFreeBusy);
+    this.router.get(CalendarRoutes.freeBusyIterativePath, this.getFreeBusyIteratively);
     this.router.get(CalendarRoutes.eventsListPath, this.listEvents);
   }
 
@@ -89,7 +90,7 @@ class CalendarController implements ControllerInterface {
   };
 
   /**
-   * @route GET /freebusy/:userids
+   * @route GET /freebusy/:userid
    * @documentation {https://docs.eventhopper.app/users#h.28k4ntj99bnx}
    */
   getFreeBusy = async (req:express.Request, res:express.Response) => {
@@ -108,6 +109,36 @@ class CalendarController implements ControllerInterface {
     const calendarFunc:CalendarFunctions = new CalendarFunctions(client_id);
     const result = await calendarFunc.getFreeBusy(calendarCredentials['refresh_token'], startRange, endRange, emails);
     res.status(200).json(result);
+    return;
+  };
+
+  /**
+   * @route GET /freebusyiteratve/:userids
+   * @documentation {https://docs.eventhopper.app/users#h.28k4ntj99bnx}
+   */
+  getFreeBusyIteratively = async (req:express.Request, res:express.Response) => {
+
+    if(!(req.query.start && req.query.end && req.params.userids)){
+      res.status(400).send({ message: 'Invalid Query Parameters', code: -1, result: ''});
+      return;
+    }
+
+    const ids:string[] = String(req.params.userids).split(',');
+    let final_result:any[] = []; 
+    
+    for (const id of ids){
+      const calendarCredentials = await this.getCalendarCredentials(id, res);
+      if (calendarCredentials == null) {
+        continue; //skip this iteration
+      }
+      const startRange: Date = new Date(String(req.query.start));
+      const endRange: Date = new Date(String(req.query.end));
+      const client_id: String = calendarCredentials.client_id;
+      const calendarFunc: CalendarFunctions = new CalendarFunctions(client_id);
+      const result = await calendarFunc.getFreeBusy(calendarCredentials['refresh_token'], startRange, endRange, ['primary']);
+      final_result.push(result);
+    }
+    res.status(200).json(final_result);
     return;
   };
 
