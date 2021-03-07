@@ -130,7 +130,7 @@ export async function updateUserRelationship(requester_id:string, recipient_id:s
  * @return returns operation success result status
  * 
  * ****************************************************************************/
-export async function getUserRelationshipList(user_id:string, state:number, isRecipient:Boolean) { // saves to database
+export async function getUserRelationshipList(user_id:string, state:number) { // saves to database
   
   let userRelationshipIDs = (await new Promise<any>((resolve)=>{
     resolve(UserModel.getUserData(undefined,undefined,user_id));

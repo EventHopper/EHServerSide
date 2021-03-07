@@ -177,7 +177,7 @@ class UserController implements ControllerInterface {
       res.status(400).send('Please provide either a relationship_id or both the requester and recipient ids');
     } else {
       
-      const modelFunctionResult = await UserRelationshipModel.getUserRelationshipList(user_id, state, isRecipient);
+      const modelFunctionResult = await UserRelationshipModel.getUserRelationshipList(user_id, state);
       if(modelFunctionResult.status >= 0) res.status(200).json(modelFunctionResult);
       else res.status(400).json(modelFunctionResult);
     }
