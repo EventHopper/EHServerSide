@@ -45,7 +45,8 @@ class UserController implements ControllerInterface {
     this.router.post(UserRoutes.swipe, this.updateCardSwipe);
     this.router.get(UserRoutes.userManager, this.getEventList);
     this.router.post(UserRoutes.userOAuthGrant, this.addUserOAuthData);
-    this.router.post(UserRoutes.userRelationshipUpdate, this.updateUserRelationship);
+    this.router.post(UserRoutes.userRelationship, this.updateUserRelationship);
+    this.router.get(UserRoutes.userRelationship, this.getUserRelationship);
 
   }
 
@@ -135,7 +136,7 @@ class UserController implements ControllerInterface {
   }
 
   /**
-   * @route POST /users/relationship/:
+   * @route POST /users/network/relationship/:
    * @documentation {https://docs.eventhopper.app/users#h.dap8ntvndtu3}
    */
   updateUserRelationship= async (req:express.Request, res: express.Response) => {
@@ -153,6 +154,30 @@ class UserController implements ControllerInterface {
     } else {
       
       const modelFunctionResult = await UserRelationshipModel.updateUserRelationship(requester_id, recipient_id, state);
+      if(modelFunctionResult.status >= 0) res.status(200).json(modelFunctionResult);
+      else res.status(400).json(modelFunctionResult);
+    }
+  }
+
+  /**
+   * @route GET /users/network/relationship/:
+   * @documentation {https://docs.eventhopper.app/users#h.dap8ntvndtu3}
+   */
+  getUserRelationship = async (req:express.Request, res: express.Response) => {
+    const relationship_id:string = req.params.relationship_id;
+    const user_id:string = req.body.user_id;
+    const isRecipient:Boolean = req.body.isRecipient;
+    const state:number = req.body.state;
+
+    if (state < -1 || state > 2) {
+      res.status(400).send('Invalid state - state must be between -1 and 2 inclusive');
+    }
+
+    if ((user_id === null && relationship_id === null)) {
+      res.status(400).send('Please provide either a relationship_id or both the requester and recipient ids');
+    } else {
+      
+      const modelFunctionResult = await UserRelationshipModel.getUserRelationshipList(user_id, state, isRecipient);
       if(modelFunctionResult.status >= 0) res.status(200).json(modelFunctionResult);
       else res.status(400).json(modelFunctionResult);
     }

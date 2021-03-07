@@ -14,7 +14,7 @@ class UserRoutes {
     static userManager = `${UserRoutes.rootPath}/manager/:user_id/:list_type`;
     static userOAuthGrant = `${UserRoutes.rootPath}/:user_id/oauth/grant`;
     static userOAuthRevoke = `${UserRoutes.rootPath}/:user_id/oauth/revoke`;
-    static userRelationshipUpdate = `${UserRoutes.rootPath}/relationships/update`;
+    static userRelationship = `${UserRoutes.rootPath}/network/relationships/`;
 };
 
 export default UserRoutes;
