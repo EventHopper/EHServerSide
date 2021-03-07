@@ -5,6 +5,7 @@
 /* eslint-disable max-len */
 // const EventModel = require('../../models/events/events.model');
 import * as UserModel from '../../models/users/users.model';
+import * as UserRelationshipModel from '../../models/users/user_relationship.model';
 import * as UserManager from '../../models/users/user_manager.model';
 import * as express from 'express';
 import Auth from '../../auth/server_auth';
@@ -44,6 +45,7 @@ class UserController implements ControllerInterface {
     this.router.post(UserRoutes.swipe, this.updateCardSwipe);
     this.router.get(UserRoutes.userManager, this.getEventList);
     this.router.post(UserRoutes.userOAuthGrant, this.addUserOAuthData);
+    this.router.post(UserRoutes.userRelationshipUpdate, this.updateUserRelationship);
 
   }
 
@@ -129,6 +131,30 @@ class UserController implements ControllerInterface {
         .render(path.join(__dirname, '../public/views/user-not-found'), {username: String(req.params.username)});
     } else {
       res.send(userDocument);
+    }
+  }
+
+  /**
+   * @route POST /users/relationship/:
+   * @documentation {https://docs.eventhopper.app/users#h.dap8ntvndtu3}
+   */
+  updateUserRelationship= async (req:express.Request, res: express.Response) => {
+    const relationship_id:string = req.body.requester_id;
+    const requester_id:string = req.body.requester_id;
+    const recipient_id:string = req.body.recipient_id;
+    const state:number = req.body.state;
+
+    if (state < -1 || state > 2) {
+      res.status(400).send('Invalid state - state must be between -1 and 2 inclusive');
+    }
+
+    if ((recipient_id === null && relationship_id === null) || (requester_id === null && relationship_id === null)) {
+      res.status(400).send('Please provide either a relationship_id or both the requester and recipient ids');
+    } else {
+      
+      const modelFunctionResult = await UserRelationshipModel.updateUserRelationship(requester_id, recipient_id, state);
+      if(modelFunctionResult.status >= 0) res.status(200).json(modelFunctionResult);
+      else res.status(400).json(modelFunctionResult);
     }
   }
 
