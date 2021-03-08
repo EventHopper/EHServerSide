@@ -247,6 +247,33 @@ it('List retrieved from User Manager', async done => {
   done();
 });
 
+it('Attempts to Update User Relationship', async done => {
+  // Sends GET Request to /test endpoint
+  const res = await request
+    .post(`/users/network/relationships/?key=${KEY}`)
+    .set('Content-Type','application/json')
+    .send(`
+      {
+      "recipient_id" : "f41Quf8OiRMVipRersYKSxh9V2j1",
+      "requester_id" : "3LoUabnfbNfwgieGST7aVfSMk3l2",
+      "state" : "2"
+    }`)
+  expect(res.status).toBe(200);
+  expect(res.body).toBeDefined();
+  expect(getType(res.body)).toBe('object');
+  done();
+});
+
+it('Attempts to Get User Relationship', async done => {
+  // Sends GET Request to /test endpoint
+  const res = await request
+    .get(`/users/network/relationships/?user_id=${TestingConstants.testID}&state=1&key=${KEY}`)
+  expect(res.status).toBe(200);
+  expect(res.body).toBeDefined();
+  expect(getType(res.body)).toBe('object');
+  done();
+});
+
 // it('Invalid ID for User Manager Deletion', async done => {
 //   // Sends GET Request to /test endpoint
 //   const res = await deleteUserManager('');

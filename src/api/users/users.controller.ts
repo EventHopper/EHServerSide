@@ -164,10 +164,10 @@ class UserController implements ControllerInterface {
    * @documentation {https://docs.eventhopper.app/users#h.dap8ntvndtu3}
    */
   getUserRelationship = async (req:express.Request, res: express.Response) => {
-    const relationship_id:string = req.params.relationship_id;
-    const user_id:string = req.body.user_id;
-    const isRecipient:Boolean = req.body.isRecipient;
-    const state:number = req.body.state;
+    const relationship_id:string = String(req.query.relationship_id);
+    const user_id:string = String(req.query.user_id);
+    // const isRecipient:Boolean = req.body.isRecipient;
+    const state:number = Number(req.query.state);
 
     if (state < -1 || state > 2) {
       res.status(400).send('Invalid state - state must be between -1 and 2 inclusive');
