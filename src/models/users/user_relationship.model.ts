@@ -35,7 +35,7 @@ export const UserRelationship = userMongoose.model('UserRelationships', UserRela
  * @return returns operation success result status
  * 
  * ****************************************************************************/
-export async function updateUserRelationship(requester_id:string, recipient_id:string, state:number) { // saves to database
+export async function updateUserRelationship(requester_id:string, recipient_id:string, state:number, authenticated_user_id?:string) { // saves to database
 
   if (!(await isValidUser(requester_id))) return {status: 404, userDoc: {}, message: 'Requester Does Not Exist.'}; 
   if (!(await isValidUser(recipient_id))) return {status: 404, userDoc: {}, message: 'Recipient Does Not Exist.'}; 
@@ -120,3 +120,33 @@ export async function updateUserRelationship(requester_id:string, recipient_id:s
   return {status: 1, message: 'successfully updated relationship'};
 
 };
+
+/****************************************************************************//**
+ * @summary gets a list of user relationships for a given user_id
+ * @description updates a user relationship data through 
+ * @param {requester_id} string id of user who requested relationship
+ * @param {recipient_id} string id of user who recieved relationship request
+ * @param {state} string user relationship state code
+ * @return returns operation success result status
+ * 
+ * ****************************************************************************/
+export async function getUserRelationshipList(user_id:string, state:number) { // saves to database
+  
+  let userRelationshipIDs = (await new Promise<any>((resolve)=>{
+    resolve(UserModel.getUserData(undefined,undefined,user_id));
+  }))['relationships'];
+
+  let userRelationshipList = (await new Promise<any>((resolve)=>{
+    resolve(UserRelationship.find({
+      $and:
+     [ 
+       {'_id' : {'$in' : userRelationshipIDs}}, 
+       {state: state},
+     ]
+    }));
+  }))
+
+  if (userRelationshipList) return {status: 200, relationship_list: userRelationshipList}
+  else return {status: 400, relationship_list: null}
+
+}
