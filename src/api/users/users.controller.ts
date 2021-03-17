@@ -192,6 +192,30 @@ class UserController implements ControllerInterface {
   }
 
   /**
+   * @route GET /users/network/relationship/:
+   * @documentation {https://docs.eventhopper.app/users#h.dap8ntvndtu3}
+   */
+  getUserRelationship = async (req:express.Request, res: express.Response) => {
+    const relationship_id:string = String(req.query.relationship_id);
+    const user_id:string = String(req.query.user_id);
+    // const isRecipient:Boolean = req.body.isRecipient;
+    const state:number = Number(req.query.state);
+
+    if (state < -1 || state > 2) {
+      res.status(400).send('Invalid state - state must be between -1 and 2 inclusive');
+    }
+
+    if ((user_id === null && relationship_id === null)) {
+      res.status(400).send('Please provide either a relationship_id or both the requester and recipient ids');
+    } else {
+      
+      const modelFunctionResult = await UserRelationshipModel.getUserRelationshipList(user_id, state);
+      if(modelFunctionResult.status >= 0) res.status(200).json(modelFunctionResult);
+      else res.status(400).json(modelFunctionResult);
+    }
+  }
+
+  /**
    * @route DELETE /users/:username
    * @documentation {https://docs.eventhopper.app/users#h.fzbj7ypc3ybm}
    */
