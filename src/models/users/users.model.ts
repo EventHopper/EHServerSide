@@ -184,14 +184,14 @@ export function getUserData(username?:string, email?:string, id?:string):any { /
   return new Promise((resolve, reject) => {
 
     if(id) {
-      User.findOne({user_id : `${id}`},
+      User.find({user_id : `${id}`},
         function(err:any, userDocument:any) {
           if (err) {
             debug(err);
             reject(err);
           } else {
-            debug(userDocument);
-            resolve(userDocument);
+            debug(userDocument[0]);
+            resolve(userDocument[0]);
           }
         });
     }
@@ -202,8 +202,8 @@ export function getUserData(username?:string, email?:string, id?:string):any { /
             debug(err);
             reject(err);
           } else {
-            debug(userDocument);
-            resolve(userDocument);
+            debug(userDocument[0]);
+            resolve(userDocument[0]);
           }
         });
     } else if(email){
@@ -213,8 +213,8 @@ export function getUserData(username?:string, email?:string, id?:string):any { /
             debug(err);
             reject(err);
           } else {
-            debug(userDocument);
-            resolve(userDocument);
+            debug(userDocument[0]);
+            resolve(userDocument[0]);
           }
         });
     } else {

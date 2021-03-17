@@ -14,10 +14,29 @@ export interface IUserRelationship extends Partial<Document> {
 }
 
 const UserRelationshipSchema = new Schema({
-  requester_id: {required: true, type: String},
-  recipient_id: {required: true, type: String},
+  requester_id: {required: true, type: String, ref: 'Users'},
+  recipient_id: {required: true, type: String, ref: 'Users'},
   state: {required: true, type: Number},
-}, {timestamps: true});
+}, {timestamps: true, toObject:{virtuals:true}});
+
+UserRelationshipSchema.set('toObject', { virtuals: true })
+UserRelationshipSchema.set('toJSON', { virtuals: true })
+
+UserRelationshipSchema.virtual('recipient',{
+  ref: 'Users',
+  localField: 'recipient_id',
+  foreignField: 'user_id',
+  justOne:true
+})
+
+UserRelationshipSchema.virtual('requester',{
+  ref: 'Users',
+  localField: 'requester_id',
+  foreignField: 'user_id',
+  justOne:true
+})
+
+
 
 export const UserRelationship = userMongoose.model('UserRelationships', UserRelationshipSchema);
 
@@ -35,11 +54,14 @@ export const UserRelationship = userMongoose.model('UserRelationships', UserRela
  * @return returns operation success result status
  * 
  * ****************************************************************************/
-export async function updateUserRelationship(requester_id:string, recipient_id:string, state:number, authenticated_user_id?:string) { // saves to database
+export async function updateUserRelationship(requester_id:string, recipient_id:string, state:number, authenticated_user_id?:string) { 
 
-  if (!(await isValidUser(requester_id))) return {status: 404, userDoc: {}, message: 'Requester Does Not Exist.'}; 
-  if (!(await isValidUser(recipient_id))) return {status: 404, userDoc: {}, message: 'Recipient Does Not Exist.'}; 
-
+  if (!(await isValidUser(requester_id))) {
+    return {status: 404, userDoc: {}, message: 'Requester Does Not Exist.'}; 
+  }
+  if (!(await isValidUser(recipient_id))){ 
+    return {status: 404, userDoc: {}, message: 'Recipient Does Not Exist.'}; 
+  }
   // Check if users exist
   let relationshipUpdateResult =  await new Promise<any>((resolve) => { 
     UserRelationship.findOneAndUpdate(
@@ -132,19 +154,24 @@ export async function updateUserRelationship(requester_id:string, recipient_id:s
  * ****************************************************************************/
 export async function getUserRelationshipList(user_id:string, state:number) { // saves to database
   
-  let userRelationshipIDs = (await new Promise<any>((resolve)=>{
-    resolve(UserModel.getUserData(undefined,undefined,user_id));
-  }))['relationships'];
+  let userRelationshipIDs = (await UserModel.getUserData(undefined,undefined,user_id))['relationships'];
 
-  let userRelationshipList = (await new Promise<any>((resolve)=>{
-    resolve(UserRelationship.find({
-      $and:
+  let userRelationshipList = (await UserRelationship.find({
+    $and:
      [ 
        {'_id' : {'$in' : userRelationshipIDs}}, 
        {state: state},
      ]
-    }));
-  }))
+  })
+    .populate('recipient', 'full_name image_url username')
+    .populate('requester', 'full_name image_url username')
+    .exec()
+    .catch());
+
+
+  // let userRelationshipList2 = await UserRelationship.find().
+
+  debug(userRelationshipList)
 
   if (userRelationshipList) return {status: 200, relationship_list: userRelationshipList}
   else return {status: 400, relationship_list: null}
