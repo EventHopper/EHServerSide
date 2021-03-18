@@ -153,7 +153,7 @@ export async function updateUserRelationship(requester_id:string, recipient_id:s
  * 
  * ****************************************************************************/
 export async function getUserRelationshipList(user_id:string, state:number) { // saves to database
-  
+
   let userRelationshipIDs = (await UserModel.getUserData(undefined,undefined,user_id))['relationships'];
 
   let userRelationshipList = (await UserRelationship.find({
