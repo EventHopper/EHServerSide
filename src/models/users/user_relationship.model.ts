@@ -168,9 +168,6 @@ export async function getUserRelationshipList(user_id:string, state:number) { //
     .exec()
     .catch());
 
-
-  // let userRelationshipList2 = await UserRelationship.find().
-
   debug(userRelationshipList)
 
   if (userRelationshipList) return {status: 200, relationship_list: userRelationshipList}
