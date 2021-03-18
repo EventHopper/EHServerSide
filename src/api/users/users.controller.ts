@@ -147,15 +147,18 @@ class UserController implements ControllerInterface {
 
     if (state < -1 || state > 2) {
       res.status(400).send('Invalid state - state must be between -1 and 2 inclusive');
+      return;
     }
 
     if ((recipient_id === null && relationship_id === null) || (requester_id === null && relationship_id === null)) {
       res.status(400).send('Please provide either a relationship_id or both the requester and recipient ids');
+      return;
     } else {
       
       const modelFunctionResult = await UserRelationshipModel.updateUserRelationship(requester_id, recipient_id, state);
       if(modelFunctionResult.status >= 0) res.status(200).json(modelFunctionResult);
       else res.status(400).json(modelFunctionResult);
+      return;
     }
   }
 
@@ -166,20 +169,25 @@ class UserController implements ControllerInterface {
   getUserRelationship = async (req:express.Request, res: express.Response) => {
     const relationship_id:string = String(req.query.relationship_id);
     const user_id:string = String(req.query.user_id);
+    debug(user_id);
     // const isRecipient:Boolean = req.body.isRecipient;
     const state:number = Number(req.query.state);
 
     if (state < -1 || state > 2) {
       res.status(400).send('Invalid state - state must be between -1 and 2 inclusive');
+      return;
     }
 
-    if ((user_id === null && relationship_id === null)) {
+    if ((user_id == null && relationship_id == null)) {
       res.status(400).send('Please provide either a relationship_id or both the requester and recipient ids');
+      return;
     } else {
       
       const modelFunctionResult = await UserRelationshipModel.getUserRelationshipList(user_id, state);
+      debug(modelFunctionResult);
       if(modelFunctionResult.status >= 0) res.status(200).json(modelFunctionResult);
       else res.status(400).json(modelFunctionResult);
+      return;
     }
   }
 
