@@ -12,7 +12,6 @@ import Auth from '../../auth/server_auth';
 import {ControllerInterface} from '../utils/controller.interface';
 import FirebaseFunctions from '../../services/firebase/index';
 import path from 'path';
-import * as TestingConstants from '../../../__tests__/utils/testing.constants';
 import UserRoutes from './users.routes.config';
 import Debug from 'debug';
 import validator from 'validator';
@@ -150,10 +149,7 @@ class UserController implements ControllerInterface {
       return;
     }
     const firebaseFunc:FirebaseFunctions = new FirebaseFunctions();
-
-    let authenticated_user_id:string;
-    authenticated_user_id = (req.headers.id_token == TestingConstants.testID) 
-      ? req.headers.id_token : await firebaseFunc.verififyIdToken(String(req.headers.id_token));
+    const authenticated_user_id:string = await firebaseFunc.verififyIdToken(String(req.headers.id_token));
 
     console.log('authenticated user id: ' + authenticated_user_id);
     if (state < -1 || state > 2) {
