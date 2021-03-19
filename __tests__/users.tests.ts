@@ -247,7 +247,7 @@ it('List retrieved from User Manager', async done => {
   done();
 });
 
-it('Attempts to Update User Relationship', async done => {
+it('Fails to Update User Relationship without ID Token', async done => {
   // Sends GET Request to /test endpoint
   const res = await request
     .post(`/users/network/relationships/?key=${KEY}`)
@@ -258,9 +258,7 @@ it('Attempts to Update User Relationship', async done => {
       "requester_id" : "3LoUabnfbNfwgieGST7aVfSMk3l2",
       "state" : "2"
     }`)
-  expect(res.status).toBe(200);
-  expect(res.body).toBeDefined();
-  expect(getType(res.body)).toBe('object');
+  expect(res.status).toBe(401);
   done();
 });
 
