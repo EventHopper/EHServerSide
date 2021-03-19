@@ -12,7 +12,6 @@ import Auth from '../../auth/server_auth';
 import {ControllerInterface} from '../utils/controller.interface';
 import FirebaseFunctions from '../../services/firebase/index';
 import path from 'path';
-// import UserFunctions from './users.functions';
 import UserRoutes from './users.routes.config';
 import Debug from 'debug';
 import validator from 'validator';
@@ -145,8 +144,20 @@ class UserController implements ControllerInterface {
     const recipient_id:string = req.body.recipient_id;
     const state:number = req.body.state;
 
+    if(!req.headers.id_token){
+      res.status(401).send('ID token not present');
+      return;
+    }
+    const firebaseFunc:FirebaseFunctions = new FirebaseFunctions();
+    const authenticated_user_id:string = await firebaseFunc.verififyIdToken(String(req.headers.id_token));
+
+    console.log('authenticated user id: ' + authenticated_user_id);
     if (state < -1 || state > 2) {
       res.status(400).send('Invalid state - state must be between -1 and 2 inclusive');
+      return;
+    }
+    if (authenticated_user_id == null) {
+      res.status(400).send('Invalid user id token');
       return;
     }
 
@@ -155,7 +166,7 @@ class UserController implements ControllerInterface {
       return;
     } else {
       
-      const modelFunctionResult = await UserRelationshipModel.updateUserRelationship(requester_id, recipient_id, state);
+      const modelFunctionResult = await UserRelationshipModel.updateUserRelationship(requester_id, recipient_id, state, authenticated_user_id);
       if(modelFunctionResult.status >= 0) res.status(200).json(modelFunctionResult);
       else res.status(400).json(modelFunctionResult);
       return;

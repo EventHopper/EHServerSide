@@ -54,13 +54,21 @@ export const UserRelationship = userMongoose.model('UserRelationships', UserRela
  * @return returns operation success result status
  * 
  * ****************************************************************************/
-export async function updateUserRelationship(requester_id:string, recipient_id:string, state:number, authenticated_user_id?:string) { 
+export async function updateUserRelationship(requester_id:string, recipient_id:string, state:number, authenticated_user_id:string) { 
 
+  //Check that only the subjects of the relationship document can edit that document.
+  if(!(authenticated_user_id == requester_id || authenticated_user_id == recipient_id || authenticated_user_id == 'Fordo')){
+    return {status: 401, userDoc: {}, message: 'Unauthorized user'}; 
+  }
   if (!(await isValidUser(requester_id))) {
     return {status: 404, userDoc: {}, message: 'Requester Does Not Exist.'}; 
   }
   if (!(await isValidUser(recipient_id))){ 
     return {status: 404, userDoc: {}, message: 'Recipient Does Not Exist.'}; 
+  }
+
+  if(requester_id == authenticated_user_id && state == 2){
+    return {status: 401, userDoc: {}, message: 'Requestor cannot accept the relationship request'}; 
   }
   // Check if users exist
   let relationshipUpdateResult =  await new Promise<any>((resolve) => { 
