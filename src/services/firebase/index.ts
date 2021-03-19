@@ -83,6 +83,24 @@ public deleteUserAccount = async (tokenID: string) => {
   return result;
 }
 
+public verififyIdToken = async (tokenID: string) => {
+  let result:any;
+  let uid:string = tokenID;
+  result = await admin
+    .auth()
+    .verifyIdToken(tokenID)
+    .then((decodedToken) => {
+      uid = decodedToken.uid;
+      console.log('uid: ' + uid);
+      return uid;
+    })
+    .catch((error) => {
+      console.log('verifyid error is: ' + error);
+      return null;
+    });
+  return result;
+}
+
 }
 
 export default FirebaseFunctions;

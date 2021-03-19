@@ -145,8 +145,19 @@ class UserController implements ControllerInterface {
     const recipient_id:string = req.body.recipient_id;
     const state:number = req.body.state;
 
+    if(!req.headers.id_token){
+      res.status(401).send('ID token not present');
+      return;
+    }
+    const firebaseFunc:FirebaseFunctions = new FirebaseFunctions();
+    const authenticated_user_id:string = await firebaseFunc.verififyIdToken(String(req.headers.id_token));
+    console.log('authenticated user id: ' + authenticated_user_id);
     if (state < -1 || state > 2) {
       res.status(400).send('Invalid state - state must be between -1 and 2 inclusive');
+      return;
+    }
+    if (authenticated_user_id == null) {
+      res.status(400).send('Invalid user id token');
       return;
     }
 
@@ -155,7 +166,7 @@ class UserController implements ControllerInterface {
       return;
     } else {
       
-      const modelFunctionResult = await UserRelationshipModel.updateUserRelationship(requester_id, recipient_id, state);
+      const modelFunctionResult = await UserRelationshipModel.updateUserRelationship(requester_id, recipient_id, state, authenticated_user_id);
       if(modelFunctionResult.status >= 0) res.status(200).json(modelFunctionResult);
       else res.status(400).json(modelFunctionResult);
       return;
@@ -188,30 +199,6 @@ class UserController implements ControllerInterface {
       if(modelFunctionResult.status >= 0) res.status(200).json(modelFunctionResult);
       else res.status(400).json(modelFunctionResult);
       return;
-    }
-  }
-
-  /**
-   * @route GET /users/network/relationship/:
-   * @documentation {https://docs.eventhopper.app/users#h.dap8ntvndtu3}
-   */
-  getUserRelationship = async (req:express.Request, res: express.Response) => {
-    const relationship_id:string = String(req.query.relationship_id);
-    const user_id:string = String(req.query.user_id);
-    // const isRecipient:Boolean = req.body.isRecipient;
-    const state:number = Number(req.query.state);
-
-    if (state < -1 || state > 2) {
-      res.status(400).send('Invalid state - state must be between -1 and 2 inclusive');
-    }
-
-    if ((user_id === null && relationship_id === null)) {
-      res.status(400).send('Please provide either a relationship_id or both the requester and recipient ids');
-    } else {
-      
-      const modelFunctionResult = await UserRelationshipModel.getUserRelationshipList(user_id, state);
-      if(modelFunctionResult.status >= 0) res.status(200).json(modelFunctionResult);
-      else res.status(400).json(modelFunctionResult);
     }
   }
 
