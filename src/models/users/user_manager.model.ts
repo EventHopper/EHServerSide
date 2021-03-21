@@ -227,6 +227,7 @@ export const getUserEventList = async (user_id: string, list_type: string) => { 
   await UserManager.find(
     {user_id: user_id},
     list_type,
+    {},
     function(err: any, doc: any) {
       if (err) {
         console.log('error in manager: ', err);
@@ -252,6 +253,7 @@ export const getUserCalendarCredentials = async (user_id: string) => { // retrie
   await UserManager.find(
     {user_id: user_id},
     'google_oauth',
+    {},
     function(err: any, doc: any) {
       if (err) {
         console.log('error in manager: ', err);
