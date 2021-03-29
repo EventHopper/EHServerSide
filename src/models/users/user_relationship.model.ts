@@ -103,7 +103,7 @@ export async function updateUserRelationship(requester_id:string, recipient_id:s
   // If the status of the update is a 0 (which is considered a request rejection) then delete the relationship document
   if (relationshipUpdateResult.status == 200 && state == 0) {
     const document_id = relationshipUpdateResult.userDoc._id;
-    debug(await UserRelationship.deleteOne({_id: document_id}, ((err)=>{
+    debug(await UserRelationship.deleteOne({_id: document_id}, {}, ((err)=>{
       debug(err);
     })).then(async ()=> {
       // Once deleted, we must remove the relationship from the list of each user
