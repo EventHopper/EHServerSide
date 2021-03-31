@@ -1,5 +1,4 @@
 import * as user from './users';
-import { s3_utils as s3 } from './utils';
 import debug from 'debug';
 export { s3_utils as s3 } from './utils';
 
@@ -51,9 +50,10 @@ export { s3_utils as s3 } from './utils';
 const url =
   'https://cdn-images-1.medium.com/max/1600/1*4VBxaeHaxTxjZiPbI7g3kw.jpeg';
 user
-  .uploadUserFile('kyler', url)
-  .then((data) => console.log(data))
+  .uploadUserFile('kylers a certified ho', url, true)
+  .then((data) => console.log('public: ' + data))
   .catch((err) => console.log(err));
+
 // s3
 //   .uploadFile('hopper-users-bucket', 'tests/', url)
 //   .then((data) => debug(data))

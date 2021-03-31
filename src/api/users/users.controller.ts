@@ -8,6 +8,7 @@ import * as UserModel from '../../models/users/users.model';
 import * as UserRelationshipModel from '../../models/users/user_relationship.model';
 import * as UserManager from '../../models/users/user_manager.model';
 import * as express from 'express';
+import * as s3Module from '../../services/storage/users';
 import Auth from '../../auth/server_auth';
 import {ControllerInterface} from '../utils/controller.interface';
 import FirebaseFunctions from '../../services/firebase/index';
@@ -20,6 +21,7 @@ import { error } from 'console';
 import * as Event from '../../models/events/events.model';
 
 import * as  EventManager from '../../models/events/event_manager.model';
+import { UploadedFile } from 'express-fileupload';
 const debug = Debug('users.controller');
 
 class UserController implements ControllerInterface {
@@ -46,7 +48,7 @@ class UserController implements ControllerInterface {
     this.router.post(UserRoutes.userOAuthGrant, this.addUserOAuthData);
     this.router.post(UserRoutes.userRelationship, this.updateUserRelationship);
     this.router.get(UserRoutes.userRelationship, this.getUserRelationship);
-
+    this.router.get(UserRoutes.userUpload, this.uploadUserMedia);
   }
 
   /**
@@ -133,6 +135,46 @@ class UserController implements ControllerInterface {
       res.send(userDocument);
     }
   }
+
+  /**
+   * @route POST /users/media/:userid
+   * @documentation {tbc}
+   */
+   uploadUserMedia = async (req:express.Request, res: express.Response) => {
+     const userID = req.params.id;
+     try {
+       if(!req.files) {
+         res.status(400).send({
+           status: false,
+           message: 'No file specified'
+         });
+       } else {
+         //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
+         let avatar:UploadedFile = req.files.avatar as UploadedFile;      
+         
+         //Use the mv() method to place the file in upload directory (i.e. "uploads")
+         const filePath:string = './uploads/' + userID;
+         avatar.mv(filePath);
+         s3Module.uploadUserFile(userID, filePath, true).then(async (imageURL) => {
+           const updates:UserModel.IUserUpdate = {image_url: imageURL}; 
+           const userDocument = await UserModel.updateUser(/*username= */ '', updates, userID);
+           if (userDocument == null) {
+             res.status(404)
+               .render(path.join(__dirname, '../public/views/user-not-found'), {username: String(req.params.username)});
+           } else {
+             res.send(userDocument);
+           }
+           return;
+         }).catch((err) => {
+           console.log(err); 
+           res.status(500).send(err);
+           return;
+         });
+       }
+     } catch (err) {
+       res.status(500).send(err);
+     } 
+   }
 
   /**
    * @route POST /users/network/relationship/:

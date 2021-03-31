@@ -7,6 +7,7 @@ import express from 'express';
 import path from 'path';
 import chalk from 'chalk';
 import bodyParser from 'body-parser';
+import fileUpload from 'express-fileupload';
 import Auth from '../auth/server_auth';
 import {ControllerInterface} from './utils/controller.interface';
 import Debug from 'debug';
@@ -32,6 +33,10 @@ class App {
     this.app.use(express.static(path.join(__dirname, 'public')));
     this.app.set('view engine', 'ejs');
     this.app.use(this.authMiddleware);
+    // enable files upload
+    this.app.use(fileUpload({
+      createParentPath: true
+    }));
   }
 
   private authMiddleware = async (request: express.Request,

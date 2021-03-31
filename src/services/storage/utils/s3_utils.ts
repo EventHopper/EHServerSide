@@ -73,7 +73,7 @@ export async function createFolder(bucketName: string, path: string) {
     const result = await s3
       .putObject({
         Bucket: bucketName,
-        Key: path
+        Key: path,
       })
       .promise();
     return result;
@@ -168,12 +168,14 @@ export async function listObjects(bucketName: string, path: string) {
  * @param {string} bucketName name of the bucket
  * @param {string} bucketTargetDirectory name of target directory for file
  * @param {string} filePath path/url of file to upload directory
+ * @param {string} isPublic whether the file should be publicly accessible
  * @returns {Promise<string>} final destination of the file in s3
  */
 export async function uploadFile(
   bucketName: string,
   bucketTargetDirectory: string,
-  filePath: string
+  filePath: string,
+  isPublic: boolean
 ): Promise<string> {
   const pass = new stream.PassThrough();
   let fileStream: stream.PassThrough | fs.ReadStream;
@@ -198,10 +200,12 @@ export async function uploadFile(
     throw new Error(`File stream error ${err.message}`);
   });
 
+  const ACL:string = isPublic? 'public-read' : 'private';
   const uploadParam = {
     Bucket: bucketName,
     Key: `${bucketTargetDirectory}${path.basename(filePath)}`,
-    Body: fileStream
+    Body: fileStream,
+    ACL: ACL
   };
 
   try {
