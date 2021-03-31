@@ -48,7 +48,7 @@ class UserController implements ControllerInterface {
     this.router.post(UserRoutes.userOAuthGrant, this.addUserOAuthData);
     this.router.post(UserRoutes.userRelationship, this.updateUserRelationship);
     this.router.get(UserRoutes.userRelationship, this.getUserRelationship);
-    this.router.get(UserRoutes.userUpload, this.uploadUserMedia);
+    this.router.post(UserRoutes.userUpload, this.uploadUserMedia);
   }
 
   /**
@@ -141,11 +141,17 @@ class UserController implements ControllerInterface {
    * @documentation {tbc}
    */
    uploadUserMedia = async (req:express.Request, res: express.Response) => {
-     const userID = req.params.id;
+     if(!req.params.userid){
+       res.status(400).send({
+         message: 'No user id specified'
+       });
+       return;
+     }
+     const userID = req.params.userid;
+     console.log('userid: ' + userID);
      try {
        if(!req.files) {
          res.status(400).send({
-           status: false,
            message: 'No file specified'
          });
        } else {
@@ -155,7 +161,10 @@ class UserController implements ControllerInterface {
          //Use the mv() method to place the file in upload directory (i.e. "uploads")
          const filePath:string = './uploads/' + userID;
          avatar.mv(filePath);
+         console.log('avatar name: ' + avatar.name);
+         console.log('avatar size: ' + avatar.size);
          s3Module.uploadUserFile(userID, filePath, true).then(async (imageURL) => {
+           console.log('server url is: ' + imageURL);
            const updates:UserModel.IUserUpdate = {image_url: imageURL}; 
            const userDocument = await UserModel.updateUser(/*username= */ '', updates, userID);
            if (userDocument == null) {

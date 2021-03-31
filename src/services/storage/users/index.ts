@@ -1,4 +1,4 @@
-import { usersBucket } from '../../../../common/utils/config';
+import { usersBucket } from '../../../common/utils/config';
 // import { userBucket } from '../utils';
 import { s3_utils as s3 } from '../utils';
 import * as fs from 'fs';

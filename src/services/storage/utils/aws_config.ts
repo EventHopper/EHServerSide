@@ -1,7 +1,7 @@
 import {
   AWS_SECRET_ACCESS_KEY,
   AWS_ACCESS_KEY_ID
-} from './../../../../common/utils/config';
+} from '../../../common/utils/config';
 
 const awsConfig = {
   accessKeyId: AWS_ACCESS_KEY_ID,
