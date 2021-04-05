@@ -55,7 +55,7 @@ export function aggregateExternalVendor(location: any) {
     '&city=' +
     location.city +
     '&apikey=' +
-    process.env.TICKETMASTER_CONSUMER_KEY +
+    config.TICKETMASTER_CONSUMER_KEY +
     '&startDateTime=' +
     date +
     '&page=';

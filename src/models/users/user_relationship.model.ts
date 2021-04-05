@@ -136,7 +136,7 @@ export async function updateUserRelationship(requester_id:string, recipient_id:s
 
     if (error) return error;
 
-    console.log(JSON.stringify(result));
+    // console.log(JSON.stringify(result));
 
     const update = {$addToSet : {relationships: String(result._id)}};
 
@@ -180,5 +180,33 @@ export async function getUserRelationshipList(user_id:string, state:number) { //
 
   if (userRelationshipList) return {status: 200, relationship_list: userRelationshipList}
   else return {status: 400, relationship_list: null}
+
+}
+
+/****************************************************************************//**
+ * @summary gets a user relationships for a given two users
+ * @description updates a user relationship data through 
+ * @param {userid_a} string id of user 1
+ * @param {userid_b} string id of user 2
+ * @return returns operation success result status
+ * 
+ * ****************************************************************************/
+export async function getUserRelationship(userid_a:string, userid_b:string) { // saves to database
+
+  let userRelationship = (await UserRelationship.find({
+    $or: 
+        [
+          { requester_id: userid_a, recipient_id: userid_b }, // This or....
+          { requester_id: userid_b, recipient_id: userid_a }, // The inverse
+        ]
+     
+  })
+    .exec()
+    .catch());
+
+  // console.log(userRelationship)
+
+  if (userRelationship) return {status: 200, relationship: userRelationship}
+  else return {status: 400, relationship: null}
 
 }
