@@ -5,6 +5,7 @@ import Debug from 'debug';
 import { Document } from 'mongoose';
 import { initializeUserManager, deleteUserManager } from './user_manager.model';
 import FirebaseFunctions from '../../services/firebase/index'
+import { UserRelationship } from './user_relationship.model';
 
 
 const Schema = userMongoose.Schema;
@@ -180,7 +181,7 @@ export function search(query:string, limit?:number) { // list users matching que
  * @return returns Promise of user document or error on fail
  * 
  * ****************************************************************************/
-export function getUserData(username?:string, email?:string, id?:string):any { // list single users
+export function getUserData(username?:string, email?:string, id?:string, callerID?:string, returnRelationship?:Boolean):any { // list single users
   return new Promise((resolve, reject) => {
 
     if(id) {
@@ -190,6 +191,7 @@ export function getUserData(username?:string, email?:string, id?:string):any { /
             debug(err);
             reject(err);
           } else {
+            
             debug(userDocument);
             resolve(userDocument);
           }

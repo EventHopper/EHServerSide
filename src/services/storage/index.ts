@@ -50,7 +50,7 @@ export { s3_utils as s3 } from './utils';
 const url =
   'https://cdn-images-1.medium.com/max/1600/1*4VBxaeHaxTxjZiPbI7g3kw.jpeg';
 user
-  .uploadUserFile('kylers a certified ho', url, true)
+  .uploadUserFile('test', url, true)
   .then((data) => console.log('public: ' + data))
   .catch((err) => console.log(err));
 

@@ -68,7 +68,7 @@ it('Succeeds to get event by lat/long with swipe parameter true', async done => 
   
 it('Succeeds to get random event from database', async done => {
   // Sends GET Request to /test endpoint
-  const event = (await eventBySample(1))[0];
+  const event = (await eventBySample(1, 'New York'))[0];
   console.log(event);
   expect(event).toBeDefined;
   expect(event.vendor_id).toBeDefined;

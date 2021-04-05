@@ -27,7 +27,7 @@ class CalendarFunctions {
     const calendar = google.calendar({version: 'v3'}); 
     const empty: calendar_v3.Schema$Event[] = [];
     let result;
-    console.log('token is: ' + token);
+    // console.log('token is: ' + token);
     await calendar.events.list({
       calendarId: 'primary',
       timeMin: (new Date()).toISOString(),
@@ -39,12 +39,12 @@ class CalendarFunctions {
       result = {message: 'Successfully retrieved events', code: 0, Events: events};
       if(events != null){
         if (events.length) {
-          console.log('Upcoming 10 events:');
+          // console.log('Upcoming 10 events:');
           events.map((event, i) => {
             const start = event.start!.dateTime || event.start!.date;
           });
         } else {
-          console.log('No upcoming events found.');
+          // console.log('No upcoming events found.');
         }   
       }    
     }).catch((err) => {

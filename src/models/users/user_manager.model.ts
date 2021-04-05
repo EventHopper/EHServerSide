@@ -2,6 +2,7 @@ import {userMongooseInstance as userMongoose} from '../../services/mongoose/mong
 import { Schema, Document } from 'mongoose';
 import { ResponseObject } from '../utils/model_response.object'
 import Debug from 'debug';
+import { ConfigurationServicePlaceholders } from 'aws-sdk/lib/config_service_placeholders';
 
 const debug = Debug('user_manager.model');
 
@@ -148,7 +149,7 @@ export const updateUserManager = async (user_id: string, updateFields: any, isAr
     {setDefaultsOnInsert: true, useFindAndModify: true, new: true},
     function(err: any, doc: any) {
       if (err) {
-        console.log('error in manager: ', err);
+        // console.log('error in manager: ', err);
         debug('here is the error:', err);
         result = {error: err};
       }
@@ -237,7 +238,10 @@ export const getUserEventList = async (user_id: string, list_type: string) => { 
         debug('succesfully retrieved document');
         result = doc[0][list_type];
       }
-    });
+    }).then((value)=>{
+    // console.log(value);
+  })
+
   return result;
 }; 
 
@@ -261,7 +265,7 @@ export const getUserCalendarCredentials = async (user_id: string) => { // retrie
         result = {error: err};
       } else {
         debug('succesfully retrieved document');
-        console.log(doc);
+        // console.log(doc);
         result = doc[0]['google_oauth'];
       }
     });

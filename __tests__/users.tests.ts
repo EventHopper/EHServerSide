@@ -80,7 +80,7 @@ it('Fails to register user malformatted email', async done => {
     .post(`/users/register?key=${KEY}`)
     .set('Content-Type', 'application/json')
     .send('{"username": "aaa","email":"spidermanwedoo","password": "googleking"}');
-  console.log(res.body);
+  // console.log(res.body);
   expect(res.status).toBe(400);
   expect(res.body.message).toBeDefined();
   expect(getType(res.body)).toBe('object');

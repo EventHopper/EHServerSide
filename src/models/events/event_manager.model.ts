@@ -45,7 +45,7 @@ export const initializeEventManager = async (eventID: string) => { // saves to d
     {upsert: true, setDefaultsOnInsert: true, useFindAndModify: true, new: true},
     function(err: any, doc: any) {
       if (err) {
-        console.log('error in manager: ', err);
+        // console.log('error in manager: ', err);
         debug('here is the error:', err);
         result = {error: err};
       }
@@ -68,7 +68,7 @@ export const updateEventManager = async (event_id: string, updateFields: any) =>
     {setDefaultsOnInsert: true, useFindAndModify: true, new: true},
     function(err: any, doc: any) {
       if (err) {
-        console.log('error in manager: ', err);
+        // console.log('error in manager: ', err);
         debug('here is the error:', err);
         result = {error: err};
       }
@@ -91,7 +91,7 @@ export const updateEventManagerUserList = async (event_id: string, update_fields
     {setDefaultsOnInsert: true, useFindAndModify: true, new: true},
     function(err: any, doc: any) {
       if (err) {
-        console.log('error in manager: ', err);
+        // console.log('error in manager: ', err);
         debug('here is the error:', err);
         result = {error: err};
       }
@@ -108,7 +108,7 @@ export const updateEventManagerUserList = async (event_id: string, update_fields
         {setDefaultsOnInsert: true, useFindAndModify: true, new: true},
         function(err: any, doc: any) {
           if (err) {
-            console.log('error in manager: ', err);
+            // console.log('error in manager: ', err);
             debug('here is the error:', err);
             result = {error: err};
           }

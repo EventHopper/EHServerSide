@@ -81,7 +81,7 @@ const Event = mongoose.model('Events', eventSchema);
 const saveEvent = async (eventData: any) => { // saves to database
   const event = eventData;
   const manager_id = await initializeEventManager(event.vendor_id);
-  console.log('manager_id: ', manager_id);
+  // console.log('manager_id: ', manager_id);
   event.event_manager_id = manager_id;
   //debug(event.venue.position);
   return Event.findOneAndUpdate(
@@ -90,7 +90,7 @@ const saveEvent = async (eventData: any) => { // saves to database
     { upsert: true, setDefaultsOnInsert: true, useFindAndModify: true, new: true },
     function(err: any, doc: any) {
       if (err) {
-        console.log('error in event: ', err);
+        // console.log('error in event: ', err);
         debug('here is the error:', err);
         return { error: err };
       }
@@ -109,7 +109,7 @@ const updateEvent = async (eventData: any) => { // saves to database
     { setDefaultsOnInsert: true, useFindAndModify: true, new: true },
     function(err: any, doc: any) {
       if (err) {
-        console.log('error in event: ', err);
+        // console.log('error in event: ', err);
         debug('here is the error:', err);
         return { error: err };
       }
@@ -182,14 +182,11 @@ const byLatLong = (perPage: number, page: number, lon: number, lat: number, quer
   });
 }
 
-const eventBySample = (sample_size:Number) =>{
+const eventBySample = (sample_size:Number, city:String) =>{
   return new Promise((resolve, reject) => {
     const aggregaton = [
-      {
-        $sample: { 
-          size: sample_size
-        }
-      }
+      { $match: { 'venue.city' : city} },
+      { $sample: { size: sample_size }},
     ];
 
     Event.aggregate(aggregaton).exec(function(err:any, events:any) {
@@ -198,7 +195,7 @@ const eventBySample = (sample_size:Number) =>{
       } else{
         resolve(events);
       }
-    })
+    });
 
   }
   )

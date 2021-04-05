@@ -16,8 +16,6 @@ import path from 'path';
 import UserRoutes from './users.routes.config';
 import Debug from 'debug';
 import validator from 'validator';
-import { error } from 'console';
-
 import * as Event from '../../models/events/events.model';
 
 import * as  EventManager from '../../models/events/event_manager.model';
@@ -111,12 +109,28 @@ class UserController implements ControllerInterface {
    * @documentation {https://docs.eventhopper.app/users#h.8ck31sozoexm}
    */
   getUserData = async (req:express.Request, res: express.Response) => {
-    const userDocument = await UserModel.getUserData(String(req.params.username));
+    const firebaseFunc:FirebaseFunctions = new FirebaseFunctions();
+    // const authenticated_user_id:string = await firebaseFunc.verififyIdToken(String(req.headers.id_token));
+    let userDocument;
+    if (req.query.user_id){
+      userDocument = await UserModel.getUserData('','',String(req.query.user_id));
+    } else {
+      userDocument = await UserModel.getUserData(String(req.params.username));
+    }
+    let relationshipDoc;
+    if (req.query.related_to) {
+      let relatedUser = await UserModel.getUserData(String(req.query.related_to));
+      relationshipDoc = await UserRelationshipModel.getUserRelationship(userDocument.user_id, relatedUser.user_id);
+    }
+
     if (userDocument == null) {
       res.status(404)
         .render(path.join(__dirname, '../public/views/user-not-found'), {username: String(req.params.username)});
     } else {
-      res.send(userDocument);
+      res.json({
+        user: userDocument,
+        relationship: relationshipDoc?.relationship,
+      });
     }
   }
 
@@ -148,7 +162,7 @@ class UserController implements ControllerInterface {
        return;
      }
      const userID = req.params.userid;
-     console.log('userid: ' + userID);
+     //console.log('userid: ' + userID);
      try {
        if(!req.files) {
          res.status(400).send({
@@ -161,10 +175,10 @@ class UserController implements ControllerInterface {
          //Use the mv() method to place the file in upload directory (i.e. "uploads")
          const filePath:string = './uploads/' + userID;
          avatar.mv(filePath);
-         console.log('avatar name: ' + avatar.name);
-         console.log('avatar size: ' + avatar.size);
+         //  ('avatar name: ' + avatar.name);
+         //  console.log('avatar size: ' + avatar.sizeconsole.log);
          s3Module.uploadUserFile(userID, filePath, true).then(async (imageURL) => {
-           console.log('server url is: ' + imageURL);
+         //console.log('server url is: ' + imageURL);
            const updates:UserModel.IUserUpdate = {image_url: imageURL}; 
            const userDocument = await UserModel.updateUser(/*username= */ '', updates, userID);
            if (userDocument == null) {
@@ -202,7 +216,7 @@ class UserController implements ControllerInterface {
     const firebaseFunc:FirebaseFunctions = new FirebaseFunctions();
     const authenticated_user_id:string = await firebaseFunc.verififyIdToken(String(req.headers.id_token));
 
-    console.log('authenticated user id: ' + authenticated_user_id);
+    // console.log('authenticated user id: ' + authenticated_user_id);
     if (state < -1 || state > 2) {
       res.status(400).send('Invalid state - state must be between -1 and 2 inclusive');
       return;
@@ -282,7 +296,7 @@ class UserController implements ControllerInterface {
       return;
     }
     
-    console.log(oAuthData);
+    // console.log(oAuthData);
     const userManagerDocument = await UserManager.updateUserManager(req.params.user_id, oAuthUpdateQuery);
     if (userManagerDocument == null) {
       res.status(404)
@@ -358,7 +372,7 @@ class UserController implements ControllerInterface {
     
     const events = await Event.byID(event_list);
     
-    res.status(200).json({'count':event_list.length, 'events':events,});
+    res.status(200).json({'count': event_list == null ? 0 : event_list.length, 'events':events,});
    
   }
 
