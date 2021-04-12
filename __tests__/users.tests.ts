@@ -154,7 +154,7 @@ it('Succeeds to get user based on username', async done => {
   expect(res.status).toBe(200);
   expect(res.body).toBeDefined();
   expect(getType(res.body)).toBe('object');
-  expect(res.body.username).toMatch(TestingConstants.testUsername);
+  expect(res.body['user'].username).toMatch(TestingConstants.testUsername);
   done();
 });
 
@@ -190,7 +190,7 @@ it('Succeeds to update user based on username', async done => {
     .get(`/users/${TestingConstants.testUsername}?key=${KEY}`)
   expect(secondResponse.status).toBe(200);
   expect(secondResponse.body).toBeDefined();
-  expect(secondResponse.body.full_name).toBe('Johnny Karate');
+  expect(secondResponse.body['user'].full_name).toBe('Johnny Karate');
   done();
 });
   

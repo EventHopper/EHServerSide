@@ -23,7 +23,7 @@ const eventModel = require('../../events/models/events.model.js');
 
 exports.aggregateExternalVendor = aggregateExternalVendor;
 
-function aggregateExternalVendor(location) {
+function aggregateExternalVendor(location:any) {
   // Construct URL
 
   const now = new Date();
@@ -33,21 +33,21 @@ function aggregateExternalVendor(location) {
   const date = year.toString() + '-' + month.toString() + '-' + day.toString();
   const page_num = 1;
 
-  const api_url = null;
+  const api_url = '';
 
   // send http request
   axios.get(api_url + page_num) // TODO: keep iterating the page numbers till the events array is empty
-    .then((response) => {
+    .then((response:any) => {
       const events = null; // array of event objects
       importToDatabase(events);
     })
-    .catch((error) => {
+    .catch((error:any) => {
       console.log(error);
     });
 };
 
-function importToDatabase(external_events) {
-  external_events.forEach((element) => {
+function importToDatabase(external_events:any) {
+  external_events.forEach((element:any) => {
     const newEvent = {
       name: null,
       details: null,
