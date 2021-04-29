@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+docs
+.github
+coverage
+.vscode
+mongodb-realm
+realm-object-servver
