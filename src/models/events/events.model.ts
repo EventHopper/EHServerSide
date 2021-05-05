@@ -203,4 +203,4 @@ const eventBySample = (sample_size:Number, city:String) =>{
   
 }
 
-export { Event, saveEvent, updateEvent, list, byID, byLatLong, eventBySample, EventDoc }; //TODO: Can't we export the whole file?
+export { Event, saveEvent, updateEvent, list, byID, byLatLong, eventBySample, EventDoc, eventSchema }; //TODO: Can't we export the whole file?
