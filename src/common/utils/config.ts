@@ -52,6 +52,10 @@ export const variables = {
       privateKey: process.env.REALM_PRIVATE_KEY,
       publicKey: process.env.REALM_PUBLIC_KEY
     },
+    onesignal: {
+      appId: process.env.ONESIGNAL_APP_ID,
+      apiKey: process.env.ONESIGNAL_API_KEY,
+    },
     firebase: {
       serviceAccountObject: {
         'type': String(process.env.FSAV_TYPE),
