@@ -20,6 +20,8 @@ import * as Event from '../../models/events/events.model';
 
 import * as  EventManager from '../../models/events/event_manager.model';
 import { UploadedFile } from 'express-fileupload';
+import { sendNotification } from '../../services/onesignal';
+import { NotificationHandler } from '../utils/notification.handler';
 const debug = Debug('users.controller');
 
 class UserController implements ControllerInterface {
@@ -205,8 +207,8 @@ class UserController implements ControllerInterface {
    */
   updateUserRelationship= async (req:express.Request, res: express.Response) => {
     const relationship_id:string = req.body.requester_id;
-    const requester_id:string = req.body.requester_id;
-    const recipient_id:string = req.body.recipient_id;
+    let requester_id:string = req.body.requester_id;
+    let recipient_id:string = req.body.recipient_id;
     const state:number = req.body.state;
 
     if(!req.headers.id_token){
@@ -232,7 +234,23 @@ class UserController implements ControllerInterface {
     } else {
       
       const modelFunctionResult = await UserRelationshipModel.updateUserRelationship(requester_id, recipient_id, state, authenticated_user_id);
-      if(modelFunctionResult.status >= 0) res.status(200).json(modelFunctionResult);
+      // Ensuring correct recipient and requester 
+      let doc : any;
+      if (doc = modelFunctionResult.userDoc){
+        requester_id = doc.requester_id;
+        recipient_id = doc.recipient_id;
+      }
+     
+      if (state == 1) {
+        NotificationHandler.sendFriendRequestNotification(requester_id, recipient_id);
+      }
+
+      if (state == 2) {
+        NotificationHandler.acceptFriendRequestNotification(recipient_id, requester_id);
+      }
+      if(modelFunctionResult.status >= 0) {
+        res.status(200).json(modelFunctionResult);
+      } 
       else res.status(400).json(modelFunctionResult);
       return;
     }
@@ -381,3 +399,5 @@ class UserController implements ControllerInterface {
 }
 
 export default UserController;
+
+

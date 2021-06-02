@@ -3,6 +3,7 @@ import Debug from 'debug';
 import { Document } from 'mongoose';
 import * as UserModel from './users.model';
 import { isValidUser } from './user.validation';
+import { sendNotification } from '../../services/onesignal';
 
 const Schema = userMongoose.Schema;
 const debug = Debug('user_relationship.model');
@@ -86,6 +87,7 @@ export async function updateUserRelationship(requester_id:string, recipient_id:s
     ).then((userRelationshipDoc:any)  => {
       debug(userRelationshipDoc);
       if (userRelationshipDoc != null) {
+        
         resolve({status: 200, userDoc: userRelationshipDoc, message: 'User Relationship Succesfully Updated.'});
       } else {
         resolve({status: 404, userDoc: {}, message: 'User Relationship Does Not Exist.'});
@@ -208,5 +210,6 @@ export async function getUserRelationship(userid_a:string, userid_b:string) { //
 
   if (userRelationship) return {status: 200, relationship: userRelationship}
   else return {status: 400, relationship: null}
-
+  
 }
+
