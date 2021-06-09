@@ -1,11 +1,11 @@
 import supertest from 'supertest';
+import getType from 'jest-get-type';
 import App from '../src/api/app';
 import {TEST_PORT as PORT, TEST_AUTH_API_KEY as KEY} from '../src/common/utils/config';
 import EventsController from '../src/api/events/events.controller';
 import {eventBySample } from '../src/models/events/events.model';
 import UserController from '../src/api/users/users.controller';
 import {EventDoc} from '../src/models/events/events.model';
-import getType from 'jest-get-type';
 
 const request = supertest(new App([
   new EventsController(),
