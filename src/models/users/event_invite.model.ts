@@ -10,24 +10,20 @@ const Schema = userMongoose.Schema;
 
 const debug = Debug('event_invite.model');
 
-interface IRSVP extends Document{
-    rsvp: [{
-        recipient_id : String,
-        state: Number
-    },]
+interface IRSVP extends Partial<Document>{
+    recipient_id : String,
+    state: Number
   };
 
 const rsvpSchema = new Schema ({
-  rsvp: [{
-    recipient_id : {type: String, required: true},
-    state: Number
-  },]
+  recipient_id : String,
+  state: Number
 });
 
 export interface IEventInvite extends Partial<Document> {
   vendor_id: String;
   requester_id: String;
-  rsvp: IRSVP;
+  rsvp: IRSVP[];
 }
 
 const EventInviteSchema = new Schema({
@@ -110,4 +106,50 @@ export async function updateEventInviteRsvp(recipient_id:string, state:number, a
 
   return {status: 1, message: 'successfully updated relationship'};
   });
+}
+
+/****************************************************************************//**
+ * @summary creates an event invite doc 
+ * @description creates a new event invite doc and adds recipients to the rsvp array
+ * @param {requester_id} string id of user who created the event
+ * @param {recipient_ids} [string] ids of users who are invited
+ * @param {event_id} string the id of the event 
+ * @return returns operation success result status
+ * 
+ * ****************************************************************************/
+export async function createEventInvite(requester_id:string, recipient_ids:string[], authenticated_user_id:string, event_id:string) { 
+  // TODO: Check that recipients are friends.
+
+  //Check that only the invitee can accept or decline an invite.
+  if(authenticated_user_id != requester_id){
+    return {status: 401, userDoc: {}, message: 'Unauthorized user'}; 
+  }
+  if (!(await isValidUser(requester_id))){ 
+    return {status: 404, userDoc: {}, message: 'Recipient Does Not Exist.'}; 
+  }
+  const rsvpArray:IRSVP[] = [];
+  recipient_ids.map(function(id, index) {
+    let rsvp : IRSVP = {
+      recipient_id : id,
+      state: 0,
+    }
+    rsvpArray.push(rsvp);
+  });
+
+  let eventInviteDocument : IEventInvite =  {
+    vendor_id: event_id,
+    requester_id: requester_id,
+    rsvp: rsvpArray,
+  }
+    
+  var doc = new EventInvite(eventInviteDocument);
+  let error;
+  let result:any = await doc.save().catch((err)=>{
+    error = {status: -2, message: 'an error occurred during event invite creation:\n'+ err};
+  });
+
+  if (error) return error;
+
+  // TODO: Update user manager with new event invite array.
+  return {status: 2, message: 'successfully created event invite', result: result};
 }

@@ -17,6 +17,7 @@ import UserRoutes from './users.routes.config';
 import Debug from 'debug';
 import validator from 'validator';
 import * as Event from '../../models/events/events.model';
+import * as EventInvite from '../../models/users/event_invite.model';
 
 import * as  EventManager from '../../models/events/event_manager.model';
 import { UploadedFile } from 'express-fileupload';
@@ -47,6 +48,7 @@ class UserController implements ControllerInterface {
     this.router.post(UserRoutes.userRelationship, this.updateUserRelationship);
     this.router.get(UserRoutes.userRelationship, this.getUserRelationship);
     this.router.post(UserRoutes.userUpload, this.uploadUserMedia);
+    this.router.post(UserRoutes.createEventInvite, this.createEventInvite);
   }
 
   /**
@@ -376,6 +378,31 @@ class UserController implements ControllerInterface {
    
   }
 
+  /**
+   * @route POST /users/network/invites/create/:
+   * @documentation {https://docs.eventhopper.app/users#h.dap8ntvndtu3}
+   */
+ createEventInvite = async (req:express.Request, res: express.Response) => {
+   const requester_id:string = req.body.requester_id;
+   const recipient_ids:string[] = String(req.body.recipient_id).split(',');
+   const event_id:string = req.body.event_id;
+
+   if(!req.headers.id_token) {
+     res.status(401).send('ID token not present');
+     return;
+   }
+   const firebaseFunc:FirebaseFunctions = new FirebaseFunctions();
+   const authenticated_user_id:string = await firebaseFunc.verififyIdToken(String(req.headers.id_token));
+
+   if (authenticated_user_id == null) {
+     res.status(400).send('Invalid user id token');
+     return;
+   }
+   const modelFunctionResult = await EventInvite.createEventInvite(requester_id, recipient_ids, authenticated_user_id, event_id);
+   if(modelFunctionResult.status >= 0) res.status(200).json(modelFunctionResult);
+   else res.status(400).json(modelFunctionResult);
+   return;
+ }
 
 
 }
