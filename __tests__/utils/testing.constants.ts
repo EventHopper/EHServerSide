@@ -7,7 +7,7 @@ export const testEmail = 'kangaroo@eventhopper.app';
 export const testPassword = 'password';
 export const testID = '3LoUabnfbNfwgieGST7aVfSMk3l2'
 
-// it('Sanity check', async done => {
-//   expect(true).toBe(true);
-//   done()
-// });
+it('Sanity check', async done => {
+  expect(true).toBe(true);
+  done()
+});
