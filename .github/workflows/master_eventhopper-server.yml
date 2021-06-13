@@ -35,6 +35,9 @@ jobs:
         FSAV_PROJECT_ID: ${{ secrets.FSAV_PROJECT_ID }}
         FSAV_TOKEN_URI: ${{ secrets.FSAV_TOKEN_URI }}
         FSAV_TYPE: ${{ secrets.FSAV_TYPE }}
+        ONESIGNAL_APP_ID: ${{ secrets.ONESIGNAL_APP_ID }}
+        ONESIGNAL_API_KEY: ${{ secrets.ONESIGNAL_API_KEY }}
+        
     runs-on: ubuntu-latest
 
     steps:

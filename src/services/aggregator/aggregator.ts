@@ -10,6 +10,7 @@ import * as ticketMaster from './event_apis/ticketmaster';
  ******************************************************************************/
 
 export function aggregate(location : any) {
+  console.log('reached');
   ticketLeap.aggregateExternalVendor(location);
   ticketMaster.aggregateExternalVendor(location);
 }

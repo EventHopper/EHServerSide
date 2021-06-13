@@ -42,12 +42,19 @@ export const variables = {
     },
     google: {
       geocodingApiKey: process.env.GOOGLE_GEOCODING_API_KEY,
+      authClientID: process.env.GCP_CLIENT_ID,
+      authClientSecret: process.env.GCP_CLIENT_SECRET,
+      authRedirectURI: process.env.GCP_REDIRECT_URI,
     },
     realm: {
       appId: process.env.REALM_APP_ID,
       numericalAppId: process.env.REALM_NUMERICAL_APP_ID,
       privateKey: process.env.REALM_PRIVATE_KEY,
       publicKey: process.env.REALM_PUBLIC_KEY
+    },
+    onesignal: {
+      appId: process.env.ONESIGNAL_APP_ID,
+      apiKey: process.env.ONESIGNAL_API_KEY,
     },
     firebase: {
       serviceAccountObject: {

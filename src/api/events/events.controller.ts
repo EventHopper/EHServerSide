@@ -69,6 +69,9 @@ export default class EventsController implements ControllerInterface {
     }
     let endpoint: string = String(req.query.index);
     switch (endpoint) {
+    case 'random':
+      this.byRandom(req, res);
+      break;
     case 'id':  //find event by ID
       this.byID(req, res);
       break;
@@ -90,11 +93,13 @@ export default class EventsController implements ControllerInterface {
         switch (param) {
         case 'date_after':  //find all events after this date
           let afterDateQuery: { [k: string]: any } = { '$gt': new Date(`${req.query[param]}`) };
-          query['start_date_utc'] = afterDateQuery;
+          query['start_date_utc'] == null ? query['start_date_utc'] = afterDateQuery :  query['$and'] = [{'start_date_utc' : afterDateQuery}, 
+            {'start_date_utc': query['start_date_utc']}];
           break;
         case 'date_before':
           let beforeDateQuery: { [k: string]: any } = { '$lt': new Date(`${req.query[param]}`) };
-          query['start_date_utc'] = beforeDateQuery;
+          query['start_date_utc'] == null ? query['start_date_utc'] = beforeDateQuery :  query['$and'] = [{'start_date_utc' : beforeDateQuery}, 
+            {'start_date_utc': query['start_date_utc']}];
           break;
         case 'tags': //include events which contain the specified tags
           let tags: string[] = String(req.query[param]).split(',');
@@ -112,17 +117,27 @@ export default class EventsController implements ControllerInterface {
     }
   };
 
+  private byRandom = (req: express.Request, res: express.Response) => {
+
+    EventModel.eventBySample(Number(req.query.size), String(req.query.city))
+      .then((result: any) => {
+        return res.status(200).send(result);
+      }).catch(error => {
+        return res.status(400).json('No such event exists: ' + error);
+      });
+  };
+
   private byID = (req: express.Request, res: express.Response) => {
 
     if (!req.query.id) {
       return res.status(400).json('Invalid ID provided to search endpoint');
     }
-    const id: string[] = String(req.params.id).split(',');
+    const id: string[] = String(req.query.id).split(',');
     EventModel.byID(id)
       .then((result: any) => {
         return res.status(200).send(result);
       }).catch(error => {
-        return res.status(400).json('No such event exists');
+        return res.status(400).json('No such event exists: ' + error);
       });
   };
 

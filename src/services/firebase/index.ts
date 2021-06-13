@@ -3,6 +3,7 @@ import * as admin from 'firebase-admin';
 import { IUser } from '../../models/users/users.model';
 import * as UserModel from '../../models/users/users.model';
 import * as ServerConfig from '../../common/utils/config';
+import * as TestingConstants from '../../../__tests__/utils/testing.constants';
 
 const debug = Debug('firebase.admin.service');
 
@@ -80,6 +81,27 @@ public deleteUserAccount = async (tokenID: string) => {
   } else {
     result = {message : 'Could not delete account due to error', status: 500};
   }
+  return result;
+}
+
+public verififyIdToken = async (tokenID: string) => {
+  let result:any;
+  let uid:string = tokenID;
+  if(tokenID == TestingConstants.testID){
+    return uid;
+  }
+  result = await admin
+    .auth()
+    .verifyIdToken(tokenID)
+    .then((decodedToken) => {
+      uid = decodedToken.uid;
+      console.log('uid: ' + uid);
+      return uid;
+    })
+    .catch((error) => {
+      console.log('verifyid error is: ' + error);
+      return null;
+    });
   return result;
 }
 

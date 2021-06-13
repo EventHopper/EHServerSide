@@ -5,6 +5,7 @@ import Debug from 'debug';
 import { Document } from 'mongoose';
 import { initializeUserManager, deleteUserManager } from './user_manager.model';
 import FirebaseFunctions from '../../services/firebase/index'
+import { UserRelationship } from './user_relationship.model';
 
 
 const Schema = userMongoose.Schema;
@@ -16,7 +17,7 @@ export interface IUser extends Partial<Document> {
   email: string;
   full_name?: string;
   image_url?: string;
-  friends?: string[];
+  relationships?: string[];
   user_manager_id: string;
   location?: {
     city: string;
@@ -25,10 +26,10 @@ export interface IUser extends Partial<Document> {
 
 export interface IUserUpdate extends Partial<Document> {
   username?: string;
-  email: string;
+  email?: string;
   full_name?: string;
   image_url?: string;
-  friends?: string[];
+  relationships?: string[];
   location?: {
     city: string;
   };
@@ -40,12 +41,12 @@ const UserSchema = new Schema({
   username: {required: true, type: String, unique: true},
   email: {required: true, type: String, unique:true},
   image_url: String,
-  friends: [String],
+  relationships: [String],
   user_manager_id: {required: true, type: String, unique: true},
   location: {
     city: String,
   },
-});
+}, {timestamps: true});
 
 export const User = userMongoose.model('Users', UserSchema);
 
@@ -56,17 +57,19 @@ export const User = userMongoose.model('Users', UserSchema);
  * @return returns response object with fields `message`, `status` and `userDoc` if successful
  * 
  * ****************************************************************************/
-export function updateUser(username:string, userData:IUserUpdate) { // saves to database
-  const updates:IUserUpdate = userData;
+export function updateUser(username:string, userData:any, id? : string) { // saves to database
+  const query:any = id != undefined ? {user_id: id} : {username: username}   
+  const updates:any = userData;
   return new Promise((resolve, reject) => { 
     User.findOneAndUpdate(
-      {username: username},
+      query,
       updates,
-      {useFindAndModify: false},
+      {useFindAndModify: false, new: true},
     ).exec(function(err:any, userDoc:any) {
       debug(userDoc);
       if (err) reject({status: 500, message: err});
-      resolve({status: 200, userDoc: userDoc, message: 'User Succesfully Updated.'});
+      if (userDoc) resolve({status: 200, userDoc: userDoc, message: 'User Succesfully Updated.'});
+      else resolve({status: 500, userDoc: userDoc, message: 'User Updated Failed Silently'});
     });
   });
 };
@@ -166,8 +169,7 @@ export function search(query:string, limit?:number) { // list users matching que
       } else {
         resolve(users);
       }
-    });
-  
+    });  
   });
 };
 
@@ -179,7 +181,7 @@ export function search(query:string, limit?:number) { // list users matching que
  * @return returns Promise of user document or error on fail
  * 
  * ****************************************************************************/
-export function getUserData(username?:string, email?:string, id?:string):any { // list single users
+export function getUserData(username?:string, email?:string, id?:string, callerID?:string, returnRelationship?:Boolean):any { // list single users
   return new Promise((resolve, reject) => {
 
     if(id) {
@@ -189,6 +191,7 @@ export function getUserData(username?:string, email?:string, id?:string):any { /
             debug(err);
             reject(err);
           } else {
+            
             debug(userDocument);
             resolve(userDocument);
           }
@@ -257,3 +260,4 @@ export async function wipeUserData(tokenID:string,) { // deletes from database
 
   return result;
 };
+

@@ -1,4 +1,4 @@
-import * as aggregator from './src/services/aggregator/aggregator';
+import {updateJob} from './src/jobs/update_job/index';
 import express from 'express';
 import * as bodyParser from 'body-parser';
 import * as constants from './src/common/public/constants';
@@ -44,7 +44,7 @@ const location = {
   // console.log(location);
 
   // LocationModel.saveLocation(location);
-  aggregator.aggregate(location);
+  // aggregator.aggregate(location);
   // update.updateJob();
 })();
 
@@ -56,4 +56,5 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, function() {
   console.log(`app listening at port ${PORT}`);
+  updateJob();
 });

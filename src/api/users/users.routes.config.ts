@@ -12,6 +12,10 @@ class UserRoutes {
     static userUpdate = `${UserRoutes.rootPath}/:username`;
     static swipe = `${UserRoutes.rootPath}/swipe/:event_id`;
     static userManager = `${UserRoutes.rootPath}/manager/:user_id/:list_type`;
+    static userOAuthGrant = `${UserRoutes.rootPath}/:user_id/oauth/grant`;
+    static userOAuthRevoke = `${UserRoutes.rootPath}/:user_id/oauth/revoke`;
+    static userRelationship = `${UserRoutes.rootPath}/network/relationships/`;
+    static userUpload = `${UserRoutes.rootPath}/media/:userid`;
 };
 
 export default UserRoutes;

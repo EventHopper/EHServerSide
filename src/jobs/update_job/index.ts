@@ -20,12 +20,58 @@ function updateJob() {
 }
 
 async function updateEvents() {
-  const locations = await list().catch(
-    (err) => {
-      debug(err);
-    });
-  debug(locations);
-  locations.forEach((element: any) => {
+  // const locations = 
+  
+  // await list().catch(
+  //   (err) => {
+  //     debug(err);
+  //   });
+  // debug(locations);
+
+  
+  const locationArray = [
+    {
+      city: 'Philadelphia',
+      country: 'United States of America',
+      region: 'null',
+      country_code: 'US',
+      region_code:'PA'
+    },
+    {
+      city: 'New York',
+      country: 'United States of America',
+      region: 'null',
+      country_code: 'US',
+      region_code:'NY'
+    }
+    ,
+    {
+      city: 'Dallas',
+      country: 'United States of America',
+      region: 'null',
+      country_code: 'US',
+      region_code:'TX'
+    }
+    ,
+    {
+      city: 'Boston',
+      country: 'United States of America',
+      region: 'null',
+      country_code: 'US',
+      region_code:'MA'
+    }
+    ,
+    {
+      city: 'Los Angeles',
+      country: 'United States of America',
+      region: 'null',
+      country_code: 'US',
+      region_code:'LA'
+    },  
+  ];
+
+  locationArray.forEach((element: any) => {
+    debug('aggregating ' + element.city);
     aggregate(element);
   });
   debug('whats hatnin');

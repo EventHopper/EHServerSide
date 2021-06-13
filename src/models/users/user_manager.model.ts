@@ -2,9 +2,15 @@ import {userMongooseInstance as userMongoose} from '../../services/mongoose/mong
 import { Schema, Document } from 'mongoose';
 import { ResponseObject } from '../utils/model_response.object'
 import Debug from 'debug';
+import { ConfigurationServicePlaceholders } from 'aws-sdk/lib/config_service_placeholders';
 
 const debug = Debug('user_manager.model');
 
+export interface IUserOAuthData extends Partial<Document>{
+  provider_name: string, // SPOTIFY | GOOGLE | PANDORA
+  client_id: string, // CLIENT ID USED FOR GRANT FLOW ON CLIENT
+  refresh_token: string, // TO BE STORED FOR PROVIDER API ACCCESS 
+}
 interface IUserManager extends Partial<Document> {
   user_id: string,
   device_info: Object,
@@ -19,7 +25,21 @@ interface IUserManager extends Partial<Document> {
   location : {
     city: string,
   },
+  google_calendar : {
+    refresh_token: string,
+    primary_email: string,
+    calendar_ids: string[],
+  },
+  oauth_data: IUserOAuthData[],
 } 
+
+const userOAuthSchema = new Schema({
+  provider_name: {required: true, type: String, unique: true},
+  client_id: {required: true, type: String},
+  refresh_token: {required: true, type: String},
+}, {
+  timestamps: true
+});
 
 const UserManagerSchema = new Schema({
   user_id: String,
@@ -35,13 +55,13 @@ const UserManagerSchema = new Schema({
   location : {
     city: String,
   },
+  spotify_oauth: userOAuthSchema,
+  google_oauth: userOAuthSchema,
 }, {
   timestamps: true
 });
 
 const UserManager = userMongoose.model('UserManager', UserManagerSchema);
-
-
 
 /****************************************************************************//**
  * @summary initializes user manager in MongoDB
@@ -69,6 +89,12 @@ export async function initializeUserManager(user_id:string):Promise<Partial<Resp
     location : {
       city: '',
     },
+    google_calendar : {
+      refresh_token: '',
+      primary_email: '',
+      calendar_ids: [],
+    },
+    oauth_data: [],
   };
 
   let manager = new UserManager(managerInit);
@@ -112,26 +138,24 @@ export async function deleteUserManager(user_id:string):Promise<Partial<Response
  * @return returns a 
  * 
  * ****************************************************************************/
-export const updateUserManager = async (user_id: string, updateFields: any) => { // updates database
+export const updateUserManager = async (user_id: string, updateFields: any, isArray:boolean = false) => { // updates database
    
   let result:any;
-  let update_1 = { $addToSet: updateFields}; //for updating arrays
-  let fieldsUpdate = updateFields.log_url ? {log_url: updateFields.log_url} : update_1;
+  let update_1 = isArray ? { $addToSet: updateFields}: updateFields; //for updating arrays
 
   await UserManager.findOneAndUpdate(
     {user_id: user_id},
-    fieldsUpdate,
+    update_1,
     {setDefaultsOnInsert: true, useFindAndModify: true, new: true},
     function(err: any, doc: any) {
       if (err) {
-        console.log('error in manager: ', err);
+        // console.log('error in manager: ', err);
         debug('here is the error:', err);
         result = {error: err};
       }
       debug('succesfully updated user manager');
-
       //console.log(doc._id);
-      result = doc._id;
+      result = doc?._id;
     });
   return result;
 }; 
@@ -195,7 +219,7 @@ export const updateUserManagerEventList = async (user_id: string, update_fields:
  * @summary 
  * @description 
  * @param {string} user_id - id of associated user account
- * @param {string} list_type - fields to be updated
+ * @param {string} list_type - fields to be retrieved
  * @return returns a list of event ids from given list_type
  * 
  * ****************************************************************************/
@@ -204,6 +228,7 @@ export const getUserEventList = async (user_id: string, list_type: string) => { 
   await UserManager.find(
     {user_id: user_id},
     list_type,
+    {},
     function(err: any, doc: any) {
       if (err) {
         console.log('error in manager: ', err);
@@ -212,6 +237,36 @@ export const getUserEventList = async (user_id: string, list_type: string) => { 
       } else {
         debug('succesfully retrieved document');
         result = doc[0][list_type];
+      }
+    }).then((value)=>{
+    // console.log(value);
+  })
+
+  return result;
+}; 
+
+/****************************************************************************//**
+ * @summary 
+ * @description 
+ * @param {string} user_id - id of associated user account
+ * @return returns the google calendar credentials for the given user
+ * 
+ * ****************************************************************************/
+export const getUserCalendarCredentials = async (user_id: string) => { // retrieves from database
+  let result:any;
+  await UserManager.find(
+    {user_id: user_id},
+    'google_oauth',
+    {},
+    function(err: any, doc: any) {
+      if (err) {
+        console.log('error in manager: ', err);
+        debug('here is the error:', err);
+        result = {error: err};
+      } else {
+        debug('succesfully retrieved document');
+        // console.log(doc);
+        result = doc[0]['google_oauth'];
       }
     });
   return result;

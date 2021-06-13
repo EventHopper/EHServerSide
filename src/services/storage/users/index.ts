@@ -1,4 +1,4 @@
-import { usersBucket } from '../../../../common/utils/config';
+import { usersBucket } from '../../../common/utils/config';
 // import { userBucket } from '../utils';
 import { s3_utils as s3 } from '../utils';
 import * as fs from 'fs';
@@ -19,7 +19,7 @@ export async function createUserFolder(userId: string) {
   }
   const folderPath = `${userId}/`;
   try {
-    const userFolder = await s3.createFolder(usersBucket!, folderPath);
+    const userFolder = await s3.createFolder(usersBucket!, folderPath); 
     return userFolder;
   } catch (err) {
     throw new Error(err.sack);
@@ -32,7 +32,7 @@ export async function createUserFolder(userId: string) {
  * @param filePath local/remote path to user file
  * @returns {Promise<string>} final file URL 
  */
-export async function uploadUserFile(userId: string, filePath: string): Promise<string> {
+export async function uploadUserFile(userId: string, filePath: string, isPublic: boolean): Promise<string> {
   //TODO: input sanity check
   // check filetype to put in appropriate folder
   let folder: string | undefined;
@@ -45,7 +45,8 @@ export async function uploadUserFile(userId: string, filePath: string): Promise<
     const results = await s3.uploadFile(
       usersBucket!,
       `${userId}/${folder}/`,
-      filePath
+      filePath,
+      isPublic
     );
     return results;
   } catch (err) {
