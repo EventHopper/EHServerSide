@@ -49,6 +49,7 @@ class UserController implements ControllerInterface {
     this.router.get(UserRoutes.userRelationship, this.getUserRelationship);
     this.router.post(UserRoutes.userUpload, this.uploadUserMedia);
     this.router.post(UserRoutes.createEventInvite, this.createEventInvite);
+    this.router.post(UserRoutes.updateEventInvite, this.updateEventInvite);
   }
 
   /**
@@ -315,7 +316,7 @@ class UserController implements ControllerInterface {
   updateCardSwipe = async (req:express.Request, res: express.Response) => {
     if (req.body.event_manager_update && req.body.user_manager_update ) { //TODO: assign an interface to the update bodies
       let error_message;
-      var proceed = UserManager.updateUserManagerEventList(req.body.user_id, req.body.user_manager_update, req.body.direction)
+      var proceed = await UserManager.updateUserManagerEventList(req.body.user_id, req.body.user_manager_update, req.body.direction)
         .then((result:any) => {
           return true;
         }).catch((error)=> {
@@ -403,6 +404,33 @@ class UserController implements ControllerInterface {
    else res.status(400).json(modelFunctionResult);
    return;
  }
+
+ /**
+   * @route POST /users/network/invites/update/:
+   * @documentation {https://docs.eventhopper.app/users#h.dap8ntvndtu3}
+   */
+  updateEventInvite = async (req:express.Request, res: express.Response) => {
+    const state:number = req.body.state;
+    const recipient_id:string = req.body.recipient_id;
+    const event_id:string = req.body.event_invite_id;
+ 
+    if(!req.headers.id_token) {
+      res.status(401).send('ID token not present');
+      return;
+    }
+    
+    const firebaseFunc:FirebaseFunctions = new FirebaseFunctions();
+    const authenticated_user_id:string = await firebaseFunc.verififyIdToken(String(req.headers.id_token));
+ 
+    if (authenticated_user_id == null) {
+      res.status(400).send('Invalid user id token');
+      return;
+    } 
+    const modelFunctionResult = await EventInvite.updateEventInviteRsvp(recipient_id, state, authenticated_user_id, event_id);
+    if(modelFunctionResult!.status >= 0) res.status(200).json(modelFunctionResult);
+    else res.status(400).json(modelFunctionResult);
+    return;
+  }
 
 
 }

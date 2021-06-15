@@ -16,6 +16,7 @@ class UserRoutes {
     static userOAuthRevoke = `${UserRoutes.rootPath}/:user_id/oauth/revoke`;
     static userRelationship = `${UserRoutes.rootPath}/network/relationships/`;
     static createEventInvite = `${UserRoutes.rootPath}/network/invites/create`;
+    static updateEventInvite = `${UserRoutes.rootPath}/network/invites/update`;
     static userUpload = `${UserRoutes.rootPath}/media/:userid`;
 };
 

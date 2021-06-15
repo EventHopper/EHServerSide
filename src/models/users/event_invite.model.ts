@@ -78,7 +78,6 @@ export const EventInvite = userMongoose.model('EventInvites', EventInviteSchema)
  * 
  * ****************************************************************************/
 export async function updateEventInviteRsvp(recipient_id:string, state:number, authenticated_user_id:string, event_invite_id:string) { 
-
   //Check that only the invitee can accept or decline an invite.
   if(authenticated_user_id != recipient_id){
     return {status: 401, userDoc: {}, message: 'Unauthorized user'}; 
@@ -87,7 +86,7 @@ export async function updateEventInviteRsvp(recipient_id:string, state:number, a
     return {status: 404, userDoc: {}, message: 'Recipient Does Not Exist.'}; 
   }
 
-  let eventInviteUpdateResult =  await new Promise<any>((resolve) => { EventInvite.findOneAndUpdate({_id: event_invite_id, rsvp: {$elemMatch: {recipient_id: recipient_id}}},
+  let eventInviteUpdateResult:any =  await new Promise<any>((resolve) => { EventInvite.findOneAndUpdate({_id: event_invite_id, rsvp: {$elemMatch: {recipient_id: recipient_id}}},
     {$set: {'rsvp.$.state': state,}},
   ).then((eventInviteDoc:any)  => {
     debug(eventInviteDoc);
@@ -97,15 +96,15 @@ export async function updateEventInviteRsvp(recipient_id:string, state:number, a
       resolve({status: 404, eventInviteDoc: {}, message: 'Event Invite Doc Does Not Exist.'});
     }
   }).catch((err)=>{
+    console.log('fordo error:' + err);
     return {status: -1, message: 'An error occurred during event invite update:\n '+ err};
   }).catch((err)=>{
+    console.log('fordo error 2' + err);
     return {status: -1, message: 'An error occurred during event invite update:\n '+ err};
   });
-
-  debug('The result was ' + eventInviteUpdateResult.status +' & state was ' +state);
-
-  return {status: 1, message: 'successfully updated relationship'};
   });
+
+  return {status: 1, message: 'successfully updated relationship', result: eventInviteUpdateResult};
 }
 
 /****************************************************************************//**
