@@ -1,6 +1,6 @@
 import Debug from 'debug';
 import { calendar_v3, google} from 'googleapis';
-import { OAuth2Client } from 'googleapis/node_modules/google-auth-library';
+import { OAuth2Client } from 'google-auth-library';
 import { EventDoc } from '../../models/events/events.model';
 import * as EventModel from '../../models/events/events.model';
 import * as ServerConfig from '../../common/utils/config';

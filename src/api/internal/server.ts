@@ -6,10 +6,14 @@ import UserController from '../../api/users/users.controller';
 import CalendarController from '../../api/calendar/calendar.controller';
 import App from '../app';
 
+const events = new EventsController();
+const users = new UserController();
+const calendar = new CalendarController();
+
 const app = new App([
-  new EventsController(),
-  new UserController(),
-  new CalendarController(),
+  events,
+  users,
+  calendar
 ],
 
 Number(PORT));

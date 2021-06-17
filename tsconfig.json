@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "esnext",
     "allowJs": true,
     "module": "commonjs",
     "outDir": "./build",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "strict": true,
+    "strict": false
   },
   "include": [
     "src"

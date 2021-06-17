@@ -5,7 +5,6 @@
 
 import express from 'express';
 import path from 'path';
-import chalk from 'chalk';
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
 import Auth from '../auth/server_auth';
@@ -76,10 +75,11 @@ class App {
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
+    this.app.listen(this.port || 8080, () => {
       console.log(`App listening on the port ${this.port}`);
     });
   }
+  
 }
 
 export default App;

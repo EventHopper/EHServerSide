@@ -24,11 +24,12 @@ import { sendNotification } from '../../services/onesignal';
 import { NotificationHandler } from '../utils/notification.handler';
 const debug = Debug('users.controller');
 
-class UserController implements ControllerInterface {
+
+export default class UserController implements ControllerInterface {
   public router = express.Router();
 
   constructor() {
-    this.initializeRoutes();
+    this.initializeRoutes();   
   }
 
   public setAuthObject = (authObject:Auth) => {
@@ -331,7 +332,7 @@ class UserController implements ControllerInterface {
   updateCardSwipe = async (req:express.Request, res: express.Response) => {
     if (req.body.event_manager_update && req.body.user_manager_update ) { //TODO: assign an interface to the update bodies
       let error_message;
-      var proceed = UserManager.updateUserManagerEventList(req.body.user_id, req.body.user_manager_update, req.body.direction)
+      var proceed =  await UserManager.updateUserManagerEventList(req.body.user_id, req.body.user_manager_update, req.body.direction)
         .then((result:any) => {
           return true;
         }).catch((error)=> {
@@ -398,6 +399,6 @@ class UserController implements ControllerInterface {
 
 }
 
-export default UserController;
+
 
 

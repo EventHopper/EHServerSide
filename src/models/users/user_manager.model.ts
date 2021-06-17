@@ -99,9 +99,9 @@ export async function initializeUserManager(user_id:string):Promise<Partial<Resp
 
   let manager = new UserManager(managerInit);
   await manager.save()
-    .then(doc => {
+    .then((doc: any) => {
       result = {status: 200, user_manager_doc: doc, message: 'UserManager Succesfully Initialized.'};
-    }).catch(err => {
+    }).catch((err: any) => {
       result = {status: 500, message: err}; 
     });
   return result;
@@ -117,13 +117,13 @@ export async function initializeUserManager(user_id:string):Promise<Partial<Resp
  * ****************************************************************************/
 export async function deleteUserManager(user_id:string):Promise<Partial<ResponseObject>> { // deletes from database
   var result={};
-  result = await UserManager.find({user_id: user_id}).remove().exec().then(doc => {
+  result = await UserManager.find({user_id: user_id}).remove().exec().then((doc: any) => {
     if (doc) {
       return {status: 200, user_manager_doc: doc, message: `UserManager associated with ${user_id} Deleted.`};
     } else {
       return{status: 400, message: `Error: UserManager associated with ${user_id} not found.`}; 
     }
-  }).catch(err => {
+  }).catch((err: any) => {
     return {status: 500, message: err}; 
   });
 
@@ -238,7 +238,7 @@ export const getUserEventList = async (user_id: string, list_type: string) => { 
         debug('succesfully retrieved document');
         result = doc[0][list_type];
       }
-    }).then((value)=>{
+    }).then((value: any)=>{
     // console.log(value);
   })
 

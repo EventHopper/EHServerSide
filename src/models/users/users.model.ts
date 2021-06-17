@@ -241,10 +241,10 @@ export async function wipeUserData(tokenID:string,) { // deletes from database
     if (accountDeletionResult.status == 204) {
       let deletionResult:any = await deleteUserManager(accountDeletionResult.data.uid);
       if(deletionResult.status == 200) {
-        result = await User.find({user_id: userData.user_id}).remove().exec().then(doc => {
+        result = await User.find({user_id: userData.user_id}).remove().exec().then((doc: any) => {
           result = {status: 200, message: `UserManager associated with ${userData.user_id} deleted.`};
           return result;
-        }).catch(err => {
+        }).catch((err: any) => {
           result = {status: 500, message: err}; 
           return result;
         });

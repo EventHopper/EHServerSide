@@ -13,7 +13,7 @@ import Debug from 'debug';
 
 const debug = Debug('calendar.controller');
 
-class CalendarController implements ControllerInterface {
+export default class CalendarController implements ControllerInterface {
   public router = express.Router();
 
   constructor() {
@@ -143,5 +143,3 @@ class CalendarController implements ControllerInterface {
   };
 
 }
-
-export default CalendarController;
