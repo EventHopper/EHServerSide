@@ -3,8 +3,13 @@ import * as admin from 'firebase-admin';
 import { IUser } from '../../models/users/users.model';
 import * as UserModel from '../../models/users/users.model';
 import * as ServerConfig from '../../common/utils/config';
-import * as TestingConstants from '../../../__tests__/utils/testing.constants';
+// import {testID} from '../../../__tests__/users.tests';
 
+const longString = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam facilisis elementum orci, a pellentesque nisl dapibus ac placerat.';
+const testUsername = 'kanga';
+const testEmail = 'kangaroo@eventhopper.app';
+const testPassword = 'password';
+const testID = '3LoUabnfbNfwgieGST7aVfSMk3l2';
 const debug = Debug('firebase.admin.service');
 
 admin.initializeApp({
@@ -87,7 +92,7 @@ public deleteUserAccount = async (tokenID: string) => {
 public verififyIdToken = async (tokenID: string) => {
   let result:any;
   let uid:string = tokenID;
-  if(tokenID == TestingConstants.testID){
+  if(tokenID == testID){
     return uid;
   }
   result = await admin

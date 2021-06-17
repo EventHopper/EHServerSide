@@ -1,7 +1,9 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable require-jsdoc */
 import Auth from '../../auth/server_auth';
-import EventController from '../events/events.controller';
+import EventsController from '../events/events.controller';
+import UserController from '../users/users.controller';
+import CalendarController from '../calendar/calendar.controller';
 import * as express from 'express';
 
 export interface ControllerInterface {
@@ -18,4 +20,6 @@ export function createController(
 }
 
 
-export type Controller = EventController;
+export type {EventsController};
+export type {UserController};
+export type {CalendarController};

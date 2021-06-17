@@ -9,7 +9,7 @@ export async function checkCredentials(email:string, password:string, accessToke
   const app: Realm.App = new Realm.App({id: `${ID}`});
   const userCredentials = Realm.Credentials.emailPassword(email, password);
   let success = true;
-  let token = null;
+  let token;
   try {
 
     let user:Realm.User = await app.logIn(userCredentials);
