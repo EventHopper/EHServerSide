@@ -97,7 +97,9 @@ const saveEvent = async (eventData: any) => { // saves to database
       debug('succesfully saved');
       //debug(doc);
       return 'Succesfully saved.';
-    });
+    }).catch((err)=>{
+    debug(err);
+  });
 };
 
 const updateEvent = async (eventData: any) => { // saves to database

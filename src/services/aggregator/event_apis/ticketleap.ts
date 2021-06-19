@@ -57,22 +57,28 @@ export function aggregateExternalVendor(location: any) {
 
 // recursive http request function
 export function getEventObjects(api_url: string, page_num: number) {
-  axios.get(api_url + page_num).then(function(response) {
-    const events = response.data.events;
-    if (events.length !== 0) {
-      debug('_____________________ NEW PAGE _____________________\n' +
+  try {
+
+    axios.get(api_url + page_num).then(function(response) {
+      const events = response.data.events;
+      if (events.length !== 0) {
+        debug('_____________________ NEW PAGE _____________________\n' +
           'API URL: ' +
           api_url +
           page_num +
           '\n___________________________________________________\n');
-      importToDatabase(events);
-      getEventObjects(api_url, page_num + 1);
-    }else {
-      debug('TicketLeap is Done');
-    }
-  }).catch((error) => {
-    debug(error);
-  });
+        importToDatabase(events);
+        getEventObjects(api_url, page_num + 1);
+      }else {
+        debug('TicketLeap is Done');
+      }
+    }).catch((error) => {
+      debug(error);
+    });
+  } catch (error) {
+    debug(error)
+  }
+  
 }
 
 // converts response to event object and updates database
@@ -109,8 +115,8 @@ export function importToDatabase(external_events: any[]) {
       public_action: element.url,
       event_manager_id: null, // FIXME: To be added
     };
-
-    // debug(newEvent);
-    eventModel.saveEvent(newEvent);
+    eventModel.saveEvent(newEvent).catch((err)=>{
+      debug(err);
+    });
   });
 }

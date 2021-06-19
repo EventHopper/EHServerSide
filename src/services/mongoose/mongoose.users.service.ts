@@ -19,13 +19,13 @@ const options = {
   useFindAndModify: true,
 
 };
-const uri = 'mongodb+srv://ransford:chiefarchitect@eventhoppertesting.mdabm.mongodb.net/user_database?retryWrites=true&w=majority';
+const uri = 'mongodb+srv://eventhopper-operations:HMxmyo4C9GqFZtMQ@testing-cluster.4swtx.mongodb.net/user_database?retryWrites=true&w=majority';
 
 const connectWithRetry = () => {
   debug('MongoDB connection with retry');
   userMongooseInstance.connect(uri, options).then(()=>{
     console.log('MongoDB - User Database is connected');
-  }).catch((err:any)=>{
+  }).catch((err: any)=>{
     debug('MongoDB connection unsuccessful, retry after 5 seconds. ',
       ++count);
     setTimeout(connectWithRetry, 5000);

@@ -20,7 +20,7 @@ import * as Event from '../../models/events/events.model';
 
 import * as  EventManager from '../../models/events/event_manager.model';
 import { UploadedFile } from 'express-fileupload';
-import { sendNotification } from '../../services/onesignal';
+import { sendNotification } from '../../services/onesignal/index';
 import { NotificationHandler } from '../utils/notification.handler';
 const debug = Debug('users.controller');
 

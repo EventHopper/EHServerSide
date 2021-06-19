@@ -17,6 +17,7 @@ const debug = Debug('update.job.index');
 
 function updateJob() {
   setIntervalAsync(updateEvents, constants.UPDATE_JOB_INTERVAL);
+  // updateEvents();
 }
 
 async function updateEvents() {
