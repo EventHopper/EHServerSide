@@ -10,6 +10,6 @@
     "strict": false
   },
   "include": [
-    "src"
+    "src","**/*.tests.ts"
   ]
 }

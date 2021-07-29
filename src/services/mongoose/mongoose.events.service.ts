@@ -19,7 +19,7 @@ const options = {
   useFindAndModify: true,
 
 };
-const uri = 'mongodb+srv://eventhopper-operations:HMxmyo4C9GqFZtMQ@testing-cluster.4swtx.mongodb.net/event_database?retryWrites=true&w=majority';
+const uri = 'mongodb+srv://ransford:chiefarchitect@eventhoppertesting.mdabm.mongodb.net/all_events?retryWrites=true&w=majority';
 const connectWithRetry = () => {
   debug('MongoDB connection with retry');
   eventMongooseInstance.connect(uri, options).then(() => {

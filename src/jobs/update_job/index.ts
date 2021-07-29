@@ -16,7 +16,7 @@ const debug = Debug('update.job.index');
  ******************************************************************************/
 
 function updateJob() {
-  setIntervalAsync(updateEvents, constants.UPDATE_JOB_INTERVAL);
+  setIntervalAsync(updateEvents, 10);
   // updateEvents();
 }
 
@@ -31,6 +31,13 @@ async function updateEvents() {
 
   
   const locationArray = [
+    {
+      city: 'Chicago',
+      country: 'United States of America',
+      region: 'null',
+      country_code: 'US',
+      region_code:'IL'
+    },
     {
       city: 'Philadelphia',
       country: 'United States of America',

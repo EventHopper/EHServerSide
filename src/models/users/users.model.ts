@@ -18,6 +18,8 @@ export interface IUser extends Partial<Document> {
   full_name?: string;
   image_url?: string;
   relationships?: string[];
+  bio?:string;
+  interests?: string[];
   user_manager_id: string;
   location?: {
     city: string;
@@ -29,7 +31,9 @@ export interface IUserUpdate extends Partial<Document> {
   email?: string;
   full_name?: string;
   image_url?: string;
+  bio?: string;
   relationships?: string[];
+  interests?: string[];
   location?: {
     city: string;
   };
@@ -41,6 +45,8 @@ const UserSchema = new Schema({
   username: {required: true, type: String, unique: true},
   email: {required: true, type: String, unique:true},
   image_url: String,
+  bio : String,
+  interests: [String],
   relationships: [String],
   user_manager_id: {required: true, type: String, unique: true},
   location: {
@@ -159,7 +165,8 @@ export function search(query:string, limit?:number) { // list users matching que
           'username': 1,
           'full_name': 1,
           'email': 1,
-          'image_url':1
+          'image_url':1,
+          'bio':1
         }
       }];
 

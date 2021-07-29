@@ -266,7 +266,12 @@ export const getUserCalendarCredentials = async (user_id: string) => { // retrie
       } else {
         debug('succesfully retrieved document');
         // console.log(doc);
-        result = doc[0]['google_oauth'];
+        if (doc != undefined) {
+          result = doc[0]['google_oauth'];
+        } else {
+          result = {error: 'error retrieving user OAuth credentials'}
+        }
+
       }
     });
   return result;
